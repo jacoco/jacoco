@@ -13,6 +13,7 @@
 package org.jacoco.report;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import java.io.File;
@@ -63,6 +64,11 @@ public class FileMultiReportOutputTest {
 			fail("IOException expected");
 		} catch (final IOException e) {
 			// expected
+			assertEquals(
+					String.format("Can't create directory %s.",
+							new File(folder.getRoot(), "a/b/c")),
+					e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 

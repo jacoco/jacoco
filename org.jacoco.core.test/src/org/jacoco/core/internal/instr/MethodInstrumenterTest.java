@@ -13,6 +13,7 @@
 package org.jacoco.core.internal.instr;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import org.jacoco.core.instr.MethodRecorder;
@@ -174,6 +175,8 @@ public class MethodInstrumenterTest {
 			fail("IllegalArgumentException expected");
 		} catch (final IllegalArgumentException e) {
 			// expected
+			assertNull(e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 

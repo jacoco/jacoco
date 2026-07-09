@@ -21,6 +21,7 @@ import static org.junit.Assert.fail;
 import java.io.File;
 import java.util.Properties;
 
+import org.jacoco.core.test.validation.JavaVersion;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -311,6 +312,11 @@ public class AgentOptionsTest {
 			fail("IllegalArgumentException expected");
 		} catch (final IllegalArgumentException e) {
 			// expected
+			assertEquals(JavaVersion.current().isBefore("7")
+					? "No enum const class org.jacoco.core.runtime.AgentOptions$OutputMode.foo"
+					: "No enum constant org.jacoco.core.runtime.AgentOptions.OutputMode.foo",
+					e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -322,6 +328,11 @@ public class AgentOptionsTest {
 			fail("IllegalArgumentException expected");
 		} catch (final IllegalArgumentException e) {
 			// expected
+			assertEquals(JavaVersion.current().isBefore("7")
+					? "No enum const class org.jacoco.core.runtime.AgentOptions$OutputMode.foo"
+					: "No enum constant org.jacoco.core.runtime.AgentOptions.OutputMode.foo",
+					e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -342,9 +353,11 @@ public class AgentOptionsTest {
 	public void testParseInvalidPort() {
 		try {
 			new AgentOptions("port=xxx");
-			fail("IllegalArgumentException expected");
-		} catch (final IllegalArgumentException e) {
+			fail("NumberFormatException expected");
+		} catch (final NumberFormatException e) {
 			// expected
+			assertEquals("For input string: \"xxx\"", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -356,6 +369,8 @@ public class AgentOptionsTest {
 			fail("IllegalArgumentException expected");
 		} catch (final IllegalArgumentException e) {
 			// expected
+			assertEquals("port must be positive", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -387,6 +402,9 @@ public class AgentOptionsTest {
 			fail("IllegalArgumentException expected");
 		} catch (final IllegalArgumentException e) {
 			// expected
+			assertEquals("Invalid agent option syntax \"destfile\".",
+					e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -397,6 +415,9 @@ public class AgentOptionsTest {
 			fail("IllegalArgumentException expected");
 		} catch (final IllegalArgumentException e) {
 			// expected
+			assertEquals("Unknown agent option \"Some-thing_1\".",
+					e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -407,6 +428,8 @@ public class AgentOptionsTest {
 			fail("IllegalArgumentException expected");
 		} catch (final IllegalArgumentException e) {
 			// expected
+			assertEquals("port must be positive", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 

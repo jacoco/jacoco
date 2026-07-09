@@ -14,6 +14,7 @@ package org.jacoco.core.analysis;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import java.util.Arrays;
@@ -128,6 +129,9 @@ public class CoverageBuilderTest {
 			fail("IllegalStateException expected");
 		} catch (final IllegalStateException e) {
 			// expected
+			assertEquals("Can't add different class with same name: Sample",
+					e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 

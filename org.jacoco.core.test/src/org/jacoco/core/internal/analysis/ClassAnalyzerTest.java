@@ -52,6 +52,10 @@ public class ClassAnalyzerTest {
 			fail("IllegalStateException expected");
 		} catch (final IllegalStateException e) {
 			// expected
+			assertEquals(
+					"Cannot process instrumented class Foo. Please supply original non-instrumented classes.",
+					e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -64,6 +68,10 @@ public class ClassAnalyzerTest {
 			fail("IllegalStateException expected");
 		} catch (final IllegalStateException e) {
 			// expected
+			assertEquals(
+					"Cannot process instrumented class Foo. Please supply original non-instrumented classes.",
+					e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 

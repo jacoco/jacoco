@@ -149,6 +149,8 @@ public class ZipMultiReportOutputTest {
 			fail("IOException expected");
 		} catch (final IOException e) {
 			// expected
+			assertEquals("Zip entry already closed.", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -161,6 +163,8 @@ public class ZipMultiReportOutputTest {
 			fail("IOException expected");
 		} catch (final IOException e) {
 			// expected
+			assertEquals("Zip entry already closed.", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -173,6 +177,8 @@ public class ZipMultiReportOutputTest {
 			fail("IOException expected");
 		} catch (final IOException e) {
 			// expected
+			assertEquals("Zip entry already closed.", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -185,6 +191,8 @@ public class ZipMultiReportOutputTest {
 			fail("IOException expected");
 		} catch (final IOException e) {
 			// expected
+			assertEquals("Zip entry already closed.", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -197,6 +205,8 @@ public class ZipMultiReportOutputTest {
 			fail("IOException expected");
 		} catch (final IOException e) {
 			// expected
+			assertEquals("Zip entry already closed.", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 

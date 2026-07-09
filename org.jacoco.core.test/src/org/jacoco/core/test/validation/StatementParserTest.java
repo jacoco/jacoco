@@ -13,6 +13,7 @@
 package org.jacoco.core.test.validation;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
@@ -104,9 +105,11 @@ public class StatementParserTest {
 	public void should_fail_when_parenthesis_is_missing() throws IOException {
 		try {
 			StatementParser.parse("bad(", visitor, "Foo.java");
-			fail("exception expected");
+			fail("IOException expected");
 		} catch (IOException e) {
 			// expected
+			assertEquals("Invalid syntax (Foo.java)", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -114,9 +117,11 @@ public class StatementParserTest {
 	public void should_fail_when_argument1_is_missing() throws IOException {
 		try {
 			StatementParser.parse("bad(,2)", visitor, "Foo.java");
-			fail("exception expected");
+			fail("IOException expected");
 		} catch (IOException e) {
 			// expected
+			assertEquals("Invalid syntax (Foo.java)", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -124,9 +129,11 @@ public class StatementParserTest {
 	public void should_fail_when_argument2_is_missing() throws IOException {
 		try {
 			StatementParser.parse("bad(1,)", visitor, "Foo.java");
-			fail("exception expected");
+			fail("IOException expected");
 		} catch (IOException e) {
 			// expected
+			assertEquals("Invalid syntax (Foo.java)", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -135,9 +142,10 @@ public class StatementParserTest {
 			throws IOException {
 		try {
 			StatementParser.parse("bad", visitor, "Foo.java:32");
-			fail("exception expected");
+			fail("IOException expected");
 		} catch (IOException e) {
 			assertEquals("Invalid syntax (Foo.java:32)", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
