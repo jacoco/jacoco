@@ -39,6 +39,9 @@ class InstructionsBuilder {
 	/** The last instruction which has been added. */
 	private Instruction currentInsn;
 
+	/** Boundary probe to apply to the instruction that is added next. */
+	private int pendingBoundaryProbe;
+
 	/**
 	 * All instructions of a method mapped from the ASM node to the
 	 * corresponding {@link Instruction} instance.
@@ -70,6 +73,7 @@ class InstructionsBuilder {
 		this.probes = probes;
 		this.currentLine = ISourceNode.UNKNOWN_LINE;
 		this.currentInsn = null;
+		this.pendingBoundaryProbe = LabelInfo.NO_PROBE;
 		this.instructions = new HashMap<AbstractInsnNode, Instruction>();
 		this.currentLabel = new ArrayList<Label>(2);
 		this.jumps = new ArrayList<Jump>();
@@ -102,6 +106,10 @@ class InstructionsBuilder {
 	 */
 	void addInstruction(final AbstractInsnNode node) {
 		final Instruction insn = new Instruction(currentLine);
+		if (pendingBoundaryProbe != LabelInfo.NO_PROBE) {
+			insn.setBoundary(isExecuted(pendingBoundaryProbe));
+			pendingBoundaryProbe = LabelInfo.NO_PROBE;
+		}
 		final int labelCount = currentLabel.size();
 		if (labelCount > 0) {
 			for (int i = labelCount; --i >= 0;) {
@@ -138,7 +146,9 @@ class InstructionsBuilder {
 	}
 
 	/**
-	 * Adds a new probe for the last instruction.
+	 * Adds a new probe for the last instruction. Probes beyond the end of the
+	 * probe array count as not executed, which allows to analyze classes with
+	 * execution data that was recorded with fewer probes per class.
 	 *
 	 * @param probeId
 	 *            index in the probe array
@@ -146,8 +156,23 @@ class InstructionsBuilder {
 	 *            unique branch number for the last instruction
 	 */
 	void addProbe(final int probeId, final int branch) {
-		final boolean executed = probes != null && probes[probeId];
-		currentInsn.addBranch(executed, branch);
+		currentInsn.addBranch(isExecuted(probeId), branch);
+	}
+
+	private boolean isExecuted(final int probeId) {
+		return probes != null && probeId < probes.length && probes[probeId];
+	}
+
+	/**
+	 * Declares a boundary probe for the instruction that is added next. The
+	 * probe is emitted directly before the comparison it belongs to, so it is
+	 * applied to the instruction that follows.
+	 *
+	 * @param probeId
+	 *            index in the probe array
+	 */
+	void setPendingBoundaryProbe(final int probeId) {
+		pendingBoundaryProbe = probeId;
 	}
 
 	/**

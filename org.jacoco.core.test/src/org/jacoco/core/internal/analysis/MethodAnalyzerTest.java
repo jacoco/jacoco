@@ -16,6 +16,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 
+import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.ILine;
 import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.data.ExecutionDataWriter;
@@ -45,6 +46,8 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 
 	private int nextProbeId;
 
+	private int nextBoundaryProbeId;
+
 	private boolean[] probes;
 
 	private MethodNode method;
@@ -54,6 +57,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	@Before
 	public void setup() {
 		nextProbeId = 0;
+		nextBoundaryProbeId = 16;
 		method = new MethodNode();
 		method.tryCatchBlocks = new ArrayList<TryCatchBlockNode>();
 		probes = new boolean[32];
@@ -61,6 +65,10 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 
 	public int nextId() {
 		return nextProbeId++;
+	}
+
+	public int nextBoundaryId() {
+		return nextBoundaryProbeId++;
 	}
 
 	// === Scenario: linear Sequence with and without ignore filtering ===
@@ -97,6 +105,16 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	public void linear_instruction_sequence_should_show_missed_when_probearray_is_null() {
 		createLinearSequence();
 		probes = null;
+		runMethodAnalzer();
+
+		assertLine(1001, 2, 0, 0, 0);
+		assertLine(1002, 1, 0, 0, 0);
+	}
+
+	@Test
+	public void linear_instruction_sequence_should_show_missed_when_probearray_is_too_short() {
+		createLinearSequence();
+		probes = new boolean[0];
 		runMethodAnalzer();
 
 		assertLine(1001, 2, 0, 0, 0);
@@ -263,6 +281,99 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		assertLine(1001, 0, 2, 0, 2);
 		assertLine(1002, 0, 2, 0, 0);
 		assertLine(1003, 0, 2, 0, 0);
+	}
+
+	@Test
+	public void if_branch_should_show_partial_branch_coverage_when_probearray_ends_after_first_branch() {
+		createIfBranch();
+		probes = new boolean[] { true };
+		runMethodAnalzer();
+
+		assertLine(1001, 0, 2, 1, 1);
+		assertLine(1002, 0, 2, 0, 0);
+		assertLine(1003, 2, 0, 0, 0);
+	}
+
+	// === Scenario: ordered numeric comparison ===
+
+	/** <code>if (i > 6) return "a"; else return "b";</code> */
+	private void createOrderedComparison(int opcode) {
+		final Label l0 = new Label();
+		method.visitLabel(l0);
+		method.visitLineNumber(1001, l0);
+		method.visitVarInsn(Opcodes.ILOAD, 1);
+		method.visitIntInsn(Opcodes.BIPUSH, 6);
+		Label l1 = new Label();
+		method.visitJumpInsn(opcode, l1);
+		final Label l2 = new Label();
+		method.visitLabel(l2);
+		method.visitLineNumber(1002, l2);
+		method.visitLdcInsn("a");
+		method.visitInsn(Opcodes.ARETURN);
+		method.visitLabel(l1);
+		method.visitLineNumber(1003, l1);
+		method.visitLdcInsn("b");
+		method.visitInsn(Opcodes.ARETURN);
+	}
+
+	@Test
+	public void ordered_comparison_should_create_boundary_probe() {
+		createOrderedComparison(Opcodes.IF_ICMPGT);
+		runMethodAnalzer();
+		assertEquals(2, nextProbeId);
+		assertEquals(17, nextBoundaryProbeId);
+	}
+
+	@Test
+	public void equality_comparison_should_not_create_boundary_probe() {
+		createOrderedComparison(Opcodes.IF_ICMPEQ);
+		runMethodAnalzer();
+		assertEquals(2, nextProbeId);
+		assertEquals(16, nextBoundaryProbeId);
+	}
+
+	@Test
+	public void ordered_comparison_should_show_missed_boundary_when_both_branches_are_covered() {
+		createOrderedComparison(Opcodes.IF_ICMPGT);
+		probes[0] = true;
+		probes[1] = true;
+		runMethodAnalzer();
+
+		assertLine(1001, 0, 3, 0, 2);
+		assertBoundary(1, 0);
+	}
+
+	@Test
+	public void ordered_comparison_should_show_covered_boundary_when_boundary_probe_is_executed() {
+		createOrderedComparison(Opcodes.IF_ICMPGT);
+		probes[0] = true;
+		probes[1] = true;
+		probes[16] = true;
+		runMethodAnalzer();
+
+		assertLine(1001, 0, 3, 0, 2);
+		assertBoundary(0, 1);
+	}
+
+	@Test
+	public void ordered_comparison_should_not_count_boundary_when_a_branch_is_missed() {
+		createOrderedComparison(Opcodes.IF_ICMPGT);
+		probes[0] = true;
+		runMethodAnalzer();
+
+		assertLine(1001, 0, 3, 1, 1);
+		assertBoundary(0, 0);
+	}
+
+	@Test
+	public void equality_comparison_should_not_count_boundary() {
+		createOrderedComparison(Opcodes.IF_ICMPEQ);
+		probes[0] = true;
+		probes[1] = true;
+		runMethodAnalzer();
+
+		assertLine(1001, 0, 3, 0, 2);
+		assertBoundary(0, 0);
 	}
 
 	// === Scenario: branch before unconditional probe ===
@@ -1056,6 +1167,11 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		filter.filter(method, new FilterContextMock(), mcc);
 		mcc.calculate(mc);
 		result = mc;
+	}
+
+	private void assertBoundary(int missed, int covered) {
+		assertEquals("Boundaries", CounterImpl.getInstance(missed, covered),
+				result.getCounter(ICoverageNode.CounterEntity.BOUNDARY));
 	}
 
 	private void assertLine(int nr, int insnMissed, int insnCovered,

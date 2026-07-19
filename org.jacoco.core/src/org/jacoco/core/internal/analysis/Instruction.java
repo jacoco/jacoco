@@ -67,6 +67,10 @@ public class Instruction {
 
 	private int predecessorBranch;
 
+	private boolean boundary;
+
+	private boolean boundaryCovered;
+
 	/**
 	 * New instruction at the given line.
 	 *
@@ -77,6 +81,18 @@ public class Instruction {
 		this.line = line;
 		this.branches = 0;
 		this.coveredBranches = new BitSet();
+	}
+
+	/**
+	 * Marks this instruction as an ordered numeric comparison and records
+	 * whether the two compared values were ever equal.
+	 *
+	 * @param covered
+	 *            <code>true</code> if the boundary value was exercised
+	 */
+	public void setBoundary(final boolean covered) {
+		this.boundary = true;
+		this.boundaryCovered = covered;
 	}
 
 	/**
@@ -157,6 +173,8 @@ public class Instruction {
 		result.branches = this.branches;
 		result.coveredBranches.or(this.coveredBranches);
 		result.coveredBranches.or(other.coveredBranches);
+		result.boundary = this.boundary || other.boundary;
+		result.boundaryCovered = this.boundaryCovered || other.boundaryCovered;
 		return result;
 	}
 
@@ -175,6 +193,13 @@ public class Instruction {
 	 */
 	public Instruction replaceBranches(final Replacements replacements,
 			final Mapper mapper) {
+		// The boundary status is deliberately not carried over: once the
+		// branches of this comparison are replaced by the branches of an
+		// enclosing decision, its own branch coverage is no longer known, and
+		// the boundary can no longer be reported without guessing. No filter
+		// routes an ordered comparison here today, as they all replace the
+		// branches of a switch or of IFNULL, so this is a safeguard for
+		// filters added later rather than a case that currently occurs.
 		final Instruction result = new Instruction(this.line);
 		int branchIndex = 0;
 		for (final Collection<Replacements.InstructionBranch> newBranch : replacements
@@ -221,6 +246,23 @@ public class Instruction {
 		}
 		final int covered = coveredBranches.cardinality();
 		return CounterImpl.getInstance(branches - covered, covered);
+	}
+
+	/**
+	 * Returns the boundary coverage counter of this instruction. Only ordered
+	 * numeric comparisons whose branches are both covered report a boundary: as
+	 * long as a branch is missing, the branch counter already reports the gap,
+	 * and the boundary value would be missed for that reason alone.
+	 *
+	 * @return the boundary coverage counter
+	 */
+	public ICounter getBoundaryCounter() {
+		if (!boundary
+				|| getBranchCounter().getStatus() != ICounter.FULLY_COVERED) {
+			return CounterImpl.COUNTER_0_0;
+		}
+		return boundaryCovered ? CounterImpl.COUNTER_0_1
+				: CounterImpl.COUNTER_1_0;
 	}
 
 }

@@ -46,6 +46,7 @@ public class Limit {
 		entities.put(CounterEntity.LINE, "lines");
 		entities.put(CounterEntity.METHOD, "methods");
 		entities.put(CounterEntity.CLASS, "classes");
+		entities.put(CounterEntity.BOUNDARY, "boundaries");
 		ENTITY_NAMES = Collections.unmodifiableMap(entities);
 	}
 

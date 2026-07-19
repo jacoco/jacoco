@@ -76,10 +76,12 @@ public class Analyzer {
 	 *            id of the class calculated with {@link CRC64}
 	 * @param className
 	 *            VM name of the class
+	 * @param boundaryProbeBase
+	 *            first id used for boundary probes
 	 * @return ASM visitor to write class definition to
 	 */
 	private ClassVisitor createAnalyzingVisitor(final long classid,
-			final String className) {
+			final String className, final int boundaryProbeBase) {
 		final ExecutionData data = executionData.get(classid);
 		final boolean[] probes;
 		final boolean noMatch;
@@ -100,7 +102,7 @@ public class Analyzer {
 				coverageVisitor.visitCoverage(coverage);
 			}
 		};
-		return new ClassProbesAdapter(analyzer, false);
+		return new ClassProbesAdapter(analyzer, false, boundaryProbeBase);
 	}
 
 	private void analyzeClass(final byte[] source) {
@@ -113,7 +115,8 @@ public class Analyzer {
 			return;
 		}
 		final ClassVisitor visitor = createAnalyzingVisitor(classId,
-				reader.getClassName());
+				reader.getClassName(),
+				ClassProbesAdapter.countRegularProbes(reader));
 		reader.accept(visitor, 0);
 	}
 

@@ -103,6 +103,12 @@ public class MethodAnalyzer extends MethodProbesVisitor {
 	}
 
 	@Override
+	public void visitBoundaryProbe(final int opcode, final int probeId,
+			final IFrame frame) {
+		builder.setPendingBoundaryProbe(probeId);
+	}
+
+	@Override
 	public void visitJumpInsn(final int opcode, final Label label) {
 		builder.addInstruction(currentNode);
 		builder.addJump(label, 1);
