@@ -41,9 +41,10 @@ public final class ExecutionDataStore implements IExecutionDataVisitor {
 	 * @param data
 	 *            execution data to add or merge
 	 * @throws IllegalStateException
-	 *             if the given {@link ExecutionData} object is not compatible
-	 *             to a corresponding one, that is already contained
-	 * @see ExecutionData#assertCompatibility(long, String, int)
+	 *             if the given {@link ExecutionData} object describes a
+	 *             different class than a corresponding one, that is already
+	 *             contained
+	 * @see ExecutionData#merge(ExecutionData)
 	 */
 	public void put(final ExecutionData data) throws IllegalStateException {
 		final Long id = Long.valueOf(data.getId());
@@ -65,9 +66,10 @@ public final class ExecutionDataStore implements IExecutionDataVisitor {
 	 * @param data
 	 *            execution data to subtract
 	 * @throws IllegalStateException
-	 *             if the given {@link ExecutionData} object is not compatible
-	 *             to a corresponding one, that is already contained
-	 * @see ExecutionData#assertCompatibility(long, String, int)
+	 *             if the given {@link ExecutionData} object describes a
+	 *             different class than a corresponding one, that is already
+	 *             contained
+	 * @see ExecutionData#merge(ExecutionData, boolean)
 	 */
 	public void subtract(final ExecutionData data)
 			throws IllegalStateException {

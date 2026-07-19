@@ -27,6 +27,10 @@
   <li>To instrument classes loaded by the platform class loader, introduced in JDK 9
       by JEP 261, the agent option <code>inclbootstrapclasses=true</code> is required
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/2155">#2155</a>).</li>
+  <li>Execution data for the same class with a different number of probes is now
+      merged instead of being rejected: the shorter probe array is treated as a
+      prefix of the longer one, and probes that are missing from the execution
+      data count as not executed.</li>
 </ul>
 
 <h2>Release 0.8.15 (2026/06/04)</h2>

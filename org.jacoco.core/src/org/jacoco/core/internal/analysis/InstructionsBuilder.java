@@ -138,7 +138,9 @@ class InstructionsBuilder {
 	}
 
 	/**
-	 * Adds a new probe for the last instruction.
+	 * Adds a new probe for the last instruction. Probes beyond the end of the
+	 * probe array count as not executed, which allows to analyze classes with
+	 * execution data that was recorded with fewer probes per class.
 	 *
 	 * @param probeId
 	 *            index in the probe array
@@ -146,7 +148,8 @@ class InstructionsBuilder {
 	 *            unique branch number for the last instruction
 	 */
 	void addProbe(final int probeId, final int branch) {
-		final boolean executed = probes != null && probes[probeId];
+		final boolean executed = probes != null && probeId < probes.length
+				&& probes[probeId];
 		currentInsn.addBranch(executed, branch);
 	}
 

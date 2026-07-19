@@ -104,6 +104,16 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	}
 
 	@Test
+	public void linear_instruction_sequence_should_show_missed_when_probearray_is_too_short() {
+		createLinearSequence();
+		probes = new boolean[0];
+		runMethodAnalzer();
+
+		assertLine(1001, 2, 0, 0, 0);
+		assertLine(1002, 1, 0, 0, 0);
+	}
+
+	@Test
 	public void linear_instruction_sequence_should_show_covered_when_probe_is_executed() {
 		createLinearSequence();
 		probes[0] = true;
@@ -263,6 +273,17 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		assertLine(1001, 0, 2, 0, 2);
 		assertLine(1002, 0, 2, 0, 0);
 		assertLine(1003, 0, 2, 0, 0);
+	}
+
+	@Test
+	public void if_branch_should_show_partial_branch_coverage_when_probearray_ends_after_first_branch() {
+		createIfBranch();
+		probes = new boolean[] { true };
+		runMethodAnalzer();
+
+		assertLine(1001, 0, 2, 1, 1);
+		assertLine(1002, 0, 2, 0, 0);
+		assertLine(1003, 2, 0, 0, 0);
 	}
 
 	// === Scenario: branch before unconditional probe ===

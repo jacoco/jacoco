@@ -19,7 +19,9 @@ import java.util.Arrays;
 /**
  * Execution data for a single Java class. While instances are immutable care
  * has to be taken about the probe data array of type <code>boolean[]</code>
- * which can be modified.
+ * which can be modified. {@link #merge(ExecutionData)} may also replace the
+ * array with a longer one, so callers must not cache the result of
+ * {@link #getProbes()} across a merge.
  */
 public final class ExecutionData {
 
@@ -27,7 +29,7 @@ public final class ExecutionData {
 
 	private final String name;
 
-	private final boolean[] probes;
+	private boolean[] probes;
 
 	/**
 	 * Creates a new {@link ExecutionData} object with the given probe data.
@@ -149,6 +151,11 @@ public final class ExecutionData {
 	 * A and not B
 	 * </pre>
 	 *
+	 * The two probe arrays do not need to have the same length: the shorter one
+	 * is treated as a prefix of the longer one, i.e. the missing probes count
+	 * as not executed. For <code>flag==true</code> the probe array of this
+	 * object is extended if the other one is longer.
+	 *
 	 * The probe array of the other object is not modified.
 	 *
 	 * @param other
@@ -157,10 +164,15 @@ public final class ExecutionData {
 	 *            merge mode
 	 */
 	public void merge(final ExecutionData other, final boolean flag) {
-		assertCompatibility(other.getId(), other.getName(),
-				other.getProbes().length);
+		assertSameClass(other.getId(), other.getName());
 		final boolean[] otherData = other.getProbes();
-		for (int i = 0; i < probes.length; i++) {
+		if (flag && otherData.length > probes.length) {
+			final boolean[] extended = new boolean[otherData.length];
+			System.arraycopy(probes, 0, extended, 0, probes.length);
+			probes = extended;
+		}
+		final int shared = Math.min(probes.length, otherData.length);
+		for (int i = 0; i < shared; i++) {
 			if (otherData[i]) {
 				probes[i] = flag;
 			}
@@ -183,6 +195,16 @@ public final class ExecutionData {
 	 */
 	public void assertCompatibility(final long id, final String name,
 			final int probecount) throws IllegalStateException {
+		assertSameClass(id, name);
+		if (this.probes.length != probecount) {
+			throw new IllegalStateException(format(
+					"Incompatible execution data for class %s with id %016x.",
+					name, Long.valueOf(id)));
+		}
+	}
+
+	private void assertSameClass(final long id, final String name)
+			throws IllegalStateException {
 		if (this.id != id) {
 			throw new IllegalStateException(
 					format("Different ids (%016x and %016x).",
@@ -192,11 +214,6 @@ public final class ExecutionData {
 			throw new IllegalStateException(
 					format("Different class names %s and %s for id %016x.",
 							this.name, name, Long.valueOf(id)));
-		}
-		if (this.probes.length != probecount) {
-			throw new IllegalStateException(format(
-					"Incompatible execution data for class %s with id %016x.",
-					name, Long.valueOf(id)));
 		}
 	}
 
