@@ -196,7 +196,10 @@ public class Instruction {
 		// The boundary status is deliberately not carried over: once the
 		// branches of this comparison are replaced by the branches of an
 		// enclosing decision, its own branch coverage is no longer known, and
-		// the boundary can no longer be reported without guessing.
+		// the boundary can no longer be reported without guessing. No filter
+		// routes an ordered comparison here today, as they all replace the
+		// branches of a switch or of IFNULL, so this is a safeguard for
+		// filters added later rather than a case that currently occurs.
 		final Instruction result = new Instruction(this.line);
 		int branchIndex = 0;
 		for (final Collection<Replacements.InstructionBranch> newBranch : replacements
