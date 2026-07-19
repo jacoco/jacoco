@@ -27,6 +27,12 @@
   <li>To instrument classes loaded by the platform class loader, introduced in JDK 9
       by JEP 261, the agent option <code>inclbootstrapclasses=true</code> is required
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/2155">#2155</a>).</li>
+  <li>New <a href="counters.html">boundary counter</a> reports whether ordered
+      numeric comparisons were exercised with equal values. Executing both
+      branches of <code>if (i &gt; 6)</code> does not imply that
+      <code>i = 6</code> was ever used, so an off-by-one error in the comparison
+      stays undetected by branch coverage
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/2190">#2190</a>).</li>
   <li>Execution data for the same class with a different number of probes is now
       merged instead of being rejected: the shorter probe array is treated as a
       prefix of the longer one, and probes that are missing from the execution
