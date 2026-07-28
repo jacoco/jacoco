@@ -16,6 +16,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -140,6 +141,8 @@ public class ExecutionDataReaderWriterTest {
 			fail("IOException expected");
 		} catch (final IOException e) {
 			// expected
+			assertEquals("Invalid execution data file.", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -161,6 +164,7 @@ public class ExecutionDataReaderWriterTest {
 			assertEquals(version, e.getActualVersion());
 			assertEquals(ExecutionDataWriter.FORMAT_VERSION,
 					e.getExpectedVersion());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -175,6 +179,8 @@ public class ExecutionDataReaderWriterTest {
 			fail("IOException expected");
 		} catch (final IOException e) {
 			// expected
+			assertEquals("Invalid execution data file.", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -187,6 +193,8 @@ public class ExecutionDataReaderWriterTest {
 			fail("IOException expected");
 		} catch (final IOException e) {
 			// expected
+			assertEquals("Unknown block type ff.", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -203,6 +211,8 @@ public class ExecutionDataReaderWriterTest {
 			fail("EOFException expected");
 		} catch (final EOFException e) {
 			// expected
+			assertNull(e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -223,6 +233,8 @@ public class ExecutionDataReaderWriterTest {
 			fail("IOException expected");
 		} catch (final IOException e) {
 			// expected
+			assertEquals("No session info visitor.", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -255,6 +267,8 @@ public class ExecutionDataReaderWriterTest {
 			fail("RuntimeException expected");
 		} catch (final RuntimeException e) {
 			// expected
+			assertEquals("java.io.IOException", e.getMessage());
+			assertEquals(IOException.class, e.getCause().getClass());
 		}
 	}
 
@@ -270,6 +284,8 @@ public class ExecutionDataReaderWriterTest {
 			fail("IOException expected");
 		} catch (final IOException e) {
 			// expected
+			assertEquals("No execution data visitor.", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -353,6 +369,8 @@ public class ExecutionDataReaderWriterTest {
 			fail("RuntimeException expected");
 		} catch (final RuntimeException e) {
 			// expected
+			assertEquals("java.io.IOException", e.getMessage());
+			assertEquals(IOException.class, e.getCause().getClass());
 		}
 	}
 

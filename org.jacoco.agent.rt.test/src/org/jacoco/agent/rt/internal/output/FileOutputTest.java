@@ -13,12 +13,13 @@
 package org.jacoco.agent.rt.internal.output;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.nio.channels.FileLock;
 import java.nio.channels.OverlappingFileLockException;
@@ -69,8 +70,11 @@ public class FileOutputTest {
 				destFile.length() > 0);
 	}
 
+	/**
+	 * @see FileOutputStream#FileOutputStream(File)
+	 */
 	@Test
-	public void startup_should_throw_IOException_when_execfile_cannot_be_created()
+	public void startup_should_throw_FileNotFoundException_when_execfile_cannot_be_created()
 			throws Exception {
 		AgentOptions options = new AgentOptions();
 		options.setDestfile(folder.newFolder("folder").getAbsolutePath());
@@ -78,9 +82,13 @@ public class FileOutputTest {
 
 		try {
 			controller.startup(options, new RuntimeData());
-			fail("IOException expected");
-		} catch (IOException e) {
+			fail("FileNotFoundException expected");
+		} catch (FileNotFoundException e) {
 			// expected
+			assertEquals(
+					String.format("%s (Is a directory)", options.getDestfile()),
+					e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -108,6 +116,8 @@ public class FileOutputTest {
 			fail("OverlappingFileLockException expected");
 		} catch (OverlappingFileLockException e) {
 			// expected
+			assertNull(e.getMessage());
+			assertNull(e.getCause());
 		} finally {
 			lock.channel().close();
 		}
@@ -138,6 +148,8 @@ public class FileOutputTest {
 			fail("InterruptedIOException expected");
 		} catch (InterruptedIOException e) {
 			// expected
+			assertNull(e.getMessage());
+			assertNull(e.getCause());
 		} finally {
 			lock.channel().close();
 		}

@@ -13,6 +13,7 @@
 package org.jacoco.cli.internal.commands;
 
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -27,6 +28,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.jacoco.cli.internal.CommandTestBase;
+import org.jacoco.core.JaCoCo;
 import org.jacoco.core.internal.InputStreams;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Rule;
@@ -129,8 +131,14 @@ public class InstrumentTest extends CommandTestBase {
 		try {
 			execute("instrument", "--dest", destdir.getAbsolutePath(),
 					srcdir.getAbsolutePath());
-			fail("exception expected");
-		} catch (IOException expected) {
+			fail("IOException expected");
+		} catch (IOException e) {
+			final String expected = "Error while instrumenting "
+					+ new File(srcdir, "Broken.class") + " with JaCoCo "
+					+ JaCoCo.VERSION + "/" + JaCoCo.COMMITID_SHORT + ".";
+			assertEquals(expected, e.getMessage());
+			assertEquals(ArrayIndexOutOfBoundsException.class,
+					e.getCause().getClass());
 		}
 
 		assertFalse(new File(destdir, "Broken.class").exists());

@@ -14,10 +14,12 @@ package org.jacoco.agent;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.jar.Manifest;
@@ -60,6 +62,9 @@ public class AgentJarTest {
 		assertAgentContents(new FileInputStream(file));
 	}
 
+	/**
+	 * @see java.io.FileOutputStream#FileOutputStream(File)
+	 */
 	@Test
 	public void testExtractToNegative() throws IOException {
 		file = File.createTempFile("folder", null);
@@ -67,9 +72,12 @@ public class AgentJarTest {
 		file.mkdirs();
 		try {
 			AgentJar.extractTo(file);
-			fail("IOException expected");
-		} catch (final IOException e) {
+			fail("FileNotFoundException expected");
+		} catch (final FileNotFoundException e) {
 			// expected
+			assertEquals(String.format("%s (Is a directory)", file),
+					e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 

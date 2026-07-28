@@ -15,6 +15,7 @@ package org.jacoco.agent.rt.internal.output;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -89,6 +90,8 @@ public class MockSocketConnectionTest extends ExecutorTestBase {
 			fail("SocketException expected");
 		} catch (final SocketException e) {
 			// expected
+			assertEquals("Socket is closed", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -101,6 +104,8 @@ public class MockSocketConnectionTest extends ExecutorTestBase {
 			fail("SocketException expected");
 		} catch (final SocketException e) {
 			// expected
+			assertEquals("socket closed", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -126,6 +131,8 @@ public class MockSocketConnectionTest extends ExecutorTestBase {
 			fail("SocketException expected");
 		} catch (final SocketException e) {
 			// expected
+			assertEquals("socket closed", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -137,6 +144,8 @@ public class MockSocketConnectionTest extends ExecutorTestBase {
 			fail("SocketException expected");
 		} catch (final SocketException e) {
 			// expected
+			assertEquals("Socket is closed", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -149,6 +158,8 @@ public class MockSocketConnectionTest extends ExecutorTestBase {
 			fail("SocketException expected");
 		} catch (final SocketException e) {
 			// expected
+			assertEquals("Socket closed", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -183,6 +194,13 @@ public class MockSocketConnectionTest extends ExecutorTestBase {
 			fail("NullPointerException expected");
 		} catch (final NullPointerException e) {
 			// expected
+			assertEquals(JavaVersion.current().isBefore("15") //
+					? null
+					// https://openjdk.org/jeps/358
+					// https://bugs.openjdk.org/browse/JDK-8233014
+					: "Cannot read the array length because \"b\" is null",
+					e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 

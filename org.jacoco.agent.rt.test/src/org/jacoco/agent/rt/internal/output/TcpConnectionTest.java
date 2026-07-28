@@ -14,6 +14,7 @@ package org.jacoco.agent.rt.internal.output;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -65,6 +66,8 @@ public class TcpConnectionTest extends ExecutorTestBase {
 			fail("IOException expected");
 		} catch (final IOException e) {
 			// expected
+			assertEquals("Invalid execution data file.", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -82,6 +85,8 @@ public class TcpConnectionTest extends ExecutorTestBase {
 			fail("IOException expected");
 		} catch (final IOException e) {
 			// expected
+			assertEquals("Unknown block type 7b.", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 

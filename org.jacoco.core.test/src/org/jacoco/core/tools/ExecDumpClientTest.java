@@ -14,6 +14,7 @@ package org.jacoco.core.tools;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -31,6 +32,7 @@ import org.jacoco.core.data.SessionInfo;
 import org.jacoco.core.runtime.IRemoteCommandVisitor;
 import org.jacoco.core.runtime.RemoteControlReader;
 import org.jacoco.core.runtime.RemoteControlWriter;
+import org.jacoco.core.test.validation.JavaVersion;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -78,6 +80,12 @@ public class ExecDumpClientTest {
 			fail("ConnectException expected");
 		} catch (ConnectException e) {
 			// expected
+			assertEquals(!JavaVersion.current().isBefore("6")
+					&& JavaVersion.current().isBefore("13")
+							? "Connection refused (Connection refused)"
+							: "Connection refused",
+					e.getMessage());
+			assertNull(e.getCause());
 		}
 
 		assertEquals(Arrays.asList("onConnecting"), callbacks);
@@ -92,6 +100,12 @@ public class ExecDumpClientTest {
 			fail("ConnectException expected");
 		} catch (ConnectException e) {
 			// expected
+			assertEquals(!JavaVersion.current().isBefore("6")
+					&& JavaVersion.current().isBefore("13")
+							? "Connection refused (Connection refused)"
+							: "Connection refused",
+					e.getMessage());
+			assertNull(e.getCause());
 		}
 
 		assertEquals(Arrays.asList( // Initial attempt
@@ -134,9 +148,10 @@ public class ExecDumpClientTest {
 		int port = createNopServer();
 		try {
 			client.dump((String) null, port);
-			fail("exception expected");
+			fail("IOException expected");
 		} catch (IOException e) {
 			assertEquals("Socket closed unexpectedly.", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 

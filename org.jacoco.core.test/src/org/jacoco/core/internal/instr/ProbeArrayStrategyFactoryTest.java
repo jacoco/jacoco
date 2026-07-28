@@ -149,6 +149,8 @@ public class ProbeArrayStrategyFactoryTest {
 			fail("UnsupportedOperationException expected");
 		} catch (final UnsupportedOperationException e) {
 			// expected
+			assertNull(e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -184,6 +186,8 @@ public class ProbeArrayStrategyFactoryTest {
 			fail("UnsupportedOperationException expected");
 		} catch (final UnsupportedOperationException e) {
 			// expected
+			assertNull(e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 

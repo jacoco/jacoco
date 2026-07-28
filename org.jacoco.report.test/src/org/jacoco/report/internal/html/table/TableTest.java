@@ -13,6 +13,7 @@
 package org.jacoco.report.internal.html.table;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
@@ -150,6 +151,9 @@ public class TableTest {
 			fail("IllegalStateException expected");
 		} catch (final IllegalStateException e) {
 			// expected
+			assertEquals("Default sorting only allowed for one column.",
+					e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 

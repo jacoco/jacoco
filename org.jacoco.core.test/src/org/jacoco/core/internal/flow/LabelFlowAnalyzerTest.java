@@ -289,6 +289,7 @@ public class LabelFlowAnalyzerTest {
 		} catch (final AssertionError e) {
 			// expected
 			assertEquals("Subroutines not supported.", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -383,6 +384,7 @@ public class LabelFlowAnalyzerTest {
 		} catch (final AssertionError e) {
 			// expected
 			assertEquals("Subroutines not supported.", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 

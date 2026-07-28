@@ -15,6 +15,7 @@ package org.jacoco.agent.rt.internal.output;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -99,6 +100,8 @@ public class MockServerSocketTest extends ExecutorTestBase {
 			fail("SocketException expected");
 		} catch (final SocketException e) {
 			// expected
+			assertEquals("socket closed", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -124,6 +127,8 @@ public class MockServerSocketTest extends ExecutorTestBase {
 			fail("SocketException expected");
 		} catch (final SocketException e) {
 			// expected
+			assertEquals("socket closed", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 

@@ -13,6 +13,7 @@
 package org.jacoco.core.tools;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import java.io.File;
@@ -82,6 +83,8 @@ public class ExecFileLoaderTest {
 			fail("IOException expected");
 		} catch (final IOException e) {
 			// expected
+			assertEquals("Invalid execution data file.", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 

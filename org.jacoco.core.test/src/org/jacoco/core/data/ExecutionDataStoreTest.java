@@ -126,6 +126,10 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 			fail("IllegalStateException expected");
 		} catch (final IllegalStateException e) {
 			// expected
+			assertEquals(
+					"Different class names Sample and Other for id 00000000000003e8.",
+					e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -138,6 +142,10 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 			fail("IllegalStateException expected");
 		} catch (final IllegalStateException e) {
 			// expected
+			assertEquals(
+					"Incompatible execution data for class Sample with id 00000000000003e8.",
+					e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -154,6 +162,10 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 			fail("IllegalStateException expected");
 		} catch (final IllegalStateException e) {
 			// expected
+			assertEquals(
+					"Different class names Sample1 and Sample2 for id 00000000000003e8.",
+					e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -185,6 +197,10 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 			fail("IllegalStateException expected");
 		} catch (final IllegalStateException e) {
 			// expected
+			assertEquals(
+					"Incompatible execution data for class Sample with id 00000000000003e8.",
+					e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 

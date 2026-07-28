@@ -13,6 +13,7 @@
 package org.jacoco.report.internal.xml;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import java.io.ByteArrayOutputStream;
@@ -76,6 +77,8 @@ public class XMLElementTest {
 			fail("IOException expected");
 		} catch (final IOException e) {
 			// expected
+			assertEquals("Element root already closed.", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -88,6 +91,8 @@ public class XMLElementTest {
 			fail("IOException expected");
 		} catch (final IOException e) {
 			// expected
+			assertEquals("Element root already closed.", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -99,6 +104,8 @@ public class XMLElementTest {
 			fail("IOException expected");
 		} catch (final IOException e) {
 			// expected
+			assertEquals("Element root already closed.", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -179,6 +186,8 @@ public class XMLElementTest {
 			fail("IOException expected");
 		} catch (final IOException e) {
 			// expected
+			assertEquals("Element root already closed.", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -191,6 +200,8 @@ public class XMLElementTest {
 			fail("IOException expected");
 		} catch (final IOException e) {
 			// expected
+			assertEquals("Element root already closed.", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 

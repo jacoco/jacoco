@@ -13,8 +13,10 @@
 package org.jacoco.core.internal.analysis.filter;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
+import org.jacoco.core.test.validation.JavaVersion;
 import org.junit.Test;
 
 /**
@@ -105,6 +107,7 @@ public class KotlinSMAPTest {
 			fail("exception expected");
 		} catch (final IllegalStateException e) {
 			assertEquals("Unexpected SMAP line: xxx", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -116,6 +119,7 @@ public class KotlinSMAPTest {
 			fail("exception expected");
 		} catch (final IllegalStateException e) {
 			assertEquals("Unexpected SMAP line: Example.kt", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -128,6 +132,7 @@ public class KotlinSMAPTest {
 			fail("exception expected");
 		} catch (final IllegalStateException e) {
 			assertEquals("Unexpected SMAP line: JSP", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -142,6 +147,7 @@ public class KotlinSMAPTest {
 		} catch (final IllegalStateException e) {
 			assertEquals("Unexpected SMAP line: *S KotlinDebug",
 					e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -156,6 +162,7 @@ public class KotlinSMAPTest {
 			fail("exception expected");
 		} catch (final IllegalStateException e) {
 			assertEquals("Unexpected SMAP line: xxx", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -171,6 +178,7 @@ public class KotlinSMAPTest {
 			fail("exception expected");
 		} catch (final IllegalStateException e) {
 			assertEquals("Unexpected SMAP line: xxx", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -187,6 +195,7 @@ public class KotlinSMAPTest {
 			fail("exception expected");
 		} catch (final IllegalStateException e) {
 			assertEquals("Unexpected SMAP line: xxx", e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
@@ -203,6 +212,13 @@ public class KotlinSMAPTest {
 			fail("exception expected");
 		} catch (final NullPointerException e) {
 			// expected
+			assertEquals(JavaVersion.current().isBefore("15") //
+					? null
+					// https://openjdk.org/jeps/358
+					// https://bugs.openjdk.org/browse/JDK-8233014
+					: "Cannot invoke \"String.substring(int)\" because the return value of \"java.util.regex.Matcher.group(int)\" is null",
+					e.getMessage());
+			assertNull(e.getCause());
 		}
 	}
 
