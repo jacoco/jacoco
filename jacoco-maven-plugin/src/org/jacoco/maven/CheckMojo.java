@@ -137,11 +137,29 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	private List<String> includes;
 
 	/**
+	 * A comma-separated list of class-file patterns to include in analysis, as
+	 * an alternative to {@link #includes} that can be supplied from a single
+	 * (shared) property. May use wildcard characters (* and ?). Patterns given
+	 * here are combined with any {@link #includes} entries.
+	 */
+	@Parameter(property = "jacoco.additionalIncludes")
+	private String additionalIncludes;
+
+	/**
 	 * A list of class files to exclude from analysis. May use wildcard
 	 * characters (* and ?). When not specified nothing will be excluded.
 	 */
 	@Parameter
 	private List<String> excludes;
+
+	/**
+	 * A comma-separated list of class-file patterns to exclude from analysis,
+	 * as an alternative to {@link #excludes} that can be supplied from a single
+	 * (shared) property. May use wildcard characters (* and ?). Patterns given
+	 * here are combined with any {@link #excludes} entries.
+	 */
+	@Parameter(property = "jacoco.additionalExcludes")
+	private String additionalExcludes;
 
 	private boolean violations;
 
@@ -183,7 +201,9 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 		try {
 			final IReportVisitor visitor = support.initRootVisitor();
 			support.loadExecutionData(dataFile);
-			support.processProject(visitor, getProject(), includes, excludes);
+			support.processProject(visitor, getProject(),
+					FileFilter.combine(includes, additionalIncludes),
+					FileFilter.combine(excludes, additionalExcludes));
 			visitor.visitEnd();
 		} catch (final IOException e) {
 			throw new MojoExecutionException(

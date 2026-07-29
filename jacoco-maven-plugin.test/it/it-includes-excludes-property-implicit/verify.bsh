@@ -1,0 +1,38 @@
+/*******************************************************************************
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
+ * This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Clemens Loebbert - initial API and implementation
+ *
+ *******************************************************************************/
+import java.io.*;
+import org.codehaus.plexus.util.*;
+
+File includedReportFile = new File( basedir, "target/site/jacoco/org.project/Included.html" );
+if ( !includedReportFile.isFile() )
+{
+    throw new FileNotFoundException( "Included should NOT be excluded: " + includedReportFile );
+}
+
+File excludedReportFile = new File( basedir, "target/site/jacoco/org.project/Excluded.html" );
+if ( excludedReportFile.isFile() )
+{
+    throw new RuntimeException( "Excluded SHOULD be excluded: " + excludedReportFile );
+}
+
+File alsoExcludedReportFile = new File( basedir, "target/site/jacoco/org.project/AlsoExcluded.html" );
+if ( alsoExcludedReportFile.isFile() )
+{
+    throw new RuntimeException( "AlsoExcluded SHOULD be excluded: " + alsoExcludedReportFile );
+}
+
+String buildLog = FileUtils.fileRead( new File( basedir, "build.log" ) );
+if ( buildLog.indexOf( "All coverage checks have been met." ) < 0 )
+{
+    throw new RuntimeException( "Coverage check should have passed" );
+}
