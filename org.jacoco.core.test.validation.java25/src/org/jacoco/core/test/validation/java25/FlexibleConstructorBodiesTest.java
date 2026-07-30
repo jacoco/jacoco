@@ -10,13 +10,18 @@
  *    Evgeny Mandrikov - initial API and implementation
  *
  *******************************************************************************/
-import org.junit.Test;
+package org.jacoco.core.test.validation.java25;
 
-public class ExampleTest {
+import org.jacoco.core.test.validation.ValidationTestBase;
+import org.jacoco.core.test.validation.java25.targets.FlexibleConstructorBodiesTarget;
 
-	@Test
-	public void test() {
-		new Example().sayHello("test");
+/**
+ * Test of code coverage in {@link FlexibleConstructorBodiesTarget}.
+ */
+public class FlexibleConstructorBodiesTest extends ValidationTestBase {
+
+	public FlexibleConstructorBodiesTest() {
+		super(FlexibleConstructorBodiesTarget.class);
 	}
 
 }

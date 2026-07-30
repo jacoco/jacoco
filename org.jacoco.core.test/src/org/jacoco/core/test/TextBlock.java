@@ -10,11 +10,27 @@
  *    Evgeny Mandrikov - initial API and implementation
  *
  *******************************************************************************/
-public class Example {
+package org.jacoco.core.test;
 
-	public void sayHello(String name) {
-		// http://openjdk.java.net/jeps/280
-		System.out.println("Hello, " + name);
+/**
+ * Poor man's replacement for <a href="https://openjdk.org/jeps/378">Java 15
+ * Text Blocks</a>.
+ */
+public final class TextBlock {
+
+	private TextBlock() {
+	}
+
+	/**
+	 * As with Text Blocks, the LF character is used as the line terminator in
+	 * the resulting string.
+	 */
+	public static String lines(String... lines) {
+		final StringBuilder sb = new StringBuilder();
+		for (String line : lines) {
+			sb.append(line).append('\n');
+		}
+		return sb.toString();
 	}
 
 }

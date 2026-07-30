@@ -21,6 +21,7 @@ import java.util.HashSet;
 
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.jacoco.core.test.TargetLoader;
+import org.jacoco.core.test.validation.JavaVersion;
 import org.jacoco.core.test.validation.Source;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java8.targets.MethodReferencesTarget;
@@ -107,8 +108,14 @@ public class MethodReferencesTest extends ValidationTestBase {
 				assertEquals(10, names.size());
 				if (bytecodeVersion() < Opcodes.V11) {
 					// accessor methods used by above lambda methods
-					assertTrue(accessors.contains("access$000"));
-					assertTrue(accessors.contains("access$100"));
+					if (JavaVersion.current().isBefore("24")) {
+						assertTrue(accessors.contains("access$000"));
+						assertTrue(accessors.contains("access$100"));
+					} else {
+						// https://github.com/openjdk/jdk/commit/4ce8822b6c53b8bd72713f1bfaf6673b91aabea4
+						assertTrue(accessors.contains("access$100"));
+						assertTrue(accessors.contains("access$200"));
+					}
 					assertEquals(2, accessors.size());
 				} else {
 					// JEP 181: Nest-Based Access Control

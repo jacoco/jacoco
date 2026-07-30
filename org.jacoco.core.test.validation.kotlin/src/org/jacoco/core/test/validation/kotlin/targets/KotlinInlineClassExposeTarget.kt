@@ -22,18 +22,18 @@ object KotlinInlineClassExposeTarget {
 
     @JvmExposeBoxed // assertEmpty()
     @JvmInline // assertEmpty()
-    private value class ValueClass(val value: String) // assertEmpty()
+    value class ValueClass(val value: String) // assertEmpty()
 
     @JvmExposeBoxed // assertEmpty()
-    private fun exposeReturnType(): ValueClass = // assertEmpty()
+    fun exposeReturnType(): ValueClass = // assertEmpty()
         ValueClass("")
 
     @JvmExposeBoxed // assertEmpty()
-    private fun exposeParameter(p: ValueClass) = // assertEmpty()
+    fun exposeParameter(p: ValueClass) = // assertEmpty()
         nop(p) // assertFullyCovered()
 
     @JvmExposeBoxed // assertEmpty()
-    private fun exposeUseless() = // assertEmpty()
+    fun exposeUseless() = // assertEmpty()
         nop() // assertFullyCovered()
 
     @JvmStatic

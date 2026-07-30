@@ -599,6 +599,7 @@
         <module>../org.jacoco.core.test.validation.java16</module>
         <module>../org.jacoco.core.test.validation.java21</module>
         <module>../org.jacoco.core.test.validation.java22</module>
+        <module>../org.jacoco.core.test.validation.java25</module>
         <module>../org.jacoco.core.test.validation.groovy</module>
         <module>../org.jacoco.core.test.validation.scala</module>
       </modules>
@@ -629,6 +630,7 @@
         <module>../org.jacoco.core.test.validation.java16</module>
         <module>../org.jacoco.core.test.validation.java21</module>
         <module>../org.jacoco.core.test.validation.java22</module>
+        <module>../org.jacoco.core.test.validation.java25</module>
         <!-- Groovy 3.0.25 does not support Java 26
         <module>../org.jacoco.core.test.validation.groovy</module>
         -->
@@ -645,7 +647,7 @@
         </property>
       </activation>
       <properties>
-        <!-- Kotlin 2.4.0 doesn't support compilation into 27 -->
+        <!-- Kotlin 2.4.10 doesn't support compilation into 27 -->
         <kotlin.compiler.jvmTarget>26</kotlin.compiler.jvmTarget>
         <!-- Groovy 3.0.25 does not support compilation into 27 -->
         <groovy.targetBytecode>16</groovy.targetBytecode>
@@ -662,6 +664,8 @@
         <module>../org.jacoco.core.test.validation.java16</module>
         <module>../org.jacoco.core.test.validation.java21</module>
         <module>../org.jacoco.core.test.validation.java22</module>
+        <module>../org.jacoco.core.test.validation.java25</module>
+        <module>../org.jacoco.core.test.validation.java27</module>
         <!-- Groovy 3.0.25 does not support Java 27
         <module>../org.jacoco.core.test.validation.groovy</module>
         -->
@@ -678,7 +682,7 @@
         </property>
       </activation>
       <properties>
-        <!-- Kotlin 2.4.0 doesn't support compilation into 28 -->
+        <!-- Kotlin 2.4.10 doesn't support compilation into 28 -->
         <kotlin.compiler.jvmTarget>25</kotlin.compiler.jvmTarget>
         <!-- Groovy 3.0.25 does not support compilation into 28 -->
         <groovy.targetBytecode>16</groovy.targetBytecode>
@@ -695,6 +699,8 @@
         <module>../org.jacoco.core.test.validation.java16</module>
         <module>../org.jacoco.core.test.validation.java21</module>
         <module>../org.jacoco.core.test.validation.java22</module>
+        <module>../org.jacoco.core.test.validation.java25</module>
+        <module>../org.jacoco.core.test.validation.java27</module>
         <!-- Groovy 3.0.25 does not support Java 28
         <module>../org.jacoco.core.test.validation.groovy</module>
         -->
