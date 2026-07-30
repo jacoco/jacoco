@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.HashMap;
 
+import org.jacoco.core.test.TextBlock;
 import org.junit.Test;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.ConstantDynamic;
@@ -46,7 +47,7 @@ public class MethodSnapshotParserTest {
 	public void parseMaxStackMaxLocals() {
 		m.visitInsn(Opcodes.NOP);
 		m.visitMaxs(4, 2);
-		final String text = text( //
+		final String text = TextBlock.lines( //
 				"    NOP", //
 				"    MAXSTACK = 4", //
 				"    MAXLOCALS = 2");
@@ -66,7 +67,7 @@ public class MethodSnapshotParserTest {
 				"Ljava/util/List<Ljava/lang/Integer;>;", start, new Label(),
 				42);
 		m.visitLabel(start);
-		shouldParse(text( //
+		shouldParse(TextBlock.lines( //
 				"   L0", //
 				"    LOCALVARIABLE object Ljava/lang/Object; L0 L1 42", //
 				"    LOCALVARIABLE list Ljava/util/List; L0 L2 42", //
@@ -86,7 +87,7 @@ public class MethodSnapshotParserTest {
 		m.visitTryCatchBlock(start, new Label(), new Label(),
 				"java/lang/Exception");
 		m.visitLabel(start);
-		shouldParse(text( //
+		shouldParse(TextBlock.lines( //
 				"    TRYCATCHBLOCK L0 L1 L2 java/lang/Exception", //
 				"   L0"));
 	}
@@ -96,7 +97,7 @@ public class MethodSnapshotParserTest {
 		final Label start = new Label();
 		m.visitTryCatchBlock(start, new Label(), new Label(), null);
 		m.visitLabel(start);
-		final String text = text( //
+		final String text = TextBlock.lines( //
 				"    TRYCATCHBLOCK L0 L1 L2 null", //
 				"   L0", //
 				"    MAXSTACK = 0", //
@@ -116,7 +117,7 @@ public class MethodSnapshotParserTest {
 		m.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
 		m.visitFrame(Opcodes.F_SAME1, 0, null, 1,
 				new Object[] { Opcodes.LONG });
-		final String text = text( //
+		final String text = TextBlock.lines( //
 				"   FRAME FULL [J] [J]", //
 				"   FRAME APPEND [J]", //
 				"   FRAME CHOP 2", //
@@ -173,7 +174,7 @@ public class MethodSnapshotParserTest {
 				"(Descriptor)V", true));
 		m.visitLdcInsn(new Handle(Opcodes.H_GETFIELD, "Owner", "Name",
 				"Descriptor", false));
-		shouldParse(text( //
+		shouldParse(TextBlock.lines( //
 				"    LDC \"string\"", // CONSTANT_String
 				"    LDC \"string with \\r\\n new line\"", //
 				"    LDC \"string with \\\\ backslash\"", //
@@ -206,7 +207,7 @@ public class MethodSnapshotParserTest {
 		m.visitLdcInsn(new ConstantDynamic("Name", "Descriptor",
 				new Handle(Opcodes.H_INVOKESTATIC, "HandleOwner", "HandleName",
 						"(HandleDescriptor)V", false)));
-		shouldParse(text( //
+		shouldParse(TextBlock.lines( //
 				"    LDC Name : Descriptor [", // CONSTANT_Dynamic
 				"      // handle kind 0x6 : INVOKESTATIC", //
 				"      HandleOwner.HandleName(HandleDescriptor)V", //
@@ -221,7 +222,7 @@ public class MethodSnapshotParserTest {
 						"(HandleDescriptor)V", false),
 				Type.getType(String.class), new Handle(Opcodes.H_INVOKEVIRTUAL,
 						"Owner", "Name", "(Descriptor)V", true)));
-		shouldParse(text( //
+		shouldParse(TextBlock.lines( //
 				"    LDC Name : Descriptor [", // CONSTANT_Dynamic
 				"      // handle kind 0x6 : INVOKESTATIC", //
 				"      HandleOwner.HandleName(HandleDescriptor)V", //
@@ -244,7 +245,7 @@ public class MethodSnapshotParserTest {
 		m.visitVarInsn(Opcodes.FSTORE, 8);
 		m.visitVarInsn(Opcodes.DSTORE, 9);
 		m.visitVarInsn(Opcodes.ASTORE, 10);
-		shouldParse(text( //
+		shouldParse(TextBlock.lines( //
 				"    ILOAD 1", //
 				"    LLOAD 2", //
 				"    FLOAD 3", //
@@ -260,7 +261,7 @@ public class MethodSnapshotParserTest {
 	@Test
 	public void parseIincInsn() {
 		m.visitIincInsn(4, 2);
-		shouldParse(text("    IINC 4 2"));
+		shouldParse(TextBlock.lines("    IINC 4 2"));
 	}
 
 	@Test
@@ -283,7 +284,7 @@ public class MethodSnapshotParserTest {
 		m.visitJumpInsn(Opcodes.GOTO, new Label());
 		m.visitJumpInsn(Opcodes.IFNULL, new Label());
 		m.visitJumpInsn(Opcodes.IFNONNULL, new Label());
-		shouldParse(text( //
+		shouldParse(TextBlock.lines( //
 				"    IFEQ L0", //
 				"    IFNE L1", //
 				"    IFNE L2", //
@@ -307,7 +308,7 @@ public class MethodSnapshotParserTest {
 	@Test
 	public void parseTableSwitchInsn() {
 		m.visitTableSwitchInsn(2, 3, new Label(), new Label(), new Label());
-		shouldParse(text( //
+		shouldParse(TextBlock.lines( //
 				"    TABLESWITCH", //
 				"      2: L0", //
 				"      3: L1", //
@@ -319,7 +320,7 @@ public class MethodSnapshotParserTest {
 	public void parseLookupSwitchInsn() {
 		m.visitLookupSwitchInsn(new Label(), new int[] { 1, 3 },
 				new Label[] { new Label(), new Label() });
-		shouldParse(text( //
+		shouldParse(TextBlock.lines( //
 				"    LOOKUPSWITCH", //
 				"      1: L0", //
 				"      3: L1", //
@@ -332,7 +333,7 @@ public class MethodSnapshotParserTest {
 		m.visitFieldInsn(Opcodes.PUTSTATIC, "owner", "name", "descriptor");
 		m.visitFieldInsn(Opcodes.GETFIELD, "owner", "name", "descriptor");
 		m.visitFieldInsn(Opcodes.PUTFIELD, "owner", "name", "descriptor");
-		shouldParse(text( //
+		shouldParse(TextBlock.lines( //
 				"    GETSTATIC owner.name : descriptor", //
 				"    PUTSTATIC owner.name : descriptor", //
 				"    GETFIELD owner.name : descriptor", //
@@ -351,7 +352,7 @@ public class MethodSnapshotParserTest {
 				"(descriptor)V", false);
 		m.visitMethodInsn(Opcodes.INVOKEINTERFACE, "owner", "name",
 				"(descriptor)V", false);
-		shouldParse(text( //
+		shouldParse(TextBlock.lines( //
 				"    INVOKEVIRTUAL owner.name (descriptor)V (itf)", //
 				"    INVOKEVIRTUAL owner.name (descriptor)V", //
 				"    INVOKESPECIAL owner.name (descriptor)V", //
@@ -364,7 +365,7 @@ public class MethodSnapshotParserTest {
 		m.visitInvokeDynamicInsn("name", "(descriptor)I",
 				new Handle(Opcodes.H_INVOKESTATIC, "HandleOwner", "HandleName",
 						"(HandleDescriptor)V", false));
-		shouldParse(text( //
+		shouldParse(TextBlock.lines( //
 				"    INVOKEDYNAMIC name(descriptor)I [", //
 				"      // handle kind 0x6 : INVOKESTATIC", //
 				"      HandleOwner.HandleName(HandleDescriptor)V", //
@@ -388,7 +389,7 @@ public class MethodSnapshotParserTest {
 				Type.getType(float[].class), //
 				Type.getType(long[].class), //
 				Type.getType(double[].class));
-		shouldParse(text( //
+		shouldParse(TextBlock.lines( //
 				"    INVOKEDYNAMIC name(descriptor)I [", //
 				"      // handle kind 0x6 : INVOKESTATIC", // CONSTANT_MethodHandle
 				"      HandleOwner.HandleName(HandleDescriptor)V", //
@@ -417,7 +418,7 @@ public class MethodSnapshotParserTest {
 				Type.getObjectType("Target"), //
 				"field", //
 				new Handle(Opcodes.H_GETFIELD, "Target", "field", "I", false));
-		shouldParse(text( //
+		shouldParse(TextBlock.lines( //
 				"    INVOKEDYNAMIC toString(Target)Ljava/lang/String; [", //
 				"      // handle kind 0x6 : INVOKESTATIC", //
 				"      java/lang/runtime/ObjectMethods.bootstrap()Ljava/lang/Object;", //
@@ -437,7 +438,7 @@ public class MethodSnapshotParserTest {
 						"metafactory", "()LCallSite;", false),
 				new Handle(Opcodes.H_INVOKEVIRTUAL, "Example", "target", "()V",
 						false));
-		shouldParse(text( //
+		shouldParse(TextBlock.lines( //
 				"    INVOKEDYNAMIC name(descriptor)I [", //
 				"      // handle kind 0x6 : INVOKESTATIC", //
 				"      LambdaMetafactory.metafactory()LCallSite;",
@@ -455,7 +456,7 @@ public class MethodSnapshotParserTest {
 						"metafactory", "()LCallSite;", false),
 				new Handle(Opcodes.H_NEWINVOKESPECIAL, "Target", "init", "()V",
 						false));
-		shouldParse(text( //
+		shouldParse(TextBlock.lines( //
 				"    INVOKEDYNAMIC name(descriptor)I [", //
 				"      // handle kind 0x6 : INVOKESTATIC", //
 				"      LambdaMetafactory.metafactory()LCallSite;",
@@ -471,7 +472,7 @@ public class MethodSnapshotParserTest {
 		m.visitTypeInsn(Opcodes.ANEWARRAY, "java/lang/Object");
 		m.visitTypeInsn(Opcodes.CHECKCAST, "java/lang/String");
 		m.visitTypeInsn(Opcodes.INSTANCEOF, "java/lang/String");
-		shouldParse(text( //
+		shouldParse(TextBlock.lines( //
 				"    NEW java/lang/Object", //
 				"    ANEWARRAY java/lang/Object", //
 				"    CHECKCAST java/lang/String", //
@@ -482,7 +483,7 @@ public class MethodSnapshotParserTest {
 	public void parseIntInsn_NEWARRAY() {
 		m.visitIntInsn(Opcodes.NEWARRAY, Opcodes.T_BOOLEAN);
 		m.visitIntInsn(Opcodes.NEWARRAY, Opcodes.T_LONG);
-		shouldParse(text( //
+		shouldParse(TextBlock.lines( //
 				"    NEWARRAY T_BOOLEAN", //
 				"    NEWARRAY T_LONG"));
 	}
@@ -519,7 +520,7 @@ public class MethodSnapshotParserTest {
 
 	@Test
 	public void parseComments() {
-		final MethodNode parsed = parse(text( //
+		final MethodNode parsed = parse(TextBlock.lines( //
 				"// c1", //
 				"NOP", //
 				"// c2", //
@@ -537,7 +538,7 @@ public class MethodSnapshotParserTest {
 	 * {@link #m}.
 	 */
 	private void shouldParse(String text) {
-		text += text( //
+		text += TextBlock.lines( //
 				"    MAXSTACK = 0", //
 				"    MAXLOCALS = 0");
 		assertEquals("text before parsing", text, toText(m));
@@ -575,18 +576,6 @@ public class MethodSnapshotParserTest {
 				"()V", null, null);
 		m.accept(new MethodSnapshotVisitor(methodWriter));
 		return classWriter.toByteArray();
-	}
-
-	/**
-	 * Poor man's replacement for <a href="https://openjdk.org/jeps/378">Java 15
-	 * Text Blocks</a>.
-	 */
-	static String text(final String... text) {
-		final StringBuilder stringBuilder = new StringBuilder();
-		for (final String line : text) {
-			stringBuilder.append(line).append('\n');
-		}
-		return stringBuilder.toString();
 	}
 
 }

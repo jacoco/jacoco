@@ -18,6 +18,7 @@ import static org.junit.Assert.fail;
 
 import java.io.StringReader;
 
+import org.jacoco.core.test.TextBlock;
 import org.junit.Test;
 
 /**
@@ -45,13 +46,12 @@ public class MethodSnapshotLexerTest {
 	 */
 	@Test
 	public void string() throws Exception {
-		final MethodSnapshotParser.Lexer lexer = newLexer(
-				MethodSnapshotParserTest.text( //
-						" \"\" ", //
-						" \"\\r\\n\" ", //
-						" \"\\uF000\" ", //
-						" \"\\\"\" ", //
-						" \"\\\\\" "));
+		final MethodSnapshotParser.Lexer lexer = newLexer(TextBlock.lines( //
+				" \"\" ", //
+				" \"\\r\\n\" ", //
+				" \"\\uF000\" ", //
+				" \"\\\"\" ", //
+				" \"\\\\\" "));
 		assertEquals("\"\"", lexer.nextToken());
 		assertEquals("CRLF", "\"\r\n\"", lexer.nextToken());
 		assertEquals("unicode", "\"\uF000\"", lexer.nextToken());
