@@ -1,33 +1,33 @@
-   L0
+   L_method_start
     ALOAD 1
     GETSTATIC org/jacoco/core/test/validation/kotlin/targets/KotlinWhenEnumTarget$WhenMappings.$EnumSwitchMapping$0 : [I
     SWAP
     INVOKEVIRTUAL org/jacoco/core/test/validation/kotlin/targets/KotlinWhenEnumTarget$Enum.ordinal ()I
     IALOAD
     TABLESWITCH
-      1: L1
-      2: L2
-      default: L3
-   L1
+      1: L_case_a
+      2: L_case_b
+      default: L_default
+   L_case_a
     LDC "a"
-    GOTO L4
-   L2
+    GOTO L_after
+   L_case_b
     LDC "b"
-    GOTO L4
-   L3
+    GOTO L_after
+   L_default
     NEW kotlin/NoWhenBranchMatchedException
     DUP
     INVOKESPECIAL kotlin/NoWhenBranchMatchedException.<init> ()V
     ATHROW
-   L4
+   L_after
     ARETURN
-   L5
-    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWhenEnumTarget; L0 L5 0
-    LOCALVARIABLE e Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWhenEnumTarget$Enum; L0 L5 1
-    LINENUMBER 5 L0
-    LINENUMBER 6 L1
-    LINENUMBER 7 L2
-    LINENUMBER 8 L3
-    LINENUMBER 9 L4
+   L_method_end
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWhenEnumTarget; L_method_start L_method_end 0
+    LOCALVARIABLE e Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWhenEnumTarget$Enum; L_method_start L_method_end 1
+    LINENUMBER 5 L_method_start
+    LINENUMBER 6 L_case_a
+    LINENUMBER 7 L_case_b
+    LINENUMBER 8 L_default
+    LINENUMBER 9 L_after
     MAXSTACK = 2
     MAXLOCALS = 2
