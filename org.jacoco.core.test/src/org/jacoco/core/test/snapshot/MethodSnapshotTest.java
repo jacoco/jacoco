@@ -38,7 +38,8 @@ public final class MethodSnapshotTest {
 		final File s2 = new File(folder.getRoot(), "s2.txt");
 
 		try {
-			MethodSnapshot.compare(MethodSnapshotTest.class, "<init>", s1, s2);
+			MethodSnapshot.assertSnapshot(MethodSnapshotTest.class, "<init>",
+					s1, s2);
 			fail("ComparisonFailure expected");
 		} catch (final ComparisonFailure e) {
 			// expected
@@ -46,7 +47,8 @@ public final class MethodSnapshotTest {
 		}
 		assertTrue(s2.exists());
 
-		MethodSnapshot.compare(MethodSnapshotTest.class, "<init>", s2, s1);
+		MethodSnapshot.assertSnapshot(MethodSnapshotTest.class, "<init>", s2,
+				s1);
 		assertFalse(s1.exists());
 	}
 

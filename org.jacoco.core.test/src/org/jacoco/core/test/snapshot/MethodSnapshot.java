@@ -79,8 +79,8 @@ public final class MethodSnapshot {
 	}
 
 	/**
-	 * Compares {@link #snapshot(MethodNode)} of {@code targetMethod} in
-	 * {@code targetClass} with snapshot of
+	 * Compares {@link #snapshot(MethodNode) snapshot} of {@code targetMethod}
+	 * in {@code targetClass} with snapshot of
 	 * {@link #parse(Reader, MethodSnapshotCommentsHandler) parsed}
 	 * {@code snapshotFile}, in case of differences creates
 	 * {@code newSnapshotFile} and throws {@link ComparisonFailure}.
@@ -92,7 +92,7 @@ public final class MethodSnapshot {
 	 * </ul>
 	 * without impact on this comparison.
 	 */
-	public static void compare(final Class<?> targetClass,
+	public static void assertSnapshot(final Class<?> targetClass,
 			final String targetMethod, final File snapshotFile,
 			final File newSnapshotFile) throws IOException {
 		final String expected;

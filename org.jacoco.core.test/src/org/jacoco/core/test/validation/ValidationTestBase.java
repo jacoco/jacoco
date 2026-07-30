@@ -151,16 +151,16 @@ public abstract class ValidationTestBase {
 	}
 
 	/**
-	 * {@link MethodSnapshot#compare(Class, String, File, File)} with predefined
-	 * file paths.
+	 * {@link MethodSnapshot#assertSnapshot(Class, String, File, File)} with
+	 * predefined file paths.
 	 */
-	protected final void snapshot(final Class<?> targetClass,
+	protected final void assertSnapshot(final Class<?> targetClass,
 			final String targetMethod, String name) throws Exception {
-		name = targetClass.getSimpleName() + "/" + name + ".txt";
+		name = targetClass.getSimpleName() + "/" + name;
 		final String expected = "../org.jacoco.core.test/snapshots/" + name;
 		final String actual = "target/snapshots/" + name;
-		MethodSnapshot.compare(targetClass, targetMethod, new File(expected),
-				new File(actual));
+		MethodSnapshot.assertSnapshot(targetClass, targetMethod,
+				new File(expected), new File(actual));
 	}
 
 	/**
