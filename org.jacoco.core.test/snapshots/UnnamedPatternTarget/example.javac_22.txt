@@ -1,6 +1,6 @@
-    TRYCATCHBLOCK L_component_start_x L_component_end_x L_handler java/lang/Throwable
-    TRYCATCHBLOCK L_component_start_y L_component_end_y L_handler java/lang/Throwable
-   L_method_start
+    TRYCATCHBLOCK L0 L1 L2 java/lang/Throwable
+    TRYCATCHBLOCK L3 L4 L2 java/lang/Throwable
+   L5
     ALOAD 0
     INSTANCEOF org/jacoco/core/test/validation/java22/targets/UnnamedPatternTarget$Point
     IFEQ L6
@@ -8,20 +8,20 @@
     CHECKCAST org/jacoco/core/test/validation/java22/targets/UnnamedPatternTarget$Point
     ASTORE 1
     ALOAD 1
-   L_component_start_x
+   L0
     INVOKEVIRTUAL org/jacoco/core/test/validation/java22/targets/UnnamedPatternTarget$Point.x ()I
-   L_component_end_x
+   L1
     ISTORE 4
     ALOAD 1
-   L_component_start_y
+   L3
     INVOKEVIRTUAL org/jacoco/core/test/validation/java22/targets/UnnamedPatternTarget$Point.y ()I
-   L_component_end_y
+   L4
     ISTORE 4
-   L_body
+   L7
     INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
    L6
-    GOTO L_after
-   L_handler
+    GOTO L8
+   L2
     ASTORE 1
     NEW java/lang/MatchException
     DUP
@@ -30,13 +30,13 @@
     ALOAD 1
     INVOKESPECIAL java/lang/MatchException.<init> (Ljava/lang/String;Ljava/lang/Throwable;)V
     ATHROW
-   L_after
+   L8
     RETURN
-   L_method_end
-    LOCALVARIABLE o Ljava/lang/Object; L_method_start L_method_end 0
-    LINENUMBER 5 L_method_start
-    LINENUMBER 6 L_body
-    LINENUMBER 5 L_handler
-    LINENUMBER 8 L_after
+   L9
+    LOCALVARIABLE o Ljava/lang/Object; L5 L9 0
+    LINENUMBER 5 L5
+    LINENUMBER 6 L7
+    LINENUMBER 5 L2
+    LINENUMBER 8 L8
     MAXSTACK = 4
     MAXLOCALS = 5
