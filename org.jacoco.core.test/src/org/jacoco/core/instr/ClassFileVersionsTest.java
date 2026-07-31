@@ -49,6 +49,7 @@ import static org.objectweb.asm.Opcodes.V23;
 import static org.objectweb.asm.Opcodes.V24;
 import static org.objectweb.asm.Opcodes.V25;
 import static org.objectweb.asm.Opcodes.V26;
+import static org.objectweb.asm.Opcodes.V27;
 import static org.objectweb.asm.Opcodes.V9;
 
 import java.io.IOException;
@@ -201,7 +202,12 @@ public class ClassFileVersionsTest {
 
 	@Test
 	public void test_27() throws IOException {
-		testVersion(V26 + 1, true);
+		testVersion(V27, true);
+	}
+
+	@Test
+	public void test_28() throws IOException {
+		testVersion(V27 + 1, true);
 	}
 
 	private void testVersion(int version, boolean frames) throws IOException {

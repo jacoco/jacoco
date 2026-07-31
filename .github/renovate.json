@@ -1,0 +1,63 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":disableDependencyDashboard",
+    ":semanticCommitsDisabled"
+  ],
+  "rebaseWhen": "conflicted",
+  "ignorePaths": ["jacoco-maven-plugin.test/it/**"],
+  "labels": ["dependencies"],
+  "packageRules": [
+    {
+      "description": "Disable all updates unless re-enabled below",
+      "matchPackageNames": ["*"],
+      "enabled": false
+    },
+    {
+      "description": "Enable updates of GitHub Actions",
+      "matchManagers": ["github-actions"],
+      "pinDigests": true,
+      "enabled": true,
+      "addLabels": ["component: build"]
+    },
+    {
+      "description": "Enable updates of Maven and Maven Wrapper",
+      "matchManagers": ["maven-wrapper"],
+      "enabled": true,
+      "addLabels": ["component: build"]
+    },
+    {
+      "description": "Enable updates of Maven Plugins",
+      "matchManagers": ["maven"],
+      "matchDepTypes": ["build"],
+      "matchPackageNames": [
+        "org.apache.maven.plugins:*",
+        "org.codehaus.plexus:plexus-compiler-eclipse",
+        "org.codehaus.mojo:*",
+        "com.diffplug.spotless:*",
+        "org.apache.felix:*",
+        "org.sonarsource.scanner.maven:*"
+      ],
+      "enabled": true,
+      "addLabels": ["component: build"]
+    },
+    {
+      "description": "Disable updates of maven-plugin-plugin to 3.7.0 and above, because they require additional changes",
+      "matchPackageNames": ["org.apache.maven.plugins:maven-plugin-plugin"],
+      "allowedVersions": "<3.7.0"
+    },
+    {
+      "description": "Enable updates of ASM",
+      "matchPackageNames": ["org.ow2.asm:*"],
+      "enabled": true,
+      "addLabels": ["component: core"]
+    },
+    {
+      "description": "Enable updates of Kotlin",
+      "matchPackageNames": ["org.jetbrains.kotlin:*"],
+      "enabled": true,
+      "addLabels": ["component: test", "language: Kotlin"]
+    }
+  ]
+}

@@ -16,7 +16,7 @@
   <parent>
     <groupId>org.jacoco</groupId>
     <artifactId>org.jacoco.tests</artifactId>
-    <version>0.8.15-SNAPSHOT</version>
+    <version>0.8.16-SNAPSHOT</version>
     <relativePath>../org.jacoco.tests</relativePath>
   </parent>
 
@@ -63,6 +63,16 @@
     <sourceDirectory>src</sourceDirectory>
 
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <annotationProcessors>
+            <annotationProcessor>org.openjdk.jmh.generators.BenchmarkProcessor</annotationProcessor>
+          </annotationProcessors>
+        </configuration>
+      </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>

@@ -31,8 +31,6 @@ public class KotlinUnsafeCastOperatorFilterTest extends FilterTestBase {
 
 	@Test
 	public void should_filter() {
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 		final Label label = new Label();
 
 		m.visitInsn(Opcodes.DUP);
@@ -54,8 +52,6 @@ public class KotlinUnsafeCastOperatorFilterTest extends FilterTestBase {
 
 	@Test
 	public void should_filter_Kotlin_1_4() {
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 		final Label label = new Label();
 
 		m.visitInsn(Opcodes.DUP);
@@ -99,9 +95,6 @@ public class KotlinUnsafeCastOperatorFilterTest extends FilterTestBase {
 	 */
 	@Test
 	public void should_filter_Kotlin_1_5() {
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
-
 		final Label label = new Label();
 		m.visitJumpInsn(Opcodes.IFNONNULL, label);
 		final AbstractInsnNode expectedFrom = m.instructions.getLast();
@@ -123,9 +116,6 @@ public class KotlinUnsafeCastOperatorFilterTest extends FilterTestBase {
 
 	@Test
 	public void should_filter_Kotlin_1_6() {
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
-
 		final Label label = new Label();
 		m.visitInsn(Opcodes.DUP);
 		m.visitJumpInsn(Opcodes.IFNONNULL, label);

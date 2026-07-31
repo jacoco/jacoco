@@ -35,8 +35,6 @@ public class KotlinSyntheticAccessorsFilterTest extends FilterTestBase {
 	 */
 	@Test
 	public void should_not_filter_synthetic_non_accessor_methods_in_Kotlin_classes() {
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
 				Opcodes.ACC_SYNTHETIC, "example", "()V", null, null);
 		m.visitInsn(Opcodes.RETURN);
@@ -63,8 +61,6 @@ public class KotlinSyntheticAccessorsFilterTest extends FilterTestBase {
 	 */
 	@Test
 	public void should_filter_synthetic_accessor_methods_in_Kotlin_classes() {
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
 				Opcodes.ACC_SYNTHETIC, "access$getX$p", "(Outer;)I", null,
 				null);
@@ -82,8 +78,6 @@ public class KotlinSyntheticAccessorsFilterTest extends FilterTestBase {
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
 				Opcodes.ACC_SYNTHETIC | Opcodes.ACC_BRIDGE, "example$default",
 				"(LTarget;Ljava/lang/String;Ijava/lang/Object;)V", null, null);
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 		m.visitInsn(Opcodes.NOP);
 
 		filter.filter(m, context, output);
@@ -97,8 +91,6 @@ public class KotlinSyntheticAccessorsFilterTest extends FilterTestBase {
 				Opcodes.ACC_SYNTHETIC, "<init>",
 				"(IILkotlin/jvm/internal/DefaultConstructorMarker;)V", null,
 				null);
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 		m.visitInsn(Opcodes.NOP);
 
 		filter.filter(m, context, output);
@@ -123,8 +115,6 @@ public class KotlinSyntheticAccessorsFilterTest extends FilterTestBase {
 				Opcodes.ACC_SYNTHETIC | Opcodes.ACC_STATIC, "example",
 				"(Lkotlin/coroutines/Continuation;)Ljava/lang/Object;", null,
 				null);
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 		m.visitInsn(Opcodes.NOP);
 
 		filter.filter(m, context, output);
@@ -152,8 +142,6 @@ public class KotlinSyntheticAccessorsFilterTest extends FilterTestBase {
 				"access$example",
 				"(Lkotlin/coroutines/Continuation;)Ljava/lang/Object;", null,
 				null);
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 		m.visitVarInsn(Opcodes.ALOAD, 0);
 		m.visitMethodInsn(Opcodes.INVOKESTATIC, "ExampleKt", "example",
 				"(Lkotlin/coroutines/Continuation;)Ljava/lang/Object;", false);

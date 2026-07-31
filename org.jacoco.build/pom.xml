@@ -15,7 +15,7 @@
 
   <groupId>org.jacoco</groupId>
   <artifactId>org.jacoco.build</artifactId>
-  <version>0.8.15-SNAPSHOT</version>
+  <version>0.8.16-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>JaCoCo</name>
@@ -147,14 +147,14 @@
     <javadoc.JDK-8324774>-quiet</javadoc.JDK-8324774>
 
     <!-- Dependencies versions -->
-    <asm.version>9.9</asm.version>
+    <asm.version>9.10.1</asm.version>
     <ant.version>1.9.16</ant.version>
     <args4j.version>2.0.28</args4j.version>
     <junit.version>4.13.2</junit.version>
     <googlecodeprettify.version>20100721</googlecodeprettify.version>
 
     <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
-    <maven-surefire-plugin.version>3.5.5</maven-surefire-plugin.version>
+    <maven-surefire-plugin.version>3.5.6</maven-surefire-plugin.version>
 
     <!-- ================== -->
     <!-- For SonarQube analysis -->
@@ -328,7 +328,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-dependency-plugin</artifactId>
-          <version>3.10.0</version>
+          <version>3.11.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -338,7 +338,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-enforcer-plugin</artifactId>
-          <version>3.6.2</version>
+          <version>3.6.3</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -348,7 +348,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-invoker-plugin</artifactId>
-          <version>3.10.0</version>
+          <version>3.10.1</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -358,7 +358,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>3.5.0</version>
+          <version>3.5.1</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -428,7 +428,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-toolchains-plugin</artifactId>
-          <version>3.2.0</version>
+          <version>3.3.0</version>
         </plugin>
         <!-- Mojo plugins -->
         <plugin>
@@ -465,7 +465,7 @@
         <plugin>
           <groupId>org.apache.felix</groupId>
           <artifactId>maven-bundle-plugin</artifactId>
-          <version>6.0.2</version>
+          <version>6.1.0</version>
         </plugin>
         <plugin>
           <groupId>com.diffplug.spotless</groupId>
@@ -475,7 +475,7 @@
        <plugin>
          <groupId>org.sonarsource.scanner.maven</groupId>
          <artifactId>sonar-maven-plugin</artifactId>
-         <version>5.6.0.6792</version>
+         <version>5.7.0.6970</version>
        </plugin>
       </plugins>
     </pluginManagement>
@@ -537,10 +537,10 @@
             <configuration>
               <rules>
                 <requireJavaVersion>
-                  <version>17</version>
+                  <version>21</version>
                 </requireJavaVersion>
                 <requireMavenVersion>
-                  <version>3.9.15</version>
+                  <version>3.9.16</version>
                 </requireMavenVersion>
                 <requireNoRepositories>
                   <message>The rules for repo1.maven.org are that pom.xml files should not include repository definitions.</message>
@@ -1001,6 +1001,20 @@
       </properties>
     </profile>
 
+    <profile>
+      <id>java28-bytecode</id>
+      <activation>
+        <property>
+          <name>bytecode.version</name>
+          <value>28</value>
+        </property>
+      </activation>
+      <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+      </properties>
+    </profile>
+
     <!-- This profile enables use of ECJ -->
     <profile>
       <id>ecj</id>
@@ -1025,6 +1039,14 @@
                 <version>3.41.0</version>
               </dependency>
               <dependency>
+                <!--
+                Unfortunately plexus-compiler-eclipse version 2.16.2
+                does not pass path to JDK selected by maven-toolchain-plugin
+                to ECJ using argument `system`.
+                As a result, ECJ uses the same JDK as Maven,
+                so validation tests that use classes from a particular JDK version
+                require Maven to be executed with at least that version.
+                -->
                 <groupId>org.codehaus.plexus</groupId>
                 <artifactId>plexus-compiler-eclipse</artifactId>
                 <version>2.16.2</version>
@@ -1215,6 +1237,19 @@
         <property>
           <name>jdk.version</name>
           <value>27</value>
+        </property>
+      </activation>
+      <properties>
+        <javadoc.JDK-8324774>--no-fonts</javadoc.JDK-8324774>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>jdk28</id>
+      <activation>
+        <property>
+          <name>jdk.version</name>
+          <value>28</value>
         </property>
       </activation>
       <properties>

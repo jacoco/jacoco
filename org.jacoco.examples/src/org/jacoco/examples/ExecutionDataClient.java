@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.jacoco.examples;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -43,14 +45,16 @@ public final class ExecutionDataClient {
 	public static void main(final String[] args) throws IOException {
 		final FileOutputStream localFile = new FileOutputStream(DESTFILE);
 		final ExecutionDataWriter localWriter = new ExecutionDataWriter(
-				localFile);
+				new BufferedOutputStream(localFile));
 
 		// Open a socket to the coverage agent:
 		final Socket socket = new Socket(InetAddress.getByName(ADDRESS), PORT);
 		final RemoteControlWriter writer = new RemoteControlWriter(
+				// BufferedOutputStream will not improve performance here
+				// while will add memory overhead because commands are short
 				socket.getOutputStream());
 		final RemoteControlReader reader = new RemoteControlReader(
-				socket.getInputStream());
+				new BufferedInputStream(socket.getInputStream()));
 		reader.setSessionInfoVisitor(localWriter);
 		reader.setExecutionDataVisitor(localWriter);
 
@@ -61,6 +65,7 @@ public final class ExecutionDataClient {
 		}
 
 		socket.close();
+		localWriter.flush();
 		localFile.close();
 	}
 

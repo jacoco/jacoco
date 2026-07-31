@@ -22,6 +22,9 @@ import org.junit.runner.RunWith;
 
 import junit.framework.TestSuite;
 
+/**
+ * Tests for {@link InstrumentTask}.
+ */
 @RunWith(AntUnitSuiteRunner.class)
 public class InstrumentTaskTest {
 

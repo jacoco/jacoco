@@ -13,6 +13,8 @@
 package org.jacoco.core.internal.analysis;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -165,19 +167,21 @@ public class ClassAnalyzerTest {
 	}
 
 	/**
+	 * When non-Kotlin SMAP.
+	 *
 	 * @see #should_not_parse_absent_SourceDebugExtension_attribute_when_kotlin()
 	 * @see #should_parse_SourceDebugExtension_attribute_when_Kotlin()
 	 */
 	@Test
 	public void should_not_parse_SourceDebugExtension_attribute_when_not_Kotlin() {
 		analyzer.visitSource("Foo.kt", "SMAP\n");
-		final MethodNode mn = new MethodNode(0, "foo", "()V", null, null);
-		final MethodProbesVisitor mv = analyzer.visitMethod(mn.access, mn.name,
-				mn.desc, mn.signature, mn.exceptions.toArray(new String[0]));
-		mv.accept(mn, mv);
+		analyzer.visitAnnotation("LAnnotation;", false);
+		assertNull(analyzer.getKotlinSMAP());
 	}
 
 	/**
+	 * When {@code inline} methods are not used in Kotlin class.
+	 *
 	 * @see #should_not_parse_SourceDebugExtension_attribute_when_not_Kotlin()
 	 * @see #should_parse_SourceDebugExtension_attribute_when_Kotlin()
 	 */
@@ -185,10 +189,7 @@ public class ClassAnalyzerTest {
 	public void should_not_parse_absent_SourceDebugExtension_attribute_when_kotlin() {
 		analyzer.visitSource("Foo.kt", null);
 		analyzer.visitAnnotation("Lkotlin/Metadata;", false);
-		final MethodNode mn = new MethodNode(0, "foo", "()V", null, null);
-		final MethodProbesVisitor mv = analyzer.visitMethod(mn.access, mn.name,
-				mn.desc, mn.signature, mn.exceptions.toArray(new String[0]));
-		mv.accept(mn, mv);
+		assertNull(analyzer.getKotlinSMAP());
 	}
 
 	/**
@@ -197,17 +198,18 @@ public class ClassAnalyzerTest {
 	 */
 	@Test
 	public void should_parse_SourceDebugExtension_attribute_when_Kotlin() {
-		analyzer.visitSource("Foo.kt", "SMAP\n");
+		analyzer.visitSource("Example.kt", "SMAP\n" //
+				+ "Example.kt\n" // OutputFileName=Example.kt
+				+ "Kotlin\n" // DefaultStratumId=Kotlin
+				+ "*S Kotlin\n" // StratumID=Kotlin
+				+ "*F\n" // FileSection
+				+ "+ 1 Example.kt\n" // FileID=1,FileName=Example.kt
+				+ "ExampleKt\n" //
+				+ "*L\n" // LineSection
+				+ "1#1,3:1\n" // InputStartLine=1,LineFileID=1,RepeatCount=3,OutputStartLine=1
+				+ "*E\n"); // EndSection
 		analyzer.visitAnnotation("Lkotlin/Metadata;", false);
-		final MethodNode mn = new MethodNode(0, "foo", "()V", null, null);
-		final MethodProbesVisitor mv = analyzer.visitMethod(mn.access, mn.name,
-				mn.desc, mn.signature, mn.exceptions.toArray(new String[0]));
-		try {
-			mv.accept(mn, mv);
-			fail("exception expected");
-		} catch (Exception e) {
-			// expected
-		}
+		assertNotNull(analyzer.getKotlinSMAP());
 	}
 
 }

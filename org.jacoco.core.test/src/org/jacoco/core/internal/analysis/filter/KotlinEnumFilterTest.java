@@ -31,8 +31,6 @@ public class KotlinEnumFilterTest extends FilterTestBase {
 	@Test
 	public void should_filter() {
 		context.superClassName = "java/lang/Enum";
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 		final MethodNode m = new MethodNode(
 				Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "getEntries",
 				"()Lkotlin/enums/EnumEntries;", null, null);
@@ -47,8 +45,6 @@ public class KotlinEnumFilterTest extends FilterTestBase {
 
 	@Test
 	public void should_not_filter_when_not_Enum() {
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 		final MethodNode m = new MethodNode(
 				Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "getEntries",
 				"()Lkotlin/enums/EnumEntries;", null, null);
@@ -64,8 +60,6 @@ public class KotlinEnumFilterTest extends FilterTestBase {
 	@Test
 	public void should_not_filter_when_not_getEntries_name() {
 		context.superClassName = "java/lang/Enum";
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 		final MethodNode m = new MethodNode(
 				Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "get",
 				"()Lkotlin/enums/EnumEntries;", null, null);
@@ -81,8 +75,6 @@ public class KotlinEnumFilterTest extends FilterTestBase {
 	@Test
 	public void should_not_filter_when_not_getEntries_descriptor() {
 		context.superClassName = "java/lang/Enum";
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 		final MethodNode m = new MethodNode(
 				Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "getEntries",
 				"(I)Lkotlin/enums/EnumEntries;", null, null);

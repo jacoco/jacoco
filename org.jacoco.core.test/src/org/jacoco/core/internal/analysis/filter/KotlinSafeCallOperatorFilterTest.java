@@ -42,8 +42,6 @@ public class KotlinSafeCallOperatorFilterTest extends FilterTestBase {
 	 */
 	@Test
 	public void should_filter_optimized_safe_call_chain() {
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"example", "(LA;)Ljava/lang/String;", null, null);
 		m.visitVarInsn(Opcodes.ALOAD, 1);
@@ -94,8 +92,6 @@ public class KotlinSafeCallOperatorFilterTest extends FilterTestBase {
 	 */
 	@Test
 	public void should_filter_unoptimized_safe_call_chain() {
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"example", "(LA;)Ljava/lang/String;", null, null);
 		m.visitVarInsn(Opcodes.ALOAD, 0);

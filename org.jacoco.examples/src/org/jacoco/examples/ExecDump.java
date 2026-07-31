@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.examples;
 
+import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -60,7 +61,8 @@ public final class ExecDump {
 		out.println("CLASS ID         HITS/PROBES   CLASS NAME");
 
 		final FileInputStream in = new FileInputStream(file);
-		final ExecutionDataReader reader = new ExecutionDataReader(in);
+		final ExecutionDataReader reader = new ExecutionDataReader(
+				new BufferedInputStream(in));
 		reader.setSessionInfoVisitor(new ISessionInfoVisitor() {
 			public void visitSessionInfo(final SessionInfo info) {
 				out.printf("Session \"%s\": %s - %s%n", info.getId(),

@@ -31,8 +31,6 @@ public class KotlinInlineClassFilterTest extends FilterTestBase {
 	 */
 	@Test
 	public void should_filter() {
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 		context.classAnnotations.add("Lkotlin/jvm/JvmInline;");
 		final MethodNode m = new MethodNode(0, "getValue",
 				"()Ljava/lang/String;", null, null);
@@ -53,8 +51,6 @@ public class KotlinInlineClassFilterTest extends FilterTestBase {
 	 */
 	@Test
 	public void should_not_filter_static() {
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 		context.classAnnotations.add("Lkotlin/jvm/JvmInline;");
 		final MethodNode m = new MethodNode(Opcodes.ACC_STATIC, "f-impl", "()V",
 				null, null);
@@ -72,8 +68,6 @@ public class KotlinInlineClassFilterTest extends FilterTestBase {
 	 */
 	@Test
 	public void should_not_filter_when_no_JvmInline_annotation() {
-		context.classAnnotations
-				.add(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
 		final MethodNode m = new MethodNode(0, "getValue",
 				"()Ljava/lang/String;", null, null);
 		m.visitInsn(Opcodes.NOP);

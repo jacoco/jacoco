@@ -19,6 +19,16 @@ import org.objectweb.asm.tree.MethodNode;
  */
 public final class Filters {
 
+	/**
+	 * Descriptor of annotation present in all class files produced by the
+	 * Kotlin compiler.
+	 *
+	 * @see <a href=
+	 *      "https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-metadata/">documentation
+	 *      of kotlin.Metadata annotation</a>
+	 */
+	public static final String KOTLIN_METADATA_DESC = "Lkotlin/Metadata;";
+
 	private Filters() {
 		// no instances
 	}
@@ -91,6 +101,7 @@ public final class Filters {
 				new KotlinUnsafeCastOperatorFilter(), //
 				new KotlinNotNullOperatorFilter(), //
 				new KotlinInlineClassFilter(), //
+				new KotlinExposeBoxedFilter(), //
 				new KotlinDefaultArgumentsFilter(), //
 				new KotlinInlineFilter(), //
 				new KotlinCoroutineFilter(), //
@@ -99,17 +110,16 @@ public final class Filters {
 	}
 
 	/**
-	 * Checks whether the class corresponding to the given context has
-	 * <code>kotlin/Metadata</code> annotation.
+	 * Returns {@code true} if the class corresponding to this context has
+	 * {@link #KOTLIN_METADATA_DESC kotlin.Metadata} annotation.
 	 *
 	 * @param context
 	 *            context information
-	 * @return <code>true</code> if the class corresponding to the given context
-	 *         has <code>kotlin/Metadata</code> annotation
+	 * @return {@code true} if the class corresponding to this context has
+	 *         {@link #KOTLIN_METADATA_DESC kotlin.Metadata} annotation
 	 */
-	public static boolean isKotlinClass(final IFilterContext context) {
-		return context.getClassAnnotations()
-				.contains(KotlinGeneratedFilter.KOTLIN_METADATA_DESC);
+	private static boolean isKotlinClass(final IFilterContext context) {
+		return context.getClassAnnotations().contains(KOTLIN_METADATA_DESC);
 	}
 
 }
