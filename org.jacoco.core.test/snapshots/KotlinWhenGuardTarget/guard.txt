@@ -1,45 +1,45 @@
-   L0
+   L_method_start
     ALOAD 1
     ASTORE 2
-   L1
+   L_case_S1_empty_string
     ALOAD 2
     INSTANCEOF org/jacoco/core/test/validation/kotlin/targets/KotlinWhenGuardTarget$S$S1
-    IFEQ L2
+    IFEQ L_case_S1_non_empty_string
     ALOAD 1
     CHECKCAST org/jacoco/core/test/validation/kotlin/targets/KotlinWhenGuardTarget$S$S1
     INVOKEVIRTUAL org/jacoco/core/test/validation/kotlin/targets/KotlinWhenGuardTarget$S$S1.getS ()Ljava/lang/String;
     LDC ""
     INVOKESTATIC kotlin/jvm/internal/Intrinsics.areEqual (Ljava/lang/Object;Ljava/lang/Object;)Z
-    IFEQ L2
+    IFEQ L_case_S1_non_empty_string
     LDC "S1(empty string)"
-    GOTO L3
-   L2
+    GOTO L_after
+   L_case_S1_non_empty_string
     ALOAD 2
     INSTANCEOF org/jacoco/core/test/validation/kotlin/targets/KotlinWhenGuardTarget$S$S1
-    IFEQ L4
+    IFEQ L_case_S2
     LDC "S1(non empty string)"
-    GOTO L3
-   L4
+    GOTO L_after
+   L_case_S2
     ALOAD 2
     INSTANCEOF org/jacoco/core/test/validation/kotlin/targets/KotlinWhenGuardTarget$S$S2
-    IFEQ L5
+    IFEQ L_throw
     LDC "S2"
-    GOTO L3
-   L5
+    GOTO L_after
+   L_throw
     NEW kotlin/NoWhenBranchMatchedException
     DUP
     INVOKESPECIAL kotlin/NoWhenBranchMatchedException.<init> ()V
     ATHROW
-   L3
+   L_after
     ARETURN
-   L6
-    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWhenGuardTarget; L0 L6 0
-    LOCALVARIABLE s Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWhenGuardTarget$S; L0 L6 1
-    LINENUMBER 5 L0
-    LINENUMBER 6 L1
-    LINENUMBER 7 L2
-    LINENUMBER 8 L4
-    LINENUMBER 5 L5
-    LINENUMBER 9 L3
+   L_method_end
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWhenGuardTarget; L_method_start L_method_end 0
+    LOCALVARIABLE s Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWhenGuardTarget$S; L_method_start L_method_end 1
+    LINENUMBER 5 L_method_start
+    LINENUMBER 6 L_case_S1_empty_string
+    LINENUMBER 7 L_case_S1_non_empty_string
+    LINENUMBER 8 L_case_S2
+    LINENUMBER 5 L_throw
+    LINENUMBER 9 L_after
     MAXSTACK = 2
     MAXLOCALS = 3
