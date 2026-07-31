@@ -52,9 +52,11 @@ jobs:
             ${{ matrix.jdk }}
             21
       - # Disable javac problemMatcher
-        # (https://github.com/actions/setup-java/blob/v5.4.0/.github/java.json)
+        # (https://github.com/actions/setup-java/blob/v5.6.0/.github/java.json)
         # until builds produce fewer warnings
-        run: echo "::remove-matcher owner=javac::"
+        run: |
+          echo "::remove-matcher owner=javac::"
+          echo "::remove-matcher owner=maven-javac::"
       - &cache
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
