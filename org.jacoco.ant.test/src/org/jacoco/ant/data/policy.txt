@@ -6,4 +6,5 @@ grant codeBase "file:${jacoco.agent}" {
     permission java.lang.RuntimePermission "getProtectionDomain";
     permission java.lang.reflect.ReflectPermission "suppressAccessChecks";
     permission java.lang.RuntimePermission "defineClass";
+    permission java.lang.RuntimePermission "getClassLoader";
 };

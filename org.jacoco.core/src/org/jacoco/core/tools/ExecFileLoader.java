@@ -94,7 +94,7 @@ public class ExecFileLoader {
 
 	/**
 	 * Saves the current content into the given file. Parent directories are
-	 * created as needed. Also a files system lock is acquired to avoid
+	 * created as needed. Also a file system lock is acquired to avoid
 	 * concurrent write access.
 	 *
 	 * @param file

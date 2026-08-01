@@ -15,6 +15,7 @@ package org.jacoco.core.internal.analysis.filter;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import org.jacoco.core.test.TextBlock;
 import org.junit.Test;
 
 /**
@@ -37,19 +38,20 @@ public class KotlinSMAPTest {
 	 */
 	@Test
 	public void should_parse() {
-		final KotlinSMAP smap = new KotlinSMAP("B.kt", "SMAP\n" //
-				+ "B.kt\n" // OutputFileName=B.kt
-				+ "Kotlin\n" // DefaultStratumId=Kotlin
-				+ "*S Kotlin\n" // StratumID=Kotlin
-				+ "*F\n" // FileSection
-				+ "+ 1 B.kt\n" // FileID=1,FileName=B.kt
-				+ "b/BKt\n" // ClassName=b/BKt
-				+ "+ 2 A.kt\n" // FileID=2,FileName=A.kt
-				+ "a/AKt\n" // ClassName=a/AKt
-				+ "*L\n" // LineSection
-				+ "1#1,4:1\n" // InputStartLine=1,LineFileID=1,RepeatCount=4,OutputStartLine=1
-				+ "3#2:5\n" // InputStartLine=3,LineFileID=2,RepeatCount=,OutputStartLine=5
-				+ "*E\n"); // EndSection
+		final KotlinSMAP smap = new KotlinSMAP("B.kt", TextBlock.lines( //
+				"SMAP", //
+				"B.kt", // OutputFileName=B.kt
+				"Kotlin", // DefaultStratumId=Kotlin
+				"*S Kotlin", // StratumID=Kotlin
+				"*F", // FileSection
+				"+ 1 B.kt", // FileID=1,FileName=B.kt
+				"b/BKt", // ClassName=b/BKt
+				"+ 2 A.kt", // FileID=2,FileName=A.kt
+				"a/AKt", // ClassName=a/AKt
+				"*L", // LineSection
+				"1#1,4:1", // InputStartLine=1,LineFileID=1,RepeatCount=4,OutputStartLine=1
+				"3#2:5", // InputStartLine=3,LineFileID=2,RepeatCount=,OutputStartLine=5
+				"*E")); // EndSection
 		assertEquals(2, smap.mappings().size());
 		KotlinSMAP.Mapping mapping = smap.mappings().get(0);
 		assertEquals("b/BKt", mapping.inputClassName());
@@ -73,18 +75,19 @@ public class KotlinSMAPTest {
 	 */
 	@Test
 	public void should_stop_parsing_at_KotlinDebug_stratum() {
-		final KotlinSMAP smap = new KotlinSMAP("Example.kt", "SMAP\n" //
-				+ "Example.kt\n" // OutputFileName=Example.kt
-				+ "Kotlin\n" // DefaultStratumId=Kotlin
-				+ "*S Kotlin\n" // StratumID=Kotlin
-				+ "*F\n" // FileSection
-				+ "+ 1 Example.kt\n" // FileID=1,FileName=Example.kt
-				+ "ExampleKt\n" //
-				+ "*L\n" // LineSection
-				+ "1#1,3:1\n" // InputStartLine=1,LineFileID=1,RepeatCount=3,OutputStartLine=1
-				+ "1#1:4\n" // InputStartLine=1,LineFileID=1,OutputStartLine=4
-				+ "*S KotlinDebug\n" // StratumID=KotlinDebug
-				+ "xxx");
+		final KotlinSMAP smap = new KotlinSMAP("Example.kt", TextBlock.lines( //
+				"SMAP", //
+				"Example.kt", // OutputFileName=Example.kt
+				"Kotlin", // DefaultStratumId=Kotlin
+				"*S Kotlin", // StratumID=Kotlin
+				"*F", // FileSection
+				"+ 1 Example.kt", // FileID=1,FileName=Example.kt
+				"ExampleKt", //
+				"*L", // LineSection
+				"1#1,3:1", // InputStartLine=1,LineFileID=1,RepeatCount=3,OutputStartLine=1
+				"1#1:4", // InputStartLine=1,LineFileID=1,OutputStartLine=4
+				"*S KotlinDebug", // StratumID=KotlinDebug
+				"xxx"));
 		assertEquals(2, smap.mappings().size());
 		KotlinSMAP.Mapping mapping = smap.mappings().get(0);
 		assertEquals("ExampleKt", mapping.inputClassName());
@@ -111,8 +114,9 @@ public class KotlinSMAPTest {
 	@Test
 	public void should_throw_exception_when_OutputFileName_does_not_match_SourceFileName() {
 		try {
-			new KotlinSMAP("", "SMAP\n" //
-					+ "Example.kt\n");
+			new KotlinSMAP("", TextBlock.lines( //
+					"SMAP", //
+					"Example.kt"));
 			fail("exception expected");
 		} catch (final IllegalStateException e) {
 			assertEquals("Unexpected SMAP line: Example.kt", e.getMessage());
@@ -122,9 +126,10 @@ public class KotlinSMAPTest {
 	@Test
 	public void should_throw_exception_when_DefaultStratumId_is_not_Kotlin() {
 		try {
-			new KotlinSMAP("Servlet.java", "SMAP\n" //
-					+ "Servlet.java\n" // OutputFileName=Servlet.java
-					+ "JSP\n"); // DefaultStratumId=JSP
+			new KotlinSMAP("Servlet.java", TextBlock.lines( //
+					"SMAP", //
+					"Servlet.java", // OutputFileName=Servlet.java
+					"JSP")); // DefaultStratumId=JSP
 			fail("exception expected");
 		} catch (final IllegalStateException e) {
 			assertEquals("Unexpected SMAP line: JSP", e.getMessage());
@@ -134,10 +139,11 @@ public class KotlinSMAPTest {
 	@Test
 	public void should_throw_exception_when_first_StratumId_is_not_Kotlin() {
 		try {
-			new KotlinSMAP("Example.kt", "SMAP\n" //
-					+ "Example.kt\n" // OutputFileName=Example.kt
-					+ "Kotlin\n" // DefaultStratumId=Kotlin
-					+ "*S KotlinDebug\n"); // StratumID=KotlinDebug
+			new KotlinSMAP("Example.kt", TextBlock.lines( //
+					"SMAP", //
+					"Example.kt", // OutputFileName=Example.kt
+					"Kotlin", // DefaultStratumId=Kotlin
+					"*S KotlinDebug")); // StratumID=KotlinDebug
 			fail("exception expected");
 		} catch (final IllegalStateException e) {
 			assertEquals("Unexpected SMAP line: *S KotlinDebug",
@@ -148,11 +154,12 @@ public class KotlinSMAPTest {
 	@Test
 	public void should_throw_exception_when_StratumSection_does_not_start_with_FileSection() {
 		try {
-			new KotlinSMAP("Example.kt", "SMAP\n" //
-					+ "Example.kt\n" //
-					+ "Kotlin\n" //
-					+ "*S Kotlin\n" //
-					+ "xxx"); //
+			new KotlinSMAP("Example.kt", TextBlock.lines( //
+					"SMAP", //
+					"Example.kt", //
+					"Kotlin", //
+					"*S Kotlin", //
+					"xxx")); //
 			fail("exception expected");
 		} catch (final IllegalStateException e) {
 			assertEquals("Unexpected SMAP line: xxx", e.getMessage());
@@ -162,12 +169,13 @@ public class KotlinSMAPTest {
 	@Test
 	public void should_throw_exception_when_FileSection_contains_unexpected_FileInfo() {
 		try {
-			new KotlinSMAP("Example.kt", "SMAP\n" //
-					+ "Example.kt\n" //
-					+ "Kotlin\n" //
-					+ "*S Kotlin\n" //
-					+ "*F\n" //
-					+ "xxx"); //
+			new KotlinSMAP("Example.kt", TextBlock.lines( //
+					"SMAP", //
+					"Example.kt", //
+					"Kotlin", //
+					"*S Kotlin", //
+					"*F", //
+					"xxx")); //
 			fail("exception expected");
 		} catch (final IllegalStateException e) {
 			assertEquals("Unexpected SMAP line: xxx", e.getMessage());
@@ -177,13 +185,14 @@ public class KotlinSMAPTest {
 	@Test
 	public void should_throw_exception_when_LineSection_contains_unexpected_LineInfo() {
 		try {
-			new KotlinSMAP("Example.kt", "SMAP\n" //
-					+ "Example.kt\n" //
-					+ "Kotlin\n" //
-					+ "*S Kotlin\n" //
-					+ "*F\n" //
-					+ "*L\n" //
-					+ "xxx"); //
+			new KotlinSMAP("Example.kt", TextBlock.lines( //
+					"SMAP", //
+					"Example.kt", //
+					"Kotlin", //
+					"*S Kotlin", //
+					"*F", //
+					"*L", //
+					"xxx")); //
 			fail("exception expected");
 		} catch (final IllegalStateException e) {
 			assertEquals("Unexpected SMAP line: xxx", e.getMessage());
@@ -193,13 +202,14 @@ public class KotlinSMAPTest {
 	@Test
 	public void should_throw_exception_when_LineInfo_does_not_have_FileID() {
 		try {
-			new KotlinSMAP("Example.kt", "SMAP\n" //
-					+ "Example.kt\n" //
-					+ "Kotlin\n" //
-					+ "*S Kotlin\n" //
-					+ "*F\n" //
-					+ "*L\n" //
-					+ "1:1\n"); // InputStartLine=1,OutputStartLine=1
+			new KotlinSMAP("Example.kt", TextBlock.lines( //
+					"SMAP", //
+					"Example.kt", //
+					"Kotlin", //
+					"*S Kotlin", //
+					"*F", //
+					"*L", //
+					"1:1")); // InputStartLine=1,OutputStartLine=1
 			fail("exception expected");
 		} catch (final NullPointerException e) {
 			// expected

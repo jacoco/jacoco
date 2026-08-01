@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.tools;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.net.InetAddress;
@@ -116,9 +117,11 @@ public class ExecDumpClient {
 		final Socket socket = tryConnect(address, port);
 		try {
 			final RemoteControlWriter remoteWriter = new RemoteControlWriter(
+					// BufferedOutputStream will not improve performance here
+					// while will add memory overhead because commands are short
 					socket.getOutputStream());
 			final RemoteControlReader remoteReader = new RemoteControlReader(
-					socket.getInputStream());
+					new BufferedInputStream(socket.getInputStream()));
 			remoteReader.setSessionInfoVisitor(loader.getSessionInfoStore());
 			remoteReader
 					.setExecutionDataVisitor(loader.getExecutionDataStore());

@@ -32,8 +32,20 @@ public class TestTarget {
 
 	public static void main(String[] args) throws Exception {
 
-		// Load some class from the bootstrap classloader:
+		// Load some class from the bootstrap classloader
+		new java.util.UUID(0, 0);
+		if (java.util.UUID.class.getClassLoader() != null) {
+			throw new AssertionError();
+		}
+		// and from the platform classloader
+		// introduced by JEP 261 in JDK 9
 		new java.sql.Timestamp(0);
+		if (java.sql.Timestamp.class.getClassLoader() != null
+				&& !"jdk.internal.loader.ClassLoaders$PlatformClassLoader"
+						.equals(java.sql.Timestamp.class.getClassLoader()
+								.getClass().getName())) {
+			throw new AssertionError();
+		}
 
 		System.out.println("Target executed");
 

@@ -17,6 +17,7 @@ import static org.junit.Assert.assertEquals;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.Field;
 
+import org.jacoco.core.test.TextBlock;
 import org.jacoco.core.test.validation.JavaVersion;
 import org.junit.AssumptionViolatedException;
 import org.junit.Test;
@@ -51,30 +52,48 @@ public class LineImplMemoryTest {
 	@Test
 	public void currentVM() throws Exception {
 		final Layouter layouter = currentLayouter();
-		assertEquals(text( //
-				"Current VM Layout",
-				"org.jacoco.core.internal.analysis.LineImpl object internals:",
-				"OFF  SZ                                            TYPE DESCRIPTION               VALUE",
-				"  0   8                                                 (object header: mark)     N/A",
-				"  8   4                                                 (object header: class)    N/A",
-				" 12   4   org.jacoco.core.internal.analysis.CounterImpl LineImpl.instructions     N/A",
-				" 16   4   org.jacoco.core.internal.analysis.CounterImpl LineImpl.branches         N/A",
-				" 20   4                                                 (object alignment gap)    ",
-				"Instance size: 24 bytes",
-				"Space losses: 0 bytes internal + 4 bytes external = 4 bytes total"),
-				layout(layouter));
-		assertEquals(68600, sizeOfSingletons(layouter));
+		if (JavaVersion.current().isBefore("27")) {
+			assertEquals(TextBlock.lines( //
+					"Current VM Layout",
+					"org.jacoco.core.internal.analysis.LineImpl object internals:",
+					"OFF  SZ                                            TYPE DESCRIPTION               VALUE",
+					"  0   8                                                 (object header: mark)     N/A",
+					"  8   4                                                 (object header: class)    N/A",
+					" 12   4   org.jacoco.core.internal.analysis.CounterImpl LineImpl.instructions     N/A",
+					" 16   4   org.jacoco.core.internal.analysis.CounterImpl LineImpl.branches         N/A",
+					" 20   4                                                 (object alignment gap)    ",
+					"Instance size: 24 bytes",
+					"Space losses: 0 bytes internal + 4 bytes external = 4 bytes total"),
+					layout(layouter));
+			assertEquals(68600, sizeOfSingletons(layouter));
+		} else {
+			// https://openjdk.org/jeps/534
+			assertEquals(TextBlock.lines( //
+					"Current VM Layout",
+					"org.jacoco.core.internal.analysis.LineImpl object internals:",
+					"OFF  SZ                                            TYPE DESCRIPTION               VALUE",
+					"  0   8                                                 (object header: mark)     N/A",
+					"  8   4   org.jacoco.core.internal.analysis.CounterImpl LineImpl.instructions     N/A",
+					" 12   4   org.jacoco.core.internal.analysis.CounterImpl LineImpl.branches         N/A",
+					"Instance size: 16 bytes",
+					"Space losses: 0 bytes internal + 0 bytes external = 0 bytes total"),
+					layout(layouter));
+			assertEquals(48432, sizeOfSingletons(layouter));
+		}
 	}
 
 	/**
-	 * JDK 24 and above with {@code -XX:+UseCompactObjectHeaders}.
+	 * <ul>
+	 * <li>JDK 24, 25 and 26 with {@code -XX:+UseCompactObjectHeaders}</li>
+	 * <li>JDK 27 and above</li>
+	 * </ul>
 	 *
 	 * @see <a href="https://openjdk.org/jeps/450">JEP 450: Compact Object
 	 *      Headers (Experimental)</a> delivered in JDK 24
 	 * @see <a href="https://openjdk.org/jeps/519">JEP 519: Compact Object
 	 *      Headers</a> delivered in JDK 25
 	 * @see <a href="https://openjdk.org/jeps/534">JEP 534: Compact Object
-	 *      Headers by Default</a>
+	 *      Headers by Default</a> delivered in JDK 27
 	 */
 	@Test
 	public void compact_object_headers() throws Exception {
@@ -86,7 +105,7 @@ public class LineImplMemoryTest {
 						 */
 						false),
 				24);
-		assertEquals(text(
+		assertEquals(TextBlock.lines(
 				"Hotspot Layout Simulation (JDK 24, 64-bit model, Lilliput (current experiment), compressed references, compressed classes, 8-byte aligned)",
 				"org.jacoco.core.internal.analysis.LineImpl object internals:",
 				"OFF  SZ                                            TYPE DESCRIPTION               VALUE",
@@ -100,14 +119,18 @@ public class LineImplMemoryTest {
 	}
 
 	/**
-	 * JDK 24 and above with {@code -XX:+UseCompactObjectHeaders -Xmx32g}.
+	 * <ul>
+	 * <li>JDK 24, 25 and 26 with
+	 * {@code -XX:+UseCompactObjectHeaders -Xmx32g}</li>
+	 * <li>JDK 27 and above with {@code -Xmx32g}</li>
+	 * </ul>
 	 */
 	@Test
 	public void compact_object_headers_without_compressed_references()
 			throws Exception {
 		final Layouter layouter = new HotSpotLayouter(new Model64_Lilliput(),
 				24);
-		assertEquals(text(
+		assertEquals(TextBlock.lines(
 				"Hotspot Layout Simulation (JDK 24, 64-bit model, Lilliput (current experiment), NO compressed references, compressed classes, 8-byte aligned)",
 				"org.jacoco.core.internal.analysis.LineImpl object internals:",
 				"OFF  SZ                                            TYPE DESCRIPTION               VALUE",
@@ -121,7 +144,7 @@ public class LineImplMemoryTest {
 	}
 
 	/**
-	 * JDK 15 and above with {@code -Xmx32g}.
+	 * JDK 15 and above up to JDK 26 with {@code -Xmx32g}.
 	 *
 	 * @see <a href= "https://bugs.openjdk.org/browse/JDK-8241825">JDK-8241825:
 	 *      Make compressed oops and compressed class pointers independent</a>
@@ -131,7 +154,7 @@ public class LineImplMemoryTest {
 			throws Exception {
 		final Layouter layouter = new HotSpotLayouter(new Model64(false, true),
 				15);
-		assertEquals(text(
+		assertEquals(TextBlock.lines(
 				"Hotspot Layout Simulation (JDK 15, 64-bit model, NO compressed references, compressed classes, 8-byte aligned)",
 				"org.jacoco.core.internal.analysis.LineImpl object internals:",
 				"OFF  SZ                                            TYPE DESCRIPTION               VALUE",
@@ -154,7 +177,7 @@ public class LineImplMemoryTest {
 			throws Exception {
 		final Layouter layouter = new HotSpotLayouter(new Model64(false, false),
 				8);
-		assertEquals(text(
+		assertEquals(TextBlock.lines(
 				"Hotspot Layout Simulation (JDK 8, 64-bit model, NO compressed references, NO compressed classes, 8-byte aligned)",
 				"org.jacoco.core.internal.analysis.LineImpl object internals:",
 				"OFF  SZ                                            TYPE DESCRIPTION               VALUE",
@@ -169,9 +192,13 @@ public class LineImplMemoryTest {
 	}
 
 	private static String layout(final Layouter layouter) {
+		return layout(layouter, LineImpl.class);
+	}
+
+	private static String layout(final Layouter layouter, final Class<?> c) {
 		return layouter + "\n" //
-				+ layouter.layout(ClassData.parseClass(LineImpl.class))
-						.toPrintable();
+				+ layouter.layout(ClassData.parseClass(c)).toPrintable()
+						.replace("\r\n", "\n");
 	}
 
 	private static long sizeOfSingletons(final Layouter layouter)
@@ -237,13 +264,14 @@ public class LineImplMemoryTest {
 	 *      Relax alignment of array elements</a> in JDK 23 and <a href=
 	 *      "https://github.com/openjdk/jol/commit/8c4d7be996489676b9ff9caef83610b15c726019">corresponding
 	 *      change in JOL</a> as another example of change in VM unknown to JOL
-	 *      {@link HotSpotLayouter} in version 0.17
+	 *      {@link HotSpotLayouter} simulation in version 0.17
 	 */
 	@Test
 	public void clusterOops() {
 		final Layouter layouter = currentLayouter();
 		if (JavaVersion.current().isBefore("25")) {
-			assertEquals(text(
+			assertEquals(TextBlock.lines( //
+					"Current VM Layout",
 					"org.jacoco.core.internal.analysis.LineImplMemoryTest$Derived object internals:",
 					"OFF  SZ               TYPE DESCRIPTION               VALUE",
 					"  0   8                    (object header: mark)     N/A",
@@ -255,10 +283,10 @@ public class LineImplMemoryTest {
 					" 28   4                    (object alignment gap)    ",
 					"Instance size: 32 bytes",
 					"Space losses: 0 bytes internal + 4 bytes external = 4 bytes total"),
-					layouter.layout(ClassData.parseClass(Derived.class))
-							.toPrintable());
-		} else {
-			assertEquals(text(
+					layout(layouter, Derived.class));
+		} else if (JavaVersion.current().isBefore("27")) {
+			assertEquals(TextBlock.lines( //
+					"Current VM Layout",
 					"org.jacoco.core.internal.analysis.LineImplMemoryTest$Derived object internals:",
 					"OFF  SZ               TYPE DESCRIPTION               VALUE",
 					"  0   8                    (object header: mark)     N/A",
@@ -270,8 +298,21 @@ public class LineImplMemoryTest {
 					" 28   4                    (object alignment gap)    ",
 					"Instance size: 32 bytes",
 					"Space losses: 0 bytes internal + 4 bytes external = 4 bytes total"),
-					layouter.layout(ClassData.parseClass(Derived.class))
-							.toPrintable());
+					layout(layouter, Derived.class));
+		} else {
+			// https://openjdk.org/jeps/534
+			assertEquals(TextBlock.lines( //
+					"Current VM Layout",
+					"org.jacoco.core.internal.analysis.LineImplMemoryTest$Derived object internals:",
+					"OFF  SZ               TYPE DESCRIPTION               VALUE",
+					"  0   8                    (object header: mark)     N/A",
+					"  8   4                int Base.nonOop               N/A",
+					" 12   4   java.lang.Object Base.oop                  N/A",
+					" 16   4   java.lang.Object Derived.oop               N/A",
+					" 20   4                int Derived.nonOop            N/A",
+					"Instance size: 24 bytes",
+					"Space losses: 0 bytes internal + 0 bytes external = 0 bytes total"),
+					layout(layouter, Derived.class));
 		}
 	}
 
@@ -283,18 +324,6 @@ public class LineImplMemoryTest {
 	private static class Derived extends Base {
 		private Object oop;
 		private int nonOop;
-	}
-
-	/**
-	 * Poor man's replacement for <a href="https://openjdk.org/jeps/378">Java 15
-	 * Text Blocks</a>.
-	 */
-	private static String text(String... text) {
-		final StringBuilder sb = new StringBuilder();
-		for (String line : text) {
-			sb.append(line).append('\n');
-		}
-		return sb.toString();
 	}
 
 }

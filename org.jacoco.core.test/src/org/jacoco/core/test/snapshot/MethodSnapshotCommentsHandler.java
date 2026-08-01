@@ -10,11 +10,16 @@
  *    Evgeny Mandrikov - initial API and implementation
  *
  *******************************************************************************/
-public class Example {
+package org.jacoco.core.test.snapshot;
 
-	public void sayHello(String name) {
-		// http://openjdk.java.net/jeps/280
-		System.out.println("Hello, " + name);
-	}
+import org.objectweb.asm.tree.AbstractInsnNode;
+
+public interface MethodSnapshotCommentsHandler {
+
+	/**
+	 * @param precedingInstruction
+	 *            instruction prior to {@code comment} or {@code null}
+	 */
+	void onComment(String comment, AbstractInsnNode precedingInstruction);
 
 }

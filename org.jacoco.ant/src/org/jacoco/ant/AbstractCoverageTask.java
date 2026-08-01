@@ -116,11 +116,12 @@ public class AbstractCoverageTask extends Task {
 	}
 
 	/**
-	 * Sets whether classes from the bootstrap classloader should be
-	 * instrumented.
+	 * Sets whether classes from the bootstrap and platform classloaders should
+	 * be instrumented.
 	 *
 	 * @param include
-	 *            <code>true</code> if bootstrap classes should be instrumented
+	 *            <code>true</code> if classes from bootstrap and platform
+	 *            classloaders should be instrumented
 	 */
 	public void setInclBootstrapClasses(final boolean include) {
 		agentOptions.setInclBootstrapClasses(include);
@@ -138,7 +139,7 @@ public class AbstractCoverageTask extends Task {
 	}
 
 	/**
-	 * Sets the session identifier. Default is a auto-generated id
+	 * Sets the session identifier. Default is an auto-generated id
 	 *
 	 * @param id
 	 *            session identifier

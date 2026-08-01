@@ -22,6 +22,9 @@ import org.junit.runner.RunWith;
 
 import junit.framework.TestSuite;
 
+/**
+ * Tests for {@link ReportTask}.
+ */
 @RunWith(AntUnitSuiteRunner.class)
 public class ReportTaskTest {
 
