@@ -20,6 +20,7 @@ import static org.junit.Assert.fail;
 
 import org.jacoco.core.internal.flow.MethodProbesVisitor;
 import org.jacoco.core.internal.instr.InstrSupport;
+import org.jacoco.core.test.TextBlock;
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.Attribute;
@@ -121,17 +122,18 @@ public class ClassAnalyzerTest {
 	 */
 	@Test
 	public void testCalculateFragments() {
-		analyzer.visitSource("Foo.kt", "SMAP\n" //
-				+ "Foo.kt\n" //
-				+ "Kotlin\n" //
-				+ "*S Kotlin\n" //
-				+ "*F\n" //
-				+ "+ 1 Foo.kt\n" //
-				+ "Foo\n" //
-				+ "*L\n" //
-				+ "1#1,4:1\n" //
-				+ "2#1:6\n" //
-				+ "*E\n");
+		analyzer.visitSource("Foo.kt", TextBlock.lines( //
+				"SMAP", //
+				"Foo.kt", //
+				"Kotlin", //
+				"*S Kotlin", //
+				"*F", //
+				"+ 1 Foo.kt", //
+				"Foo", //
+				"*L", //
+				"1#1,4:1", //
+				"2#1:6", //
+				"*E"));
 		analyzer.visitAnnotation("Lkotlin/Metadata;", false);
 		MethodNode mn = new MethodNode(InstrSupport.ASM_API_VERSION, 0, "foo",
 				"()V", null, null) {
@@ -198,16 +200,17 @@ public class ClassAnalyzerTest {
 	 */
 	@Test
 	public void should_parse_SourceDebugExtension_attribute_when_Kotlin() {
-		analyzer.visitSource("Example.kt", "SMAP\n" //
-				+ "Example.kt\n" // OutputFileName=Example.kt
-				+ "Kotlin\n" // DefaultStratumId=Kotlin
-				+ "*S Kotlin\n" // StratumID=Kotlin
-				+ "*F\n" // FileSection
-				+ "+ 1 Example.kt\n" // FileID=1,FileName=Example.kt
-				+ "ExampleKt\n" //
-				+ "*L\n" // LineSection
-				+ "1#1,3:1\n" // InputStartLine=1,LineFileID=1,RepeatCount=3,OutputStartLine=1
-				+ "*E\n"); // EndSection
+		analyzer.visitSource("Example.kt", TextBlock.lines( //
+				"SMAP", //
+				"Example.kt", // OutputFileName=Example.kt
+				"Kotlin", // DefaultStratumId=Kotlin
+				"*S Kotlin", // StratumID=Kotlin
+				"*F", // FileSection
+				"+ 1 Example.kt", // FileID=1,FileName=Example.kt
+				"ExampleKt", //
+				"*L", // LineSection
+				"1#1,3:1", // InputStartLine=1,LineFileID=1,RepeatCount=3,OutputStartLine=1
+				"*E")); // EndSection
 		analyzer.visitAnnotation("Lkotlin/Metadata;", false);
 		assertNotNull(analyzer.getKotlinSMAP());
 	}
