@@ -1,0 +1,26 @@
+   L0
+    INVOKESTATIC kotlin/collections/CollectionsKt.emptyList ()Ljava/util/List;
+    INVOKEINTERFACE java/util/List.iterator ()Ljava/util/Iterator; (itf)
+    ASTORE 1
+   L1
+    ALOAD 1
+    INVOKEINTERFACE java/util/Iterator.hasNext ()Z (itf)
+    IFEQ L2
+    ALOAD 1
+    INVOKEINTERFACE java/util/Iterator.next ()Ljava/lang/Object; (itf)
+    ASTORE 2
+   L3
+    ALOAD 2
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
+   L4
+    GOTO L1
+   L2
+    RETURN
+   L5
+    LOCALVARIABLE o Ljava/lang/Object; L3 L4 2
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinControlStructuresTarget; L0 L5 0
+    LINENUMBER 5 L0
+    LINENUMBER 6 L3
+    LINENUMBER 9 L2
+    MAXSTACK = 1
+    MAXLOCALS = 3

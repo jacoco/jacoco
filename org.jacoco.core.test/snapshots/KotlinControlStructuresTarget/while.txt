@@ -1,0 +1,15 @@
+   L0
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.f ()Z
+    IFEQ L1
+   L2
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+    GOTO L0
+   L1
+    RETURN
+   L3
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinControlStructuresTarget; L0 L3 0
+    LINENUMBER 5 L0
+    LINENUMBER 6 L2
+    LINENUMBER 9 L1
+    MAXSTACK = 1
+    MAXLOCALS = 1
