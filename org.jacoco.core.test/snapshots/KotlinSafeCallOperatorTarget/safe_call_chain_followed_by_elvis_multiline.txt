@@ -1,6 +1,6 @@
-   L0
+   L_method_start
     ALOAD 0
-    IFNULL L1
+    IFNULL L_null
    L2
     ALOAD 0
    L3
@@ -8,7 +8,7 @@
     ASTORE 1
    L4
     ALOAD 1
-    IFNULL L1
+    IFNULL L_null
    L5
     ALOAD 1
    L6
@@ -16,22 +16,22 @@
    L7
     ASTORE 2
     ALOAD 2
-    IFNULL L1
+    IFNULL L_null
     ALOAD 2
-    GOTO L8
-   L1
+    GOTO L_after
+   L_null
     LDC ""
-   L8
+   L_after
     ARETURN
-   L9
-    LOCALVARIABLE a Lorg/jacoco/core/test/validation/kotlin/targets/KotlinSafeCallOperatorTarget$A; L0 L9 0
-    LINENUMBER 6 L0
+   L_method_end
+    LOCALVARIABLE a Lorg/jacoco/core/test/validation/kotlin/targets/KotlinSafeCallOperatorTarget$A; L_method_start L_method_end 0
+    LINENUMBER 6 L_method_start
     LINENUMBER 5 L2
     LINENUMBER 6 L3
     LINENUMBER 7 L4
     LINENUMBER 5 L5
     LINENUMBER 7 L6
     LINENUMBER 5 L7
-    LINENUMBER 8 L1
+    LINENUMBER 8 L_null
     MAXSTACK = 1
     MAXLOCALS = 3
