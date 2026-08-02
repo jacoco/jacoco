@@ -1,4 +1,4 @@
-   L0
+   L_method_start
     INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.i1 ()I
     ISTORE 1
    L1
@@ -22,10 +22,10 @@
     GOTO L3
    L2
     RETURN
-   L7
+   L_method_end
     LOCALVARIABLE j I L1 L2 1
-    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinControlStructuresTarget; L0 L7 0
-    LINENUMBER 5 L0
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinControlStructuresTarget; L_method_start L_method_end 0
+    LINENUMBER 5 L_method_start
     LINENUMBER 6 L3
     LINENUMBER 7 L5
     LINENUMBER 9 L4

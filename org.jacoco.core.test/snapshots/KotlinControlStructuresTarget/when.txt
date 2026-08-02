@@ -1,4 +1,4 @@
-   L0
+   L_method_start
     INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.i2 ()I
     TABLESWITCH
       1: L1
@@ -14,9 +14,9 @@
     INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
    L4
     RETURN
-   L5
-    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinControlStructuresTarget; L0 L5 0
-    LINENUMBER 5 L0
+   L_method_end
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinControlStructuresTarget; L_method_start L_method_end 0
+    LINENUMBER 5 L_method_start
     LINENUMBER 6 L1
     LINENUMBER 7 L2
     LINENUMBER 8 L3
