@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jacoco.core.internal.instr.InstrSupport;
+import org.jacoco.core.test.TextBlock;
 import org.junit.Test;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
@@ -35,22 +36,23 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 	@Test
 	public void should_filter() {
 		context.className = "CallsiteKt";
-		context.kotlinSMAP = new KotlinSMAP("callsite.kt", "SMAP\n" //
-				+ "callsite.kt\n" // OutputFileName=callsite.kt
-				+ "Kotlin\n" // DefaultStratumId=Kotlin
-				+ "*S Kotlin\n" // StratumID=Kotlin
-				+ "*F\n" // FileSection
-				+ "+ 1 callsite.kt\n" // FileID=1,FileName=callsite.kt
-				+ "CallsiteKt\n" //
-				+ "+ 2 a.kt\n" // FileID=2,FileName=a.kt
-				+ "AKt\n" //
-				+ "+ 3 b.kt\n" // FileID=3,FileName=b.kt
-				+ "BKt\n" //
-				+ "*L\n" // LineSection
-				+ "1#1,8:1\n" // InputStartLine=1,LineFileID=1,RepeatCount=8,OutputStartLine=1
-				+ "2#2,2:9\n" // InputStartLine=2,LineFileID=2,RepeatCount=2,OutputStartLine=9
-				+ "2#3,2:11\n" // InputStartLine=2,LineFileID=3,RepeatCount=2,OutputStartLine=11
-				+ "*E\n"); // EndSection
+		context.kotlinSMAP = new KotlinSMAP("callsite.kt", TextBlock.lines( //
+				"SMAP", //
+				"callsite.kt", // OutputFileName=callsite.kt
+				"Kotlin", // DefaultStratumId=Kotlin
+				"*S Kotlin", // StratumID=Kotlin
+				"*F", // FileSection
+				"+ 1 callsite.kt", // FileID=1,FileName=callsite.kt
+				"CallsiteKt", //
+				"+ 2 a.kt", // FileID=2,FileName=a.kt
+				"AKt", //
+				"+ 3 b.kt", // FileID=3,FileName=b.kt
+				"BKt", //
+				"*L", // LineSection
+				"1#1,8:1", // InputStartLine=1,LineFileID=1,RepeatCount=8,OutputStartLine=1
+				"2#2,2:9", // InputStartLine=2,LineFileID=2,RepeatCount=2,OutputStartLine=9
+				"2#3,2:11", // InputStartLine=2,LineFileID=3,RepeatCount=2,OutputStartLine=11
+				"*E")); // EndSection
 
 		m.visitLineNumber(2, new Label());
 		m.visitInsn(Opcodes.NOP);
@@ -109,20 +111,21 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 	@Test
 	public void should_filter_when_in_same_file() {
 		context.className = "Callsite";
-		context.kotlinSMAP = new KotlinSMAP("example.kt", "SMAP\n" //
-				+ "example.kt\n" // OutputFileName=example.kt
-				+ "Kotlin\n" // DefaultStratumId=Kotlin
-				+ "*S Kotlin\n" // StratumID=Kotlin
-				+ "*F\n" // FileSection
-				+ "+ 1 example.kt\n" // FileID=1,FileName=example.kt
-				+ "Callsite\n" //
-				+ "+ 2 example.kt\n" // FileID=2,FileName=example.kt
-				+ "ExampleKt\n" //
-				+ "*L\n" // LineSection
-				+ "1#1,15:1\n" // InputStartLine=1,LineFileID=1,RepeatCount=10,OutputStartLine=1
-				+ "7#1,2:18\n" // InputStartLine=7,LineFileID=1,RepeatCount=2,OutputStartLine=18
-				+ "2#2,2:16\n" // InputStartLine=2,LineFileID=2,RepeatCount=2,OutputStartLine=16
-				+ "*E\n"); // EndSection
+		context.kotlinSMAP = new KotlinSMAP("example.kt", TextBlock.lines( //
+				"SMAP", //
+				"example.kt", // OutputFileName=example.kt
+				"Kotlin", // DefaultStratumId=Kotlin
+				"*S Kotlin", // StratumID=Kotlin
+				"*F", // FileSection
+				"+ 1 example.kt", // FileID=1,FileName=example.kt
+				"Callsite", //
+				"+ 2 example.kt", // FileID=2,FileName=example.kt
+				"ExampleKt", //
+				"*L", // LineSection
+				"1#1,15:1", // InputStartLine=1,LineFileID=1,RepeatCount=10,OutputStartLine=1
+				"7#1,2:18", // InputStartLine=7,LineFileID=1,RepeatCount=2,OutputStartLine=18
+				"2#2,2:16", // InputStartLine=2,LineFileID=2,RepeatCount=2,OutputStartLine=16
+				"*E")); // EndSection
 
 		m.visitLineNumber(11, new Label());
 		m.visitInsn(Opcodes.NOP);
@@ -173,19 +176,20 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 	@Test
 	public void should_filter_when_inlined_with_same_file_name_and_line_number() {
 		context.className = "ExampleKt";
-		context.kotlinSMAP = new KotlinSMAP("Example.kt", "SMAP\n" //
-				+ "Example.kt\n" // OutputFileName=Example.kt
-				+ "Kotlin\n" // DefaultStratumId=Kotlin
-				+ "*S Kotlin\n" // StratumID=Kotlin
-				+ "*F\n" // FileSection
-				+ "+ 1 Example.kt\n" // FileID=1,FileName=Example.kt
-				+ "ExampleKt\n" //
-				+ "+ 2 Example.kt\n" // FileID=2,FileName=Example.kt
-				+ "a/ExampleKt\n" //
-				+ "*L\n" // LineSection
-				+ "1#1,6:1\n" // InputStartLine=1,LineFileID=1,RepeatCount=6,OutputStartLine=1
-				+ "7#2:7\n" // InputStartLine=7,LineFileID=2,OutputStartLine=7
-				+ "*S KotlinDebug"); // StratumID=KotlinDebug
+		context.kotlinSMAP = new KotlinSMAP("Example.kt", TextBlock.lines( //
+				"SMAP", //
+				"Example.kt", // OutputFileName=Example.kt
+				"Kotlin", // DefaultStratumId=Kotlin
+				"*S Kotlin", // StratumID=Kotlin
+				"*F", // FileSection
+				"+ 1 Example.kt", // FileID=1,FileName=Example.kt
+				"ExampleKt", //
+				"+ 2 Example.kt", // FileID=2,FileName=Example.kt
+				"a/ExampleKt", //
+				"*L", // LineSection
+				"1#1,6:1", // InputStartLine=1,LineFileID=1,RepeatCount=6,OutputStartLine=1
+				"7#2:7", // InputStartLine=7,LineFileID=2,OutputStartLine=7
+				"*S KotlinDebug")); // StratumID=KotlinDebug
 
 		Label label0 = new Label();
 		m.visitLabel(label0);
@@ -226,19 +230,20 @@ public class KotlinInlineFilterTest extends FilterTestBase {
 	@Test
 	public void should_filter_all_lines() {
 		context.className = "ExampleKt$callsite$$inlined$example$1";
-		context.kotlinSMAP = new KotlinSMAP("Example.kt", "SMAP\n" //
-				+ "Example.kt\n" // OutputFileName=Example.kt
-				+ "Kotlin\n" // DefaultStratumId=Kotlin
-				+ "*S Kotlin\n" // StratumID=Kotlin
-				+ "*F\n" // FileSection
-				+ "+ 1 Example.kt\n" // FileID=1
-				+ "ExampleKt$example$1\n" //
-				+ "+ 2 Example.kt\n" // FileID=2
-				+ "ExampleKt\n" //
-				+ "*L\n" // LineSection
-				+ "1#1,11:1\n" // InputStartLine=1,LineFileID=1,RepeatCount=11,OutputStartLine=1
-				+ "9#2:12\n" // InputStartLine=9,LineFileID=2,OutputStartLine=12
-				+ "*E\n"); // EndSection
+		context.kotlinSMAP = new KotlinSMAP("Example.kt", TextBlock.lines(//
+				"SMAP", //
+				"Example.kt", // OutputFileName=Example.kt
+				"Kotlin", // DefaultStratumId=Kotlin
+				"*S Kotlin", // StratumID=Kotlin
+				"*F", // FileSection
+				"+ 1 Example.kt", // FileID=1
+				"ExampleKt$example$1", //
+				"+ 2 Example.kt", // FileID=2
+				"ExampleKt", //
+				"*L", // LineSection
+				"1#1,11:1", // InputStartLine=1,LineFileID=1,RepeatCount=11,OutputStartLine=1
+				"9#2:12", // InputStartLine=9,LineFileID=2,OutputStartLine=12
+				"*E")); // EndSection
 
 		Label label0 = new Label();
 		m.visitLabel(label0);
