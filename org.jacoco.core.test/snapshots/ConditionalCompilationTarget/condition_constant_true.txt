@@ -1,9 +1,9 @@
-   L0
+   L_method_start
     LDC "then"
     INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
-   L1
+   L_after
     RETURN
-    LINENUMBER 5 L0
-    LINENUMBER 9 L1
+    LINENUMBER 5 L_method_start
+    LINENUMBER 9 L_after
     MAXSTACK = 1
     MAXLOCALS = 0
