@@ -1,0 +1,59 @@
+   L0
+    ALOAD 1
+    ASTORE 2
+    ALOAD 2
+    DUP
+    IFNULL L1
+    INVOKEVIRTUAL java/lang/String.hashCode ()I
+    TABLESWITCH
+      97: L2
+      98: L3
+      99: L4
+      default: L5
+   L2
+    ALOAD 2
+    LDC "a"
+    INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
+    IFNE L6
+    GOTO L5
+   L3
+    ALOAD 2
+    LDC "b"
+    INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
+    IFNE L7
+    GOTO L5
+   L4
+    ALOAD 2
+    LDC "c"
+    INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
+    IFNE L8
+    GOTO L5
+   L6
+    LDC "case a"
+    GOTO L9
+   L7
+    LDC "case b"
+    GOTO L9
+   L8
+    LDC "case c"
+    GOTO L9
+   L1
+    POP
+    LDC "null"
+    GOTO L9
+   L5
+    LDC "else"
+   L9
+    ARETURN
+   L10
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWhenStringTarget; L0 L10 0
+    LOCALVARIABLE p Ljava/lang/String; L0 L10 1
+    LINENUMBER 5 L0
+    LINENUMBER 6 L6
+    LINENUMBER 7 L7
+    LINENUMBER 8 L8
+    LINENUMBER 9 L1
+    LINENUMBER 10 L5
+    LINENUMBER 11 L9
+    MAXSTACK = 2
+    MAXLOCALS = 3
