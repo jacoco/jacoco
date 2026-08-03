@@ -1,0 +1,13 @@
+   L0
+    ALOAD 0
+    DUP
+    IFNONNULL L1
+    POP
+    LDC ""
+   L1
+    ARETURN
+   L2
+    LOCALVARIABLE a Ljava/lang/String; L0 L2 0
+    LINENUMBER 5 L0
+    MAXSTACK = 2
+    MAXLOCALS = 1
