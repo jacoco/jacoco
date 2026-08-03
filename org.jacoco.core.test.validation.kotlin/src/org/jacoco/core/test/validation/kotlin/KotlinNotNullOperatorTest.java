@@ -14,6 +14,7 @@ package org.jacoco.core.test.validation.kotlin;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.kotlin.targets.KotlinNotNullOperatorTarget;
+import org.junit.Test;
 
 /**
  * Test of not-null assertion operator.
@@ -22,6 +23,12 @@ public class KotlinNotNullOperatorTest extends ValidationTestBase {
 
 	public KotlinNotNullOperatorTest() {
 		super(KotlinNotNullOperatorTarget.class);
+	}
+
+	@Test
+	public void bytecodeSnapshots() throws Exception {
+		assertSnapshot(KotlinNotNullOperatorTarget.class, "example",
+				"not_null_assertion_operator.txt");
 	}
 
 }
