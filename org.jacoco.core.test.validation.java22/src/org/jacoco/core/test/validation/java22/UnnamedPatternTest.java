@@ -12,9 +12,11 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.java22;
 
+import org.jacoco.core.test.validation.JavaVersion;
 import org.jacoco.core.test.validation.Source;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java22.targets.UnnamedPatternTarget;
+import org.junit.Test;
 
 /**
  * Test of code coverage in {@link UnnamedPatternTarget}.
@@ -23,6 +25,23 @@ public class UnnamedPatternTest extends ValidationTestBase {
 
 	public UnnamedPatternTest() {
 		super(UnnamedPatternTarget.class);
+	}
+
+	@Test
+	public void bytecodeSnapshots() throws Exception {
+		final String version;
+		if (!isJDKCompiler) {
+			version = "ecj";
+		} else if (JavaVersion.current().isBefore("23")) {
+			version = "22";
+		} else {
+			version = "23";
+		}
+		assertSnapshot(UnnamedPatternTarget.class, "multiplePatternsInCase",
+				version + "/multiple_patterns_in_case.txt");
+		assertSnapshot(UnnamedPatternTarget.class,
+				"multiplePatternsInCaseWithGuard",
+				version + "/multiple_patterns_in_case_with_guard.txt");
 	}
 
 	public void assertJavacPartly(final Source.Line line,

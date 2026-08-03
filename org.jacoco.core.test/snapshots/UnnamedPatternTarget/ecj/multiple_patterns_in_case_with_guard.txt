@@ -1,0 +1,91 @@
+    TRYCATCHBLOCK L0 L1 L2 java/lang/Throwable
+    TRYCATCHBLOCK L3 L4 L2 java/lang/Throwable
+   L5
+    ALOAD 0
+    DUP
+    INVOKESTATIC java/util/Objects.requireNonNull (Ljava/lang/Object;)Ljava/lang/Object;
+    POP
+    ASTORE 2
+    ALOAD 2
+    ICONST_0
+   L6
+    INVOKEDYNAMIC typeSwitch(Ljava/lang/Object;I)I [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/runtime/SwitchBootstraps.typeSwitch(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;[Ljava/lang/Object;)Ljava/lang/invoke/CallSite;
+      // arguments:
+      org.jacoco.core.test.validation.java22.targets.UnnamedPatternTarget$R.class, 
+      org.jacoco.core.test.validation.java22.targets.UnnamedPatternTarget$R.class
+    ]
+    TABLESWITCH
+      0: L7
+      1: L7
+      default: L8
+   L7
+    ALOAD 2
+    DUP
+    INSTANCEOF org/jacoco/core/test/validation/java22/targets/UnnamedPatternTarget$R
+    IFEQ L9
+    DUP
+    CHECKCAST org/jacoco/core/test/validation/java22/targets/UnnamedPatternTarget$R
+   L0
+    INVOKEVIRTUAL org/jacoco/core/test/validation/java22/targets/UnnamedPatternTarget$R.c ()Ljava/lang/Object;
+   L1
+    INSTANCEOF java/lang/Float
+    IFNE L10
+    GOTO L9
+   L10
+    POP
+    GOTO L11
+   L9
+    DUP
+    INSTANCEOF org/jacoco/core/test/validation/java22/targets/UnnamedPatternTarget$R
+    IFEQ L12
+    DUP
+    CHECKCAST org/jacoco/core/test/validation/java22/targets/UnnamedPatternTarget$R
+   L3
+    INVOKEVIRTUAL org/jacoco/core/test/validation/java22/targets/UnnamedPatternTarget$R.c ()Ljava/lang/Object;
+   L4
+    INSTANCEOF java/lang/Double
+    IFNE L13
+    GOTO L12
+   L13
+    POP
+    GOTO L11
+   L12
+    POP
+    GOTO L14
+   L11
+    ILOAD 1
+    IFLE L14
+    GOTO L15
+   L14
+    ALOAD 2
+    ICONST_2
+    GOTO L6
+   L15
+    LDC "case"
+    GOTO L16
+   L8
+    LDC "default"
+   L16
+    ARETURN
+   L2
+    NEW java/lang/MatchException
+    DUP_X1
+    SWAP
+    DUP
+    INVOKEVIRTUAL java/lang/Throwable.toString ()Ljava/lang/String;
+    SWAP
+    INVOKESPECIAL java/lang/MatchException.<init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+    ATHROW
+   L17
+    LOCALVARIABLE o Ljava/lang/Object; L5 L17 0
+    LOCALVARIABLE x I L5 L17 1
+    LINENUMBER 5 L5
+    LINENUMBER 6 L7
+    LINENUMBER 7 L15
+    LINENUMBER 9 L8
+    LINENUMBER 5 L16
+    LINENUMBER 11 L2
+    MAXSTACK = 4
+    MAXLOCALS = 3
