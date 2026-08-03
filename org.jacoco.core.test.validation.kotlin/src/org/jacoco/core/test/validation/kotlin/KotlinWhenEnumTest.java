@@ -14,6 +14,7 @@ package org.jacoco.core.test.validation.kotlin;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.kotlin.targets.KotlinWhenEnumTarget;
+import org.junit.Test;
 
 /**
  * Test of code coverage in {@link KotlinWhenEnumTarget}.
@@ -22,6 +23,23 @@ public class KotlinWhenEnumTest extends ValidationTestBase {
 
 	public KotlinWhenEnumTest() {
 		super(KotlinWhenEnumTarget.class);
+	}
+
+	@Test
+	public void bytecodeSnapshots() throws Exception {
+		assertSnapshot(KotlinWhenEnumTarget.class, "whenEnum",
+				"without_else.txt");
+		assertSnapshot(KotlinWhenEnumTarget.class, "whenEnumRedundantElse",
+				"redundant_else.txt");
+		assertSnapshot(KotlinWhenEnumTarget.class,
+				"whenByNullableEnumWithNullCaseAndWithoutElse",
+				"nullable_case_without_else.txt");
+		assertSnapshot(KotlinWhenEnumTarget.class,
+				"whenByNullableEnumWithoutNullCaseAndWithElse",
+				"nullable_else.txt");
+		assertSnapshot(KotlinWhenEnumTarget.class,
+				"whenByNullableEnumWithNullAndElseCases",
+				"nullable_case_with_else.txt");
 	}
 
 }
