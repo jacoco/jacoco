@@ -1,0 +1,75 @@
+   L0
+    ALOAD 0
+    INVOKESTATIC java/lang/String.valueOf (Ljava/lang/Object;)Ljava/lang/String;
+    ASTORE 1
+    ICONST_M1
+    ISTORE 2
+    ALOAD 1
+    INVOKEVIRTUAL java/lang/String.hashCode ()I
+    LOOKUPSWITCH
+      97: L1
+      98: L2
+      default: L3
+   L1
+    ALOAD 1
+    LDC "\u0000a"
+    INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
+    IFEQ L4
+    ICONST_2
+    ISTORE 2
+    GOTO L3
+   L4
+    ALOAD 1
+    LDC "a"
+    INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
+    IFEQ L3
+    ICONST_0
+    ISTORE 2
+    GOTO L3
+   L2
+    ALOAD 1
+    LDC "b"
+    INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
+    IFEQ L3
+    ICONST_1
+    ISTORE 2
+   L3
+    ILOAD 2
+    TABLESWITCH
+      0: L5
+      1: L6
+      2: L7
+      default: L8
+   L5
+    LDC "case a"
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
+   L9
+    GOTO L10
+   L6
+    LDC "case b"
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
+   L11
+    GOTO L10
+   L7
+    LDC "case \u0000a"
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
+   L12
+    GOTO L10
+   L8
+    LDC "case default"
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
+   L10
+    RETURN
+   L13
+    LOCALVARIABLE s Ljava/lang/Object; L0 L13 0
+    LINENUMBER 5 L0
+    LINENUMBER 7 L5
+    LINENUMBER 8 L9
+    LINENUMBER 10 L6
+    LINENUMBER 11 L11
+    LINENUMBER 13 L7
+    LINENUMBER 14 L12
+    LINENUMBER 16 L8
+    LINENUMBER 19 L10
+    MAXSTACK = 2
+    MAXLOCALS = 3
