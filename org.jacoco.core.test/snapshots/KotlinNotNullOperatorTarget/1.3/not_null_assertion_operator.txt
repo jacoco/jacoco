@@ -1,0 +1,14 @@
+   L0
+    ALOAD 1
+    DUP
+    IFNONNULL L1
+    INVOKESTATIC kotlin/jvm/internal/Intrinsics.throwNpe ()V
+   L1
+    INVOKEVIRTUAL java/lang/String.length ()I
+    IRETURN
+   L2
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinNotNullOperatorTarget; L0 L2 0
+    LOCALVARIABLE x Ljava/lang/String; L0 L2 1
+    LINENUMBER 5 L0
+    MAXSTACK = 2
+    MAXLOCALS = 2
