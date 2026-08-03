@@ -1,0 +1,14 @@
+   L0
+    LDC Lorg/jacoco/core/test/validation/java5/targets/AssertTarget;.class
+    INVOKEVIRTUAL java/lang/Class.desiredAssertionStatus ()Z
+    IFNE L1
+    ICONST_1
+    GOTO L2
+   L1
+    ICONST_0
+   L2
+    PUTSTATIC org/jacoco/core/test/validation/java5/targets/AssertTarget.$assertionsDisabled : Z
+    RETURN
+    LINENUMBER 5 L0
+    MAXSTACK = 1
+    MAXLOCALS = 0
