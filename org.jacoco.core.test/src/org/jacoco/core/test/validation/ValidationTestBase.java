@@ -160,7 +160,8 @@ public abstract class ValidationTestBase {
 		final String expected = "../org.jacoco.core.test/snapshots/" + name;
 		final String actual = "target/snapshots/" + name;
 		MethodSnapshot.assertSnapshot(targetClass, targetMethod,
-				new File(expected), new File(actual));
+				new File(expected).getCanonicalFile(),
+				new File(actual).getCanonicalFile());
 	}
 
 	/**

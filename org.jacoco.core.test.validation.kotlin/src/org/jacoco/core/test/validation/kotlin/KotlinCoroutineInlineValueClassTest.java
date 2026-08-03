@@ -14,6 +14,7 @@ package org.jacoco.core.test.validation.kotlin;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.kotlin.targets.KotlinCoroutineInlineValueClassTarget;
+import org.junit.Test;
 
 /**
  * Test of code coverage in {@link KotlinCoroutineInlineValueClassTarget}.
@@ -22,6 +23,16 @@ public class KotlinCoroutineInlineValueClassTest extends ValidationTestBase {
 
 	public KotlinCoroutineInlineValueClassTest() {
 		super(KotlinCoroutineInlineValueClassTarget.class);
+	}
+
+	@Test
+	public void bytecodeSnapshots() throws Exception {
+		assertSnapshot(
+				Class.forName(
+						KotlinCoroutineInlineValueClassTarget.class.getName()
+								+ "$main$1"),
+				"invokeSuspend",
+				"../KotlinCoroutineInlineValueClassTarget/example.txt");
 	}
 
 }
