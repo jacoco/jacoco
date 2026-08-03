@@ -17,6 +17,7 @@ import static org.junit.Assert.assertEquals;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.Field;
 
+import org.jacoco.core.test.TextBlock;
 import org.jacoco.core.test.validation.JavaVersion;
 import org.junit.AssumptionViolatedException;
 import org.junit.Test;
@@ -52,7 +53,7 @@ public class LineImplMemoryTest {
 	public void currentVM() throws Exception {
 		final Layouter layouter = currentLayouter();
 		if (JavaVersion.current().isBefore("27")) {
-			assertEquals(text( //
+			assertEquals(TextBlock.lines( //
 					"Current VM Layout",
 					"org.jacoco.core.internal.analysis.LineImpl object internals:",
 					"OFF  SZ                                            TYPE DESCRIPTION               VALUE",
@@ -67,7 +68,7 @@ public class LineImplMemoryTest {
 			assertEquals(68600, sizeOfSingletons(layouter));
 		} else {
 			// https://openjdk.org/jeps/534
-			assertEquals(text( //
+			assertEquals(TextBlock.lines( //
 					"Current VM Layout",
 					"org.jacoco.core.internal.analysis.LineImpl object internals:",
 					"OFF  SZ                                            TYPE DESCRIPTION               VALUE",
@@ -79,6 +80,53 @@ public class LineImplMemoryTest {
 					layout(layouter));
 			assertEquals(48432, sizeOfSingletons(layouter));
 		}
+	}
+
+	/**
+	 * <a href=
+	 * "https://bugs.openjdk.org/browse/JDK-8360700?focusedId=14862778&page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-14862778">
+	 * Potentially experimental in JDK 30 and default in JDK 33</a>
+	 */
+	@Test
+	public void lilliput2() throws Exception {
+		final Layouter layouter = new HotSpotLayouter(
+				new Model64_Lilliput(/* compressed references */ true, 8,
+						/* Lilliput 2 */ true),
+				30);
+		assertEquals(TextBlock.lines(
+				"Hotspot Layout Simulation (JDK 30, 64-bit model, Lilliput (ultimate target), compressed references, compressed classes, 8-byte aligned)",
+				"org.jacoco.core.internal.analysis.LineImpl object internals:",
+				"OFF  SZ                                            TYPE DESCRIPTION               VALUE",
+				"  0   1                                                 (object header: mark)     N/A",
+				"  1   3                                                 (object header: class)    N/A",
+				"  4   4   org.jacoco.core.internal.analysis.CounterImpl LineImpl.instructions     N/A",
+				"  8   4   org.jacoco.core.internal.analysis.CounterImpl LineImpl.branches         N/A",
+				" 12   4                                                 (object alignment gap)    ",
+				"Instance size: 16 bytes",
+				"Space losses: 0 bytes internal + 4 bytes external = 4 bytes total"),
+				layout(layouter));
+		assertEquals(48432, sizeOfSingletons(layouter));
+	}
+
+	@Test
+	public void lilliput2_without_compressed_references() throws Exception {
+		final Layouter layouter = new HotSpotLayouter(
+				new Model64_Lilliput(/* compressed references */ false, 8,
+						/* Lilliput 2 */ true),
+				30);
+		assertEquals(TextBlock.lines(
+				"Hotspot Layout Simulation (JDK 30, 64-bit model, Lilliput (ultimate target), NO compressed references, compressed classes, 8-byte aligned)",
+				"org.jacoco.core.internal.analysis.LineImpl object internals:",
+				"OFF  SZ                                            TYPE DESCRIPTION               VALUE",
+				"  0   1                                                 (object header: mark)     N/A",
+				"  1   3                                                 (object header: class)    N/A",
+				"  4   4                                                 (alignment/padding gap)   ",
+				"  8   8   org.jacoco.core.internal.analysis.CounterImpl LineImpl.instructions     N/A",
+				" 16   8   org.jacoco.core.internal.analysis.CounterImpl LineImpl.branches         N/A",
+				"Instance size: 24 bytes",
+				"Space losses: 4 bytes internal + 0 bytes external = 4 bytes total"),
+				layout(layouter));
+		assertEquals(72728, sizeOfSingletons(layouter));
 	}
 
 	/**
@@ -104,7 +152,7 @@ public class LineImplMemoryTest {
 						 */
 						false),
 				24);
-		assertEquals(text(
+		assertEquals(TextBlock.lines(
 				"Hotspot Layout Simulation (JDK 24, 64-bit model, Lilliput (current experiment), compressed references, compressed classes, 8-byte aligned)",
 				"org.jacoco.core.internal.analysis.LineImpl object internals:",
 				"OFF  SZ                                            TYPE DESCRIPTION               VALUE",
@@ -129,7 +177,7 @@ public class LineImplMemoryTest {
 			throws Exception {
 		final Layouter layouter = new HotSpotLayouter(new Model64_Lilliput(),
 				24);
-		assertEquals(text(
+		assertEquals(TextBlock.lines(
 				"Hotspot Layout Simulation (JDK 24, 64-bit model, Lilliput (current experiment), NO compressed references, compressed classes, 8-byte aligned)",
 				"org.jacoco.core.internal.analysis.LineImpl object internals:",
 				"OFF  SZ                                            TYPE DESCRIPTION               VALUE",
@@ -153,7 +201,7 @@ public class LineImplMemoryTest {
 			throws Exception {
 		final Layouter layouter = new HotSpotLayouter(new Model64(false, true),
 				15);
-		assertEquals(text(
+		assertEquals(TextBlock.lines(
 				"Hotspot Layout Simulation (JDK 15, 64-bit model, NO compressed references, compressed classes, 8-byte aligned)",
 				"org.jacoco.core.internal.analysis.LineImpl object internals:",
 				"OFF  SZ                                            TYPE DESCRIPTION               VALUE",
@@ -176,7 +224,7 @@ public class LineImplMemoryTest {
 			throws Exception {
 		final Layouter layouter = new HotSpotLayouter(new Model64(false, false),
 				8);
-		assertEquals(text(
+		assertEquals(TextBlock.lines(
 				"Hotspot Layout Simulation (JDK 8, 64-bit model, NO compressed references, NO compressed classes, 8-byte aligned)",
 				"org.jacoco.core.internal.analysis.LineImpl object internals:",
 				"OFF  SZ                                            TYPE DESCRIPTION               VALUE",
@@ -269,7 +317,7 @@ public class LineImplMemoryTest {
 	public void clusterOops() {
 		final Layouter layouter = currentLayouter();
 		if (JavaVersion.current().isBefore("25")) {
-			assertEquals(text( //
+			assertEquals(TextBlock.lines( //
 					"Current VM Layout",
 					"org.jacoco.core.internal.analysis.LineImplMemoryTest$Derived object internals:",
 					"OFF  SZ               TYPE DESCRIPTION               VALUE",
@@ -284,7 +332,7 @@ public class LineImplMemoryTest {
 					"Space losses: 0 bytes internal + 4 bytes external = 4 bytes total"),
 					layout(layouter, Derived.class));
 		} else if (JavaVersion.current().isBefore("27")) {
-			assertEquals(text( //
+			assertEquals(TextBlock.lines( //
 					"Current VM Layout",
 					"org.jacoco.core.internal.analysis.LineImplMemoryTest$Derived object internals:",
 					"OFF  SZ               TYPE DESCRIPTION               VALUE",
@@ -300,7 +348,7 @@ public class LineImplMemoryTest {
 					layout(layouter, Derived.class));
 		} else {
 			// https://openjdk.org/jeps/534
-			assertEquals(text( //
+			assertEquals(TextBlock.lines( //
 					"Current VM Layout",
 					"org.jacoco.core.internal.analysis.LineImplMemoryTest$Derived object internals:",
 					"OFF  SZ               TYPE DESCRIPTION               VALUE",
@@ -323,19 +371,6 @@ public class LineImplMemoryTest {
 	private static class Derived extends Base {
 		private Object oop;
 		private int nonOop;
-	}
-
-	/**
-	 * Poor man's replacement for <a href="https://openjdk.org/jeps/378">Java 15
-	 * Text Blocks</a>. As with Text Blocks, the LF character is used as the
-	 * line terminator in the resulting string.
-	 */
-	private static String text(String... text) {
-		final StringBuilder sb = new StringBuilder();
-		for (String line : text) {
-			sb.append(line).append('\n');
-		}
-		return sb.toString();
 	}
 
 }

@@ -647,7 +647,7 @@
         </property>
       </activation>
       <properties>
-        <!-- Kotlin 2.4.0 doesn't support compilation into 27 -->
+        <!-- Kotlin 2.4.10 doesn't support compilation into 27 -->
         <kotlin.compiler.jvmTarget>26</kotlin.compiler.jvmTarget>
         <!-- Groovy 3.0.25 does not support compilation into 27 -->
         <groovy.targetBytecode>16</groovy.targetBytecode>
@@ -682,7 +682,7 @@
         </property>
       </activation>
       <properties>
-        <!-- Kotlin 2.4.0 doesn't support compilation into 28 -->
+        <!-- Kotlin 2.4.10 doesn't support compilation into 28 -->
         <kotlin.compiler.jvmTarget>25</kotlin.compiler.jvmTarget>
         <!-- Groovy 3.0.25 does not support compilation into 28 -->
         <groovy.targetBytecode>16</groovy.targetBytecode>
