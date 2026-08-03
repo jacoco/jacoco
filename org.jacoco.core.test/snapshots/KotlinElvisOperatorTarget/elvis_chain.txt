@@ -1,0 +1,18 @@
+   L_method_start
+    ALOAD 0
+    DUP
+    IFNONNULL L_after
+    POP
+    ALOAD 1
+    DUP
+    IFNONNULL L_after
+    POP
+    LDC ""
+   L_after
+    ARETURN
+   L_method_end
+    LOCALVARIABLE a Ljava/lang/String; L_method_start L_method_end 0
+    LOCALVARIABLE b Ljava/lang/String; L_method_start L_method_end 1
+    LINENUMBER 5 L_method_start
+    MAXSTACK = 2
+    MAXLOCALS = 2
