@@ -1,0 +1,14 @@
+   L0
+    NOP
+   L1
+    LDC "then"
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
+   L2
+    RETURN
+   L3
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinConditionalCompilationTarget; L0 L3 0
+    LINENUMBER 5 L0
+    LINENUMBER 6 L1
+    LINENUMBER 10 L2
+    MAXSTACK = 1
+    MAXLOCALS = 1
