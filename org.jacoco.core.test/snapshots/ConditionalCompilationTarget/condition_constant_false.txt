@@ -1,0 +1,9 @@
+   L0
+    LDC "else"
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
+   L1
+    RETURN
+    LINENUMBER 5 L0
+    LINENUMBER 7 L1
+    MAXSTACK = 1
+    MAXLOCALS = 0
