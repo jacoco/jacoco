@@ -1,0 +1,18 @@
+   L0
+    GETSTATIC org/jacoco/core/test/validation/java5/targets/AssertTarget.$assertionsDisabled : Z
+    IFNE L1
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.t ()Z
+    IFNE L1
+    NEW java/lang/AssertionError
+    DUP
+    LDC "msg"
+    INVOKESPECIAL java/lang/AssertionError.<init> (Ljava/lang/Object;)V
+    ATHROW
+   L1
+    RETURN
+   L2
+    LOCALVARIABLE args [Ljava/lang/String; L0 L2 0
+    LINENUMBER 5 L0
+    LINENUMBER 6 L1
+    MAXSTACK = 3
+    MAXLOCALS = 1
