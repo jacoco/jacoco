@@ -1,0 +1,45 @@
+   L0
+    ALOAD 1
+    ASTORE 2
+   L1
+    ALOAD 2
+    INSTANCEOF org/jacoco/core/test/validation/kotlin/targets/KotlinWhenGuardTarget$S$S1
+    IFEQ L2
+    ALOAD 1
+    CHECKCAST org/jacoco/core/test/validation/kotlin/targets/KotlinWhenGuardTarget$S$S1
+    INVOKEVIRTUAL org/jacoco/core/test/validation/kotlin/targets/KotlinWhenGuardTarget$S$S1.getS ()Ljava/lang/String;
+    LDC ""
+    INVOKESTATIC kotlin/jvm/internal/Intrinsics.areEqual (Ljava/lang/Object;Ljava/lang/Object;)Z
+    IFEQ L2
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+    GOTO L3
+   L2
+    ALOAD 2
+    INSTANCEOF org/jacoco/core/test/validation/kotlin/targets/KotlinWhenGuardTarget$S$S1
+    IFEQ L4
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+    GOTO L3
+   L4
+    ALOAD 2
+    INSTANCEOF org/jacoco/core/test/validation/kotlin/targets/KotlinWhenGuardTarget$S$S2
+    IFEQ L5
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+    GOTO L3
+   L5
+    NEW kotlin/NoWhenBranchMatchedException
+    DUP
+    INVOKESPECIAL kotlin/NoWhenBranchMatchedException.<init> ()V
+    ATHROW
+   L3
+    RETURN
+   L6
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWhenGuardTarget; L0 L6 0
+    LOCALVARIABLE s Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWhenGuardTarget$S; L0 L6 1
+    LINENUMBER 5 L0
+    LINENUMBER 6 L1
+    LINENUMBER 7 L2
+    LINENUMBER 8 L4
+    LINENUMBER 5 L5
+    LINENUMBER 10 L3
+    MAXSTACK = 2
+    MAXLOCALS = 3
