@@ -88,37 +88,9 @@ public class KotlinWhenFilterTest extends FilterTestBase {
 	}
 
 	@Test
-	public void should_filter_implicit_default() {
-		final Label case1 = new Label();
-		final Label caseDefault = new Label();
-		final Label after = new Label();
-
-		m.visitInsn(Opcodes.NOP);
-
-		m.visitTableSwitchInsn(0, 0, caseDefault, case1);
-		final AbstractInsnNode switchNode = m.instructions.getLast();
-		replacements.add(new Replacement(0, switchNode, 1));
-
-		m.visitLabel(case1);
-		m.visitInsn(Opcodes.ICONST_1);
-		m.visitJumpInsn(Opcodes.GOTO, after);
-
-		final Range range1 = new Range();
-		m.visitLabel(caseDefault);
-		range1.fromInclusive = m.instructions.getLast();
-		m.visitTypeInsn(Opcodes.NEW, "kotlin/NoWhenBranchMatchedException");
-		m.visitInsn(Opcodes.DUP);
-		m.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				"kotlin/NoWhenBranchMatchedException", "<init>", "()V", false);
-		m.visitInsn(Opcodes.ATHROW);
-		range1.toInclusive = m.instructions.getLast();
-
-		m.visitLabel(after);
-
-		filter.filter(m, context, output);
-
-		assertIgnored(m, range1);
-		assertReplacedBranches(m, switchNode, replacements);
+	public void should_filter_implicit_default() throws Exception {
+		assertSnapshot(filter,
+				"snapshots/KotlinWhenEnumTarget/without_else.txt");
 	}
 
 	/**
