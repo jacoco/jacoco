@@ -34,33 +34,9 @@ public class KotlinWhenFilterTest extends FilterTestBase {
 	private final ArrayList<Replacement> replacements = new ArrayList<Replacement>();
 
 	@Test
-	public void should_filter_implicit_else() {
-		final Label label = new Label();
-
-		final Range range1 = new Range();
-
-		m.visitInsn(Opcodes.NOP);
-
-		m.visitJumpInsn(Opcodes.IFEQ, label);
-		range1.fromInclusive = m.instructions.getLast();
-		range1.toInclusive = m.instructions.getLast();
-
-		m.visitInsn(Opcodes.NOP);
-
-		final Range range2 = new Range();
-		m.visitLabel(label);
-		range2.fromInclusive = m.instructions.getLast();
-		m.visitTypeInsn(Opcodes.NEW, "kotlin/NoWhenBranchMatchedException");
-		m.visitInsn(Opcodes.DUP);
-		m.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				"kotlin/NoWhenBranchMatchedException", "<init>", "()V", false);
-		m.visitInsn(Opcodes.ATHROW);
-		range2.toInclusive = m.instructions.getLast();
-
-		filter.filter(m, context, output);
-
-		assertIgnored(m, range1, range2);
-		assertNoReplacedBranches();
+	public void should_filter_implicit_else() throws Exception {
+		assertSnapshot(filter,
+				"snapshots/KotlinWhenSealedTarget/expression.txt");
 	}
 
 	@Test
