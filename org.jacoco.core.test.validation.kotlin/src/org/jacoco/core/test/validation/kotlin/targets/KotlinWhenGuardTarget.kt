@@ -12,8 +12,6 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.kotlin.targets
 
-import org.jacoco.core.test.validation.targets.Stubs.nop
-
 /**
  * Test target with [guard conditions in `when`](https://kotlinlang.org/docs/control-flow.html#guard-conditions-in-when-expressions).
  */
@@ -24,13 +22,12 @@ object KotlinWhenGuardTarget {
         object S2 : S
     }
 
-    private fun example(s: S) { // assertEmpty()
+    private fun example(s: S): String = // assertEmpty()
         when (s) { // assertFullyCovered()
-            is S.S1 if s.s == "" -> nop() // assertFullyCovered(0, 4)
-            is S.S1 -> nop() // assertFullyCovered(0, 2)
-            is S.S2 -> nop() // assertFullyCovered()
-        } // assertEmpty()
-    } // assertFullyCovered()
+            is S.S1 if s.s == "" -> "S1(empty string)" // assertFullyCovered(0, 4)
+            is S.S1 -> "S1(non empty string)" // assertFullyCovered(0, 2)
+            is S.S2 -> "S2" // assertFullyCovered()
+        } // assertFullyCovered()
 
     @JvmStatic
     fun main(args: Array<String>) {

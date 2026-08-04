@@ -21,17 +21,19 @@ object KotlinWhenEnumTarget {
         A, B
     }
 
-    private fun whenEnum(p: Enum): Int = when (p) {  // assertFullyCovered(0, 2)
-        Enum.A -> 1 // assertFullyCovered()
-        Enum.B -> 2 // assertFullyCovered()
-    } // assertFullyCovered()
+    private fun whenEnum(e: Enum): String =
+        when (e) {  // assertFullyCovered(0, 2)
+            Enum.A -> "a" // assertFullyCovered()
+            Enum.B -> "b" // assertFullyCovered()
+        } // assertFullyCovered()
 
     @Suppress("REDUNDANT_ELSE_IN_WHEN")
-    private fun whenEnumRedundantElse(p: Enum): Int = when (p) { // assertFullyCovered(0, 2)
-        Enum.A -> 1 // assertFullyCovered()
-        Enum.B -> 2 // assertFullyCovered()
-        else -> throw NoWhenBranchMatchedException() // assertEmpty()
-    } // assertFullyCovered()
+    private fun whenEnumRedundantElse(e: Enum): String =
+        when (e) { // assertFullyCovered(0, 2)
+            Enum.A -> "a" // assertFullyCovered()
+            Enum.B -> "b" // assertFullyCovered()
+            else -> throw NoWhenBranchMatchedException() // assertEmpty()
+        } // assertFullyCovered()
 
     private fun whenByNullableEnumWithNullCaseAndWithoutElse(e: Enum?): String =
         when (e) { // assertFullyCovered(0, 3)
