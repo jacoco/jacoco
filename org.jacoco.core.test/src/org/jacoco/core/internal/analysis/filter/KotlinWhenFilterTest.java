@@ -149,53 +149,10 @@ public class KotlinWhenFilterTest extends FilterTestBase {
 	 * </pre>
 	 */
 	@Test
-	public void should_filter_when_by_nullable_enum_without_null_case_and_with_else() {
-		final Range range1 = new Range();
-		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
-				"example", "(LE;)Ljava/lang/String;", null, null);
-		final Label l1 = new Label();
-		final Label l2 = new Label();
-		final Label caseElse = new Label();
-		final Label caseA = new Label();
-		final Label caseB = new Label();
-		final Label after = new Label();
-
-		m.visitVarInsn(Opcodes.ALOAD, 1);
-		m.visitInsn(Opcodes.DUP);
-		range1.fromInclusive = m.instructions.getLast();
-		m.visitJumpInsn(Opcodes.IFNONNULL, l1);
-		m.visitInsn(Opcodes.POP);
-		m.visitInsn(Opcodes.ICONST_M1);
-		m.visitJumpInsn(Opcodes.GOTO, l2);
-		m.visitLabel(l1);
-		m.visitFieldInsn(Opcodes.GETSTATIC, "ExampleKt$WhenMappings",
-				"$EnumSwitchMapping$0", "[I");
-		m.visitInsn(Opcodes.SWAP);
-		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "ExampleKt$Enum", "ordinal",
-				"()I", false);
-		m.visitInsn(Opcodes.IALOAD);
-		m.visitLabel(l2);
-		range1.toInclusive = m.instructions.getLast();
-		m.visitTableSwitchInsn(1, 2, caseElse, caseA, caseB);
-
-		m.visitLabel(caseA);
-		m.visitLdcInsn("a");
-		m.visitJumpInsn(Opcodes.GOTO, after);
-
-		m.visitLabel(caseB);
-		m.visitLdcInsn("b");
-		m.visitJumpInsn(Opcodes.GOTO, after);
-
-		m.visitLabel(caseElse);
-		m.visitLdcInsn("else");
-
-		m.visitLabel(after);
-		m.visitInsn(Opcodes.ARETURN);
-
-		filter.filter(m, context, output);
-
-		assertIgnored(m, range1);
-		assertNoReplacedBranches();
+	public void should_filter_when_by_nullable_enum_without_null_case_and_with_else()
+			throws Exception {
+		assertSnapshot(filter,
+				"snapshots/KotlinWhenEnumTarget/nullable_else.txt");
 	}
 
 	/**
