@@ -72,6 +72,27 @@ object KotlinWhenSealedTarget {
         /* missing is NonSealed.NonSealed3 */
     } // assertFullyCovered()
 
+    /** Indistinguishable from [statement]. */
+    private fun indistinguishable(sealed: Sealed) {
+        val tmp = sealed // assertFullyCovered()
+        if (tmp is Sealed.Sealed1) nop("case 1") // assertFullyCovered(0,2)
+        else if (tmp is Sealed.Sealed2) nop("case 2") // assertFullyCovered()
+        else throw NoWhenBranchMatchedException() // assertEmpty()
+    }
+
+    private fun singleCase(s: S1): String =
+        /* @formatter:off */
+        when (s) { is S1.A -> "S1.A" } // assertFullyCovered()
+        /* @formatter:on */
+
+    /** Indistinguishable from [singleCase]. */
+    private fun indistinguishableSingleCase(s: S1): String =
+        if (s is S1.A) "S1.A" else throw NoWhenBranchMatchedException() // assertFullyCovered()
+
+    private sealed class S1 {
+        object A : S1()
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
         expression(Sealed.Sealed1)
@@ -88,6 +109,12 @@ object KotlinWhenSealedTarget {
 
         nonSealedIf(NonSealed.NonSealed1())
         nonSealedIf(NonSealed.NonSealed2())
+
+        indistinguishable(Sealed.Sealed1)
+        indistinguishable(Sealed.Sealed2)
+
+        singleCase(S1.A)
+        indistinguishableSingleCase(S1.A)
     }
 
 }
