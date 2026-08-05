@@ -57,14 +57,22 @@ public class FilterTestBaseTest extends FilterTestBase {
 		try {
 			assertSnapshot(filter, context, new StringReader(TextBlock.lines( //
 					"NOP", //
-					"RETURN", //
-					"// previous instruction starts ignore range NAME", //
-					"// previous instruction ends ignore range NAME")));
+					"// previous instruction starts ignore range NAME_BB", //
+					"// previous instruction ends ignore range NAME_BB", //
+					"NOP", //
+					"// previous instruction starts ignore range NAME_Aa", //
+					"// previous instruction ends ignore range NAME_Aa", //
+					"RETURN")));
 			fail("ComparisonFailure expected");
 		} catch (final ComparisonFailure e) {
 			assertTrue(e.getMessage().startsWith("ignored ranges"));
-			assertEquals("range 0 from instruction 0 to 1\n", e.getActual());
-			assertEquals("range 0 from instruction 1 to 1\n", e.getExpected());
+			assertEquals(TextBlock.lines( //
+					"range 0 from instruction 0 to 2"), //
+					e.getActual());
+			assertEquals(TextBlock.lines( //
+					"range 0 from instruction 1 to 1", //
+					"range 1 from instruction 0 to 0"), //
+					e.getExpected());
 		}
 	}
 
