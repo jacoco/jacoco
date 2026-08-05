@@ -1,0 +1,11 @@
+  @Lkotlin/jvm/JvmStatic;()
+   L0
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+   L1
+    RETURN
+   L2
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinJvmStaticTarget$Interface$Companion; L0 L2 0
+    LINENUMBER 5 L0
+    LINENUMBER 6 L1
+    MAXSTACK = 0
+    MAXLOCALS = 1
