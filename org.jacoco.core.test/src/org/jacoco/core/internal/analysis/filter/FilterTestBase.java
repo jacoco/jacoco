@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -74,7 +75,7 @@ public abstract class FilterTestBase {
 	static void assertSnapshot(final IFilter filter,
 			final IFilterContext context, final Reader snapshot)
 			throws Exception {
-		final HashMap<String, Range> rangesByName = new HashMap<String, FilterTestBase.Range>();
+		final TreeMap<String, Range> rangesByName = new TreeMap<String, Range>();
 		final HashMap<String, ArrayList<Replacement>> replacementsByName = new HashMap<String, ArrayList<Replacement>>();
 		final HashMap<String, AbstractInsnNode> replacedInstructionsByName = new HashMap<String, AbstractInsnNode>();
 		final MethodSnapshotCommentsHandler commentsHandler = new MethodSnapshotCommentsHandler() {
