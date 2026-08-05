@@ -102,10 +102,21 @@ public abstract class FilterTestBase {
 				final String group3 = matcher.group(3);
 				if (group1 != null) {
 					final Range range = new Range();
+					if (rangesByName.containsKey(group1)) {
+						throw new IllegalStateException(
+								"Duplicate start for range " + group1);
+					}
 					rangesByName.put(group1, range);
 					range.fromInclusive = precedingInstruction;
 				} else if (group2 != null) {
 					final Range range = rangesByName.get(group2);
+					if (range == null) {
+						throw new IllegalStateException(
+								"Missing start for range " + group2);
+					} else if (range.toInclusive != null) {
+						throw new IllegalStateException(
+								"Duplicate end for range " + group2);
+					}
 					range.toInclusive = precedingInstruction;
 				} else if (group3 != null) {
 					replacedInstructionsByName.put(group3,
@@ -127,16 +138,28 @@ public abstract class FilterTestBase {
 		};
 		final MethodNode methodNode = MethodSnapshot.parse(snapshot,
 				commentsHandler);
+		for (final Map.Entry<String, Range> e : rangesByName.entrySet()) {
+			if (e.getValue().toInclusive == null) {
+				throw new IllegalStateException(
+						"Missing end for range " + e.getKey());
+			}
+		}
+		final HashMap<AbstractInsnNode, List<Replacement>> replacements = new HashMap<AbstractInsnNode, List<Replacement>>();
+		for (Map.Entry<String, AbstractInsnNode> e : replacedInstructionsByName
+				.entrySet()) {
+			final ArrayList<Replacement> value = replacementsByName
+					.get(e.getKey());
+			if (value == null) {
+				throw new IllegalStateException(
+						"Missing branches for replacement " + e.getKey());
+			}
+			replacements.put(e.getValue(), value);
+		}
 		final FilterTestBase output = new FilterTestBase() {
 		};
 		filter.filter(methodNode, context, output.output);
 		output.assertIgnored(methodNode,
 				rangesByName.values().toArray(new Range[0]));
-		final HashMap<AbstractInsnNode, List<Replacement>> replacements = new HashMap<AbstractInsnNode, List<Replacement>>();
-		for (Map.Entry<String, AbstractInsnNode> e : replacedInstructionsByName
-				.entrySet()) {
-			replacements.put(e.getValue(), replacementsByName.get(e.getKey()));
-		}
 		output.assertReplacedBranches(methodNode, replacements);
 	}
 

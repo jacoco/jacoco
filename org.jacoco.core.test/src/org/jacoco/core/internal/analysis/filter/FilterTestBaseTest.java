@@ -46,6 +46,75 @@ public class FilterTestBaseTest extends FilterTestBase {
 	}
 
 	@Test
+	public void assertSnapshot_should_throw_when_no_range_start()
+			throws Exception {
+		try {
+			assertSnapshot(null, context, new StringReader(TextBlock.lines( //
+					"RETURN", //
+					"// previous instruction ends ignore range NAME")));
+			fail("IllegalStateException expected");
+		} catch (final IllegalStateException e) {
+			assertEquals("Missing start for range NAME", e.getMessage());
+		}
+	}
+
+	@Test
+	public void assertSnapshot_should_throw_when_no_range_end()
+			throws Exception {
+		try {
+			assertSnapshot(null, context, new StringReader(TextBlock.lines( //
+					"RETURN", //
+					"// previous instruction starts ignore range NAME")));
+			fail("IllegalStateException expected");
+		} catch (final IllegalStateException e) {
+			assertEquals("Missing end for range NAME", e.getMessage());
+		}
+	}
+
+	@Test
+	public void assertSnapshot_should_throw_when_duplicate_range_start()
+			throws Exception {
+		try {
+			assertSnapshot(null, context, new StringReader(TextBlock.lines( //
+					"RETURN", //
+					"// previous instruction starts ignore range NAME", //
+					"// previous instruction starts ignore range NAME")));
+			fail("IllegalStateException expected");
+		} catch (final IllegalStateException e) {
+			assertEquals("Duplicate start for range NAME", e.getMessage());
+		}
+	}
+
+	@Test
+	public void assertSnapshot_should_throw_when_duplicate_range_end()
+			throws Exception {
+		try {
+			assertSnapshot(null, context, new StringReader(TextBlock.lines( //
+					"RETURN", //
+					"// previous instruction starts ignore range NAME", //
+					"// previous instruction ends ignore range NAME", //
+					"// previous instruction ends ignore range NAME")));
+			fail("IllegalStateException expected");
+		} catch (final IllegalStateException e) {
+			assertEquals("Duplicate end for range NAME", e.getMessage());
+		}
+	}
+
+	@Test
+	public void assertSnapshot_should_throw_when_no_branches_for_replacement()
+			throws Exception {
+		try {
+			assertSnapshot(null, context, new StringReader(TextBlock.lines( //
+					"RETURN", //
+					"// previous instruction replaced by NAME")));
+			fail("IllegalStateException expected");
+		} catch (final IllegalStateException e) {
+			assertEquals("Missing branches for replacement NAME",
+					e.getMessage());
+		}
+	}
+
+	@Test
 	public void assertSnapshot_should_compare_ranges() throws Exception {
 		final IFilter filter = new IFilter() {
 			public void filter(final MethodNode methodNode,
