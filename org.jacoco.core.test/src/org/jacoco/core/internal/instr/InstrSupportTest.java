@@ -145,12 +145,12 @@ public class InstrSupportTest {
 	}
 
 	@Test
-	public void assertNotIntrumented_should_accept_non_jacoco_memebers() {
+	public void assertNotInstrumented_should_accept_non_jacoco_members() {
 		InstrSupport.assertNotInstrumented("run", "Foo");
 	}
 
 	@Test
-	public void assertNotIntrumented_should_throw_exception_when_jacoco_data_field_is_present() {
+	public void assertNotInstrumented_should_throw_exception_when_jacoco_data_field_is_present() {
 		try {
 			InstrSupport.assertNotInstrumented("$jacocoData", "Foo");
 			fail("exception expected");
@@ -162,7 +162,7 @@ public class InstrSupportTest {
 	}
 
 	@Test
-	public void assertNotIntrumented_should_throw_exception_when_jacoco_init_method_is_present() {
+	public void assertNotInstrumented_should_throw_exception_when_jacoco_init_method_is_present() {
 		try {
 			InstrSupport.assertNotInstrumented("$jacocoInit", "Foo");
 			fail("exception expected");
