@@ -156,7 +156,7 @@ public abstract class ValidationTestBase {
 	 */
 	protected final void assertSnapshot(final Class<?> targetClass,
 			final String targetMethod, String name) throws Exception {
-		name = targetClass.getSimpleName() + "/" + name;
+		name = target.getSimpleName() + "/" + name;
 		final String expected = "../org.jacoco.core.test/snapshots/" + name;
 		final String actual = "target/snapshots/" + name;
 		MethodSnapshot.assertSnapshot(targetClass, targetMethod,
