@@ -14,6 +14,9 @@ package org.jacoco.core.test.validation.kotlin;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.kotlin.targets.KotlinCoroutineTarget;
+import org.junit.Test;
+
+import kotlin.KotlinVersion;
 
 /**
  * Test of coroutines.
@@ -22,6 +25,25 @@ public class KotlinCoroutineTest extends ValidationTestBase {
 
 	public KotlinCoroutineTest() {
 		super(KotlinCoroutineTarget.class);
+	}
+
+	@Test
+	public void bytecodeSnapshots() throws Exception {
+		assertSnapshot(KotlinCoroutineTarget.class, "suspendingFunction",
+				"suspending_function.txt");
+		assertSnapshot(KotlinCoroutineTarget.class,
+				"suspendingFunctionWithTailCallOptimization",
+				(KotlinVersion.CURRENT.isAtLeast(2, 4) ? "2.4.0/" : "")
+						+ "tail_call_optimization.txt");
+		assertSnapshot(
+				Class.forName(
+						KotlinCoroutineTarget.class.getName() + "$main$1"),
+				"invokeSuspend", "suspending_lambda.txt");
+		assertSnapshot(
+				Class.forName(KotlinCoroutineTarget.class.getName()
+						+ "$suspendingLambdaWithoutSuspensionPoints$1"),
+				"invokeSuspend",
+				"suspending_lambda_withous_suspension_points.txt");
 	}
 
 }
