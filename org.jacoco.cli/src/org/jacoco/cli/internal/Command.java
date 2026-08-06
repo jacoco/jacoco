@@ -13,57 +13,33 @@
 package org.jacoco.cli.internal;
 
 import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.Writer;
+import java.util.concurrent.Callable;
 
-import org.kohsuke.args4j.Option;
+import picocli.CommandLine;
 
 /**
  * Common interface for all commands.
  */
-public abstract class Command {
+public abstract class Command implements Callable<Integer> {
 
-	/**
-	 * Common command line prefix.
-	 */
-	public static final String JAVACMD = "java -jar jacococli.jar ";
+	@CommandLine.Spec
+	CommandLine.Model.CommandSpec commandSpec;
 
 	/**
 	 * Flag whether help should be printed for this command.
 	 */
-	@Option(name = "--help", usage = "show help", help = true)
+	@CommandLine.Option(names = "--help", description = "show help", usageHelp = true)
 	public boolean help = false;
 
 	/**
 	 * Flag whether output to stdout should be suppressed.
 	 */
-	@Option(name = "--quiet", usage = "suppress all output on stdout")
+	@CommandLine.Option(names = "--quiet", description = "suppress all output on stdout")
 	public boolean quiet = false;
 
 	/**
-	 * @return Short description of the command.
-	 */
-	public abstract String description();
-
-	/**
-	 * @return name of the command
-	 */
-	public String name() {
-		return getClass().getSimpleName().toLowerCase();
-	}
-
-	/**
-	 * @param parser
-	 *            parser for this command
-	 * @return usage string displayed for help
-	 */
-	public String usage(final CommandParser parser) {
-		final StringWriter writer = new StringWriter();
-		parser.printSingleLineUsage(writer, null);
-		return JAVACMD + name() + writer;
-	}
-
-	/**
-	 * Executes the given command.
+	 * Executes this command with given {@code out} and {@code err}.
 	 *
 	 * @param out
 	 *            std out
@@ -77,17 +53,29 @@ public abstract class Command {
 			throws Exception;
 
 	/**
-	 * Prints textual help for this command.
+	 * Executes this command.
 	 *
-	 * @param writer
-	 *            output destination
+	 * @return exit code, should be 0 for normal operation
+	 * @throws Exception
+	 *             any exception that my occur during execution
 	 */
-	protected void printHelp(final PrintWriter writer) {
-		final CommandParser parser = new CommandParser(this);
-		writer.println(description());
-		writer.println();
-		writer.println("Usage: " + parser.getCommand().usage(parser));
-		parser.printUsage(writer, null);
+	public final Integer call() throws Exception {
+		return execute(quiet ? NUL : commandSpec.commandLine().getOut(),
+				commandSpec.commandLine().getErr());
 	}
+
+	private static final PrintWriter NUL = new PrintWriter(new Writer() {
+		@Override
+		public void write(final char[] arg0, final int arg1, final int arg2) {
+		}
+
+		@Override
+		public void flush() {
+		}
+
+		@Override
+		public void close() {
+		}
+	});
 
 }

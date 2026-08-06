@@ -21,32 +21,29 @@ import org.jacoco.cli.internal.Command;
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.tools.ExecDumpClient;
 import org.jacoco.core.tools.ExecFileLoader;
-import org.kohsuke.args4j.Option;
+
+import picocli.CommandLine;
 
 /**
  * The <code>dump</code> command.
  */
+@CommandLine.Command(name = "dump", description = "Request execution data from a JaCoCo agent running in 'tcpserver' output mode.")
 public class Dump extends Command {
 
-	@Option(name = "--address", usage = "host name or ip address to connect to (default localhost)", metaVar = "<address>")
+	@CommandLine.Option(names = "--address", description = "host name or ip address to connect to (default localhost)", paramLabel = "<address>")
 	String address = AgentOptions.DEFAULT_ADDRESS;
 
-	@Option(name = "--port", usage = "the port to connect to (default 6300)", metaVar = "<port>")
+	@CommandLine.Option(names = "--port", description = "the port to connect to (default 6300)", paramLabel = "<port>")
 	int port = AgentOptions.DEFAULT_PORT;
 
-	@Option(name = "--destfile", usage = "file to write execution data to", metaVar = "<path>", required = true)
+	@CommandLine.Option(names = "--destfile", description = "file to write execution data to", paramLabel = "<path>", required = true)
 	File destfile;
 
-	@Option(name = "--reset", usage = "reset execution data on test target after dump")
+	@CommandLine.Option(names = "--reset", description = "reset execution data on test target after dump")
 	boolean reset = false;
 
-	@Option(name = "--retry", usage = "number of retries (default 10)", metaVar = "<count>")
+	@CommandLine.Option(names = "--retry", description = "number of retries (default 10)", paramLabel = "<count>")
 	int retrycount = 10;
-
-	@Override
-	public String description() {
-		return "Request execution data from a JaCoCo agent running in 'tcpserver' output mode.";
-	}
 
 	@Override
 	public int execute(final PrintWriter out, final PrintWriter err)
