@@ -14,6 +14,7 @@ package org.jacoco.core.test.validation.java5;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java5.targets.AssertTarget;
+import org.junit.Test;
 
 /**
  * Test of code coverage in {@link AssertTarget}.
@@ -22,6 +23,12 @@ public class AssertTest extends ValidationTestBase {
 
 	public AssertTest() {
 		super(AssertTarget.class);
+	}
+
+	@Test
+	public void bytecodeSnapshots() throws Exception {
+		assertSnapshot(AssertTarget.class, "<clinit>", "clinit.txt");
+		assertSnapshot(AssertTarget.class, "main", "assert.txt");
 	}
 
 }
