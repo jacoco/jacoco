@@ -15,6 +15,7 @@ package org.jacoco.core.test.validation.java5;
 import org.jacoco.core.test.validation.Source.Line;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java5.targets.SynchronizedTarget;
+import org.junit.Test;
 
 /**
  * Test of filtering of a bytecode that is generated for a synchronized
@@ -49,6 +50,20 @@ public class SynchronizedTest extends ValidationTestBase {
 			assertNotCovered(line);
 		} else {
 			assertEmpty(line);
+		}
+	}
+
+	@Test
+	public void bytecodeSnapshot() throws Exception {
+		if (isJDKCompiler) {
+			assertSnapshot(SynchronizedTarget.class, "normal", "normal.txt");
+			assertSnapshot(SynchronizedTarget.class, "explicitException",
+					"abnormal.txt");
+		} else {
+			assertSnapshot(SynchronizedTarget.class, "normal",
+					"ecj/normal.txt");
+			assertSnapshot(SynchronizedTarget.class, "explicitException",
+					"ecj/abnormal.txt");
 		}
 	}
 
