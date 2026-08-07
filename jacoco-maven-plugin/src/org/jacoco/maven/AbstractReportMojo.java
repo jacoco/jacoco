@@ -80,11 +80,29 @@ public abstract class AbstractReportMojo extends AbstractMojo
 	List<String> includes;
 
 	/**
+	 * A comma-separated list of class-file patterns to include in the report,
+	 * as an alternative to {@link #includes} that can be supplied from a single
+	 * (shared) property. May use wildcard characters (* and ?). Patterns given
+	 * here are combined with any {@link #includes} entries.
+	 */
+	@Parameter(property = "jacoco.additionalIncludes")
+	String additionalIncludes;
+
+	/**
 	 * A list of class files to exclude from the report. May use wildcard
 	 * characters (* and ?). When not specified nothing will be excluded.
 	 */
 	@Parameter
 	List<String> excludes;
+
+	/**
+	 * A comma-separated list of class-file patterns to exclude from the report,
+	 * as an alternative to {@link #excludes} that can be supplied from a single
+	 * (shared) property. May use wildcard characters (* and ?). Patterns given
+	 * here are combined with any {@link #excludes} entries.
+	 */
+	@Parameter(property = "jacoco.additionalExcludes")
+	String additionalExcludes;
 
 	/**
 	 * Flag used to suppress execution.
@@ -116,7 +134,7 @@ public abstract class AbstractReportMojo extends AbstractMojo
 	 * @return class files to include, may contain wildcard characters
 	 */
 	List<String> getIncludes() {
-		return includes;
+		return FileFilter.combine(includes, additionalIncludes);
 	}
 
 	/**
@@ -125,7 +143,7 @@ public abstract class AbstractReportMojo extends AbstractMojo
 	 * @return class files to exclude, may contain wildcard characters
 	 */
 	List<String> getExcludes() {
-		return excludes;
+		return FileFilter.combine(excludes, additionalExcludes);
 	}
 
 	public boolean canGenerateReport() {

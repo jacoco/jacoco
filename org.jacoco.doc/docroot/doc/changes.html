@@ -22,6 +22,12 @@
 
 <h3>New Features</h3>
 <ul>
+  <li>Maven <code>report</code>, <code>report-aggregate</code> and
+      <code>check</code> goals now accept includes/excludes as a comma-separated
+      string via the <code>jacoco.additionalIncludes</code> and <code>jacoco.additionalExcludes</code>
+      properties, so a single (shared) property can drive both reporting and
+      coverage enforcement
+      (GitHub <a href="https://github.com/jacoco/jacoco/issues/1075">#1075</a>).</li>
   <li>Experimental support for Java 28 class files
       (GitHub <a href="https://github.com/jacoco/jacoco/issues/2170">#2170</a>).</li>
   <li>To instrument classes loaded by the platform class loader, introduced in JDK 9

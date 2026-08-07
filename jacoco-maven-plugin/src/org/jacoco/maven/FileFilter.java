@@ -15,6 +15,7 @@ package org.jacoco.maven;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.codehaus.plexus.util.FileUtils;
@@ -88,6 +89,29 @@ public class FileFilter {
 	 */
 	public String getExcludes() {
 		return this.buildPattern(this.excludes, DEFAULT_EXCLUDES);
+	}
+
+	/**
+	 * Combines a list of patterns with an additional comma-separated pattern
+	 * string. Either argument may be {@code null} or empty.
+	 *
+	 * @param patterns
+	 *            list of patterns, may be {@code null}
+	 * @param additional
+	 *            comma-separated pattern string, may be {@code null} or empty
+	 * @return combined list
+	 */
+	public static List<String> combine(final List<String> patterns,
+			final String additional) {
+		if (additional == null || additional.trim().length() == 0) {
+			return patterns;
+		}
+		final List<String> result = new ArrayList<String>();
+		if (patterns != null) {
+			result.addAll(patterns);
+		}
+		result.add(additional.trim());
+		return result;
 	}
 
 	private String buildPattern(final List<String> patterns,
