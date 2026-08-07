@@ -114,6 +114,72 @@ public class ExecutionDataTest {
 	}
 
 	@Test
+	public void testMergeLongerData() {
+		final ExecutionData a = new ExecutionData(5, "Example",
+				new boolean[] { false, true });
+		final ExecutionData b = new ExecutionData(5, "Example",
+				new boolean[] { true, false, false, true });
+		a.merge(b);
+
+		// a is extended to the length of b:
+		assertEquals(4, a.getProbes().length);
+		assertTrue(a.getProbes()[0]);
+		assertTrue(a.getProbes()[1]);
+		assertFalse(a.getProbes()[2]);
+		assertTrue(a.getProbes()[3]);
+
+		// b must not be modified:
+		assertTrue(b.getProbes()[0]);
+		assertFalse(b.getProbes()[1]);
+		assertFalse(b.getProbes()[2]);
+		assertTrue(b.getProbes()[3]);
+	}
+
+	@Test
+	public void testMergeShorterData() {
+		final ExecutionData a = new ExecutionData(5, "Example",
+				new boolean[] { false, false, false, true });
+		final ExecutionData b = new ExecutionData(5, "Example",
+				new boolean[] { true, false });
+		a.merge(b);
+
+		// probes of a beyond the length of b are kept:
+		assertEquals(4, a.getProbes().length);
+		assertTrue(a.getProbes()[0]);
+		assertFalse(a.getProbes()[1]);
+		assertFalse(a.getProbes()[2]);
+		assertTrue(a.getProbes()[3]);
+	}
+
+	@Test
+	public void testMergeSubtractLongerData() {
+		final ExecutionData a = new ExecutionData(5, "Example",
+				new boolean[] { true, true });
+		final ExecutionData b = new ExecutionData(5, "Example",
+				new boolean[] { true, false, true });
+		a.merge(b, false);
+
+		// subtraction never extends the probe array:
+		assertEquals(2, a.getProbes().length);
+		assertFalse(a.getProbes()[0]);
+		assertTrue(a.getProbes()[1]);
+	}
+
+	@Test
+	public void testMergeDifferentName() {
+		final ExecutionData a = new ExecutionData(5, "Example",
+				new boolean[] { true });
+		final ExecutionData b = new ExecutionData(5, "Other",
+				new boolean[] { true });
+		try {
+			a.merge(b);
+			fail("IllegalStateException expected");
+		} catch (final IllegalStateException e) {
+			// expected
+		}
+	}
+
+	@Test
 	public void testAssertCompatibility() {
 		final ExecutionData a = new ExecutionData(5, "Example",
 				new boolean[] { true });
