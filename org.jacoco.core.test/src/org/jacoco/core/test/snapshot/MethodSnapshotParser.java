@@ -658,7 +658,7 @@ final class MethodSnapshotParser {
 			do {
 				s.append((char) c);
 				c = reader.read();
-			} while (c != -1 && c != '\n');
+			} while (c != -1 && c != '\r' && c != '\n');
 			return s.toString();
 		}
 	}
