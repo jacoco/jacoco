@@ -207,7 +207,7 @@ public class ClassFileVersionsTest {
 
 	@Test
 	public void test_28() throws IOException {
-		testVersion(V27 + 1, true);
+		testVersion(InstrSupport.BYTECODE_VERSION_MAX, true);
 	}
 
 	private void testVersion(int version, boolean frames) throws IOException {
