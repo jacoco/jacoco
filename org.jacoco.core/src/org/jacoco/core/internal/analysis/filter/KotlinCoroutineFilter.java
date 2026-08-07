@@ -19,6 +19,7 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LdcInsnNode;
+import org.objectweb.asm.tree.LineNumberNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TableSwitchInsnNode;
@@ -169,6 +170,25 @@ final class KotlinCoroutineFilter implements IFilter {
 			nextIs(Opcodes.ATHROW);
 			if (cursor == null) {
 				return;
+			}
+
+			int ignoreLineNumber = Integer.MAX_VALUE;
+			for (AbstractInsnNode i = ignore.get(0); i != ignore.get(1); i = i
+					.getNext()) {
+				if (i.getType() == AbstractInsnNode.LINE) {
+					ignoreLineNumber = Math.min(((LineNumberNode) i).line,
+							ignoreLineNumber);
+				}
+			}
+			int currentLineNumber = 0;
+			for (AbstractInsnNode i = methodNode.instructions
+					.getFirst(); i != null; i = i.getNext()) {
+				if (i.getType() == AbstractInsnNode.LINE) {
+					currentLineNumber = ((LineNumberNode) i).line;
+				}
+				if (currentLineNumber == ignoreLineNumber) {
+					output.ignore(i, i);
+				}
 			}
 
 			output.ignore(s.dflt, cursor);
