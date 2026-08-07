@@ -16,6 +16,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.StringTokenizer;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
@@ -30,6 +32,10 @@ import org.jacoco.core.internal.Pack200Streams;
 import org.jacoco.core.internal.analysis.ClassAnalyzer;
 import org.jacoco.core.internal.analysis.ClassCoverageImpl;
 import org.jacoco.core.internal.analysis.StringPool;
+import org.jacoco.core.internal.analysis.filter.FilterSet;
+import org.jacoco.core.internal.analysis.filter.Filters;
+import org.jacoco.core.internal.analysis.filter.IFilter;
+import org.jacoco.core.internal.analysis.filter.SourceFilter;
 import org.jacoco.core.internal.data.CRC64;
 import org.jacoco.core.internal.flow.ClassProbesAdapter;
 import org.jacoco.core.internal.instr.InstrSupport;
@@ -53,6 +59,59 @@ public class Analyzer {
 
 	private final StringPool stringPool;
 
+	private final ISourceFileProvider sourceProvider;
+
+	private final IFilter sourceFilter;
+
+	private final ThreadLocal<File> currentFile = new ThreadLocal<File>();
+
+	private class ContextAwareSourceFileProvider
+			implements ISourceFileProvider {
+
+		@Override
+		public Reader getSourceFile(final String packageName,
+				final String fileName) throws IOException {
+			if (sourceProvider != null) {
+				return sourceProvider.getSourceFile(packageName, fileName);
+			}
+
+			// Try to use ThreadLocal file context (if available)
+			File file = currentFile.get();
+			if (file != null) {
+				File packageRoot = file.getParentFile();
+				final String[] packageParts = packageName.split("/");
+				for (int i = 0; i < packageParts.length; i++) {
+					if (packageRoot == null)
+						break;
+					packageRoot = packageRoot.getParentFile();
+				}
+
+				if (packageRoot != null) {
+					final String[] sourceFolderNames = { "src", "src/main/java",
+							"source" };
+					File searchBase = packageRoot;
+					for (int i = 0; i < 4; i++) {
+						if (searchBase == null)
+							break;
+						for (final String srcFolderName : sourceFolderNames) {
+							final File srcDir = new File(searchBase,
+									srcFolderName);
+							final File candidate = new File(srcDir,
+									packageName + "/" + fileName);
+							if (candidate.exists() && candidate.isFile()) {
+								return new InputStreamReader(
+										new FileInputStream(candidate),
+										"UTF-8");
+							}
+						}
+						searchBase = searchBase.getParentFile();
+					}
+				}
+			}
+			return null;
+		}
+	}
+
 	/**
 	 * Creates a new analyzer reporting to the given output.
 	 *
@@ -64,9 +123,33 @@ public class Analyzer {
 	 */
 	public Analyzer(final ExecutionDataStore executionData,
 			final ICoverageVisitor coverageVisitor) {
+		this(executionData, coverageVisitor, null);
+	}
+
+	/**
+	 * Creates a new analyzer reporting to the given output.
+	 *
+	 * @param executionData
+	 *            execution data
+	 * @param coverageVisitor
+	 *            the output instance that will coverage data for every analyzed
+	 *            class
+	 * @param sourceProvider
+	 *            provider to retrieve source content
+	 */
+	public Analyzer(final ExecutionDataStore executionData,
+			final ICoverageVisitor coverageVisitor,
+			final ISourceFileProvider sourceProvider) {
 		this.executionData = executionData;
 		this.coverageVisitor = coverageVisitor;
+		this.sourceProvider = sourceProvider;
 		this.stringPool = new StringPool();
+
+		ISourceFileProvider effectiveProvider = sourceProvider;
+		if (effectiveProvider == null) {
+			effectiveProvider = new ContextAwareSourceFileProvider();
+		}
+		this.sourceFilter = new SourceFilter(effectiveProvider);
 	}
 
 	/**
@@ -92,8 +175,12 @@ public class Analyzer {
 		}
 		final ClassCoverageImpl coverage = new ClassCoverageImpl(className,
 				classid, noMatch);
+		final IFilter filter;
+
+		filter = new FilterSet(Filters.all(), sourceFilter);
+
 		final ClassAnalyzer analyzer = new ClassAnalyzer(coverage, probes,
-				stringPool) {
+				stringPool, filter) {
 			@Override
 			public void visitEnd() {
 				super.visitEnd();
@@ -129,10 +216,22 @@ public class Analyzer {
 	 */
 	public void analyzeClass(final byte[] buffer, final String location)
 			throws IOException {
+		boolean contextSet = false;
+		if (currentFile.get() == null && location != null) {
+			final File f = new File(location);
+			if (f.exists() && f.isFile()) {
+				currentFile.set(f);
+				contextSet = true;
+			}
+		}
 		try {
 			analyzeClass(buffer);
 		} catch (final RuntimeException cause) {
 			throw analyzerError(location, cause);
+		} finally {
+			if (contextSet) {
+				currentFile.remove();
+			}
 		}
 	}
 
@@ -223,11 +322,16 @@ public class Analyzer {
 				count += analyzeAll(f);
 			}
 		} else {
-			final InputStream in = new FileInputStream(file);
+			currentFile.set(file);
 			try {
-				count += analyzeAll(in, file.getPath());
+				final InputStream in = new FileInputStream(file);
+				try {
+					count += analyzeAll(in, file.getPath());
+				} finally {
+					in.close();
+				}
 			} finally {
-				in.close();
+				currentFile.remove();
 			}
 		}
 		return count;
