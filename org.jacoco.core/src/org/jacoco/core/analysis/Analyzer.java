@@ -113,7 +113,7 @@ public class Analyzer {
 			return;
 		}
 		final ClassVisitor visitor = createAnalyzingVisitor(classId,
-				reader.getClassName());
+				stringPool.get(reader.getClassName()));
 		reader.accept(visitor, 0);
 	}
 
