@@ -14,6 +14,9 @@ package org.jacoco.core.test.validation.kotlin;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.kotlin.targets.KotlinCoroutineSuspendingLambdaTarget;
+import org.junit.Test;
+
+import kotlin.KotlinVersion;
 
 /**
  * Test of code coverage in {@link KotlinCoroutineSuspendingLambdaTarget}.
@@ -22,6 +25,17 @@ public class KotlinCoroutineSuspendingLambdaTest extends ValidationTestBase {
 
 	public KotlinCoroutineSuspendingLambdaTest() {
 		super(KotlinCoroutineSuspendingLambdaTarget.class);
+	}
+
+	@Test
+	public void bytecodeSnapshots() throws Exception {
+		assertSnapshot(
+				Class.forName(
+						KotlinCoroutineSuspendingLambdaTarget.class.getName()
+								+ "$withParameter$1"),
+				"invokeSuspend",
+				(KotlinVersion.CURRENT.isAtLeast(2, 2) ? "2.2.0/" : "")
+						+ "suspending_lambda_with_parameter.txt");
 	}
 
 }
