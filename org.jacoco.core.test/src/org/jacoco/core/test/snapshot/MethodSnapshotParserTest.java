@@ -24,6 +24,7 @@ import java.util.HashMap;
 
 import org.jacoco.core.test.TextBlock;
 import org.junit.Test;
+import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.ConstantDynamic;
 import org.objectweb.asm.Handle;
@@ -31,6 +32,8 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
+import org.objectweb.asm.TypePath;
+import org.objectweb.asm.TypeReference;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
@@ -44,6 +47,112 @@ public class MethodSnapshotParserTest {
 	private final HashMap<String, AbstractInsnNode> comments = new HashMap<String, AbstractInsnNode>();
 
 	@Test
+	public void parseAnnotation() {
+		m.visitAnnotation("Lkotlin/jvm/JvmOverloads;", false);
+		m.visitAnnotation("Ljava/lang/Deprecated;", true);
+		m.visitInsn(Opcodes.NOP);
+		shouldParse(TextBlock.lines( //
+				"  @Ljava/lang/Deprecated;()", //
+				"  @Lkotlin/jvm/JvmOverloads;() // invisible", //
+				"    NOP"));
+	}
+
+	@Test
+	public void parseAnnotationValue() {
+		final AnnotationVisitor annotation = m
+				.visitAnnotation("Lorg/example/Annotation;", true);
+		annotation.visit("key1", 42);
+		annotation.visit("key2", 13);
+		annotation.visitEnd();
+		final String text = TextBlock.lines( //
+				"  @Lorg/example/Annotation;(key1=42, key2=13)");
+		assertEquals("snapshot before parsing", text,
+				MethodSnapshot.snapshot(m));
+		try {
+			parse(text);
+			fail("UnsupportedOperationException expected");
+		} catch (final UnsupportedOperationException e) {
+			assertEquals("@Lorg/example/Annotation;(key1=42", e.getMessage());
+		}
+	}
+
+	@Test
+	public void parseAnnotableParameterCount() {
+		m.visitAnnotableParameterCount(1, true);
+		final String text = TextBlock.lines( //
+				"    // annotable parameter count: 1 (visible)");
+		assertEquals("text before parsing", text, MethodSnapshot.text(m));
+		assertEquals("snapshot", "", MethodSnapshot.snapshot(m));
+		try {
+			parse(text);
+			fail("UnsupportedOperationException expected");
+		} catch (final UnsupportedOperationException e) {
+			assertEquals("// annotable parameter count: 1 (visible)",
+					e.getMessage());
+		}
+	}
+
+	/**
+	 * Requires {@link MethodNode#desc} for
+	 * {@link Type#getArgumentCount(String)}.
+	 */
+	@Test
+	public void parseParameterAnnotation() {
+		m.desc = "(Ljava/lang/String;)V";
+		m.visitParameterAnnotation(0, "Lorg/jetbrains/annotations/Nullable;",
+				true);
+		final String text = TextBlock.lines( //
+				"    @Lorg/jetbrains/annotations/Nullable;() // parameter 0");
+		assertEquals("text before parsing", text, MethodSnapshot.text(m));
+		assertEquals("snapshot", "", MethodSnapshot.snapshot(m));
+		try {
+			parse(text);
+			fail("UnsupportedOperationException expected");
+		} catch (final UnsupportedOperationException e) {
+			assertEquals("// parameter 0", e.getMessage());
+		}
+	}
+
+	/**
+	 * Requires {@link MethodNode#desc} for
+	 * {@link Type#getArgumentCount(String)}.
+	 */
+	@Test
+	public void parseParameterAnnotationInvisible() {
+		m.desc = "(Ljava/lang/String;)V";
+		m.visitParameterAnnotation(0, "Lorg/jetbrains/annotations/Nullable;",
+				false);
+		final String text = TextBlock.lines( //
+				"    @Lorg/jetbrains/annotations/Nullable;() // invisible, parameter 0");
+		assertEquals("text before parsing", text, MethodSnapshot.text(m));
+		assertEquals("snapshot", "", MethodSnapshot.snapshot(m));
+		try {
+			parse(text);
+			fail("UnsupportedOperationException expected");
+		} catch (final UnsupportedOperationException e) {
+			assertEquals("// invisible, parameter 0", e.getMessage());
+		}
+	}
+
+	@Test
+	public void parseTypeAnnotation() {
+		m.visitTypeAnnotation(
+				TypeReference.newTypeReference(TypeReference.METHOD_RETURN)
+						.getValue(),
+				null, "Lorg/jspecify/annotations/Nullable;", true);
+		final String text = TextBlock.lines( //
+				"  @Lorg/jspecify/annotations/Nullable;() : METHOD_RETURN, null");
+		assertEquals("text before parsing", text, MethodSnapshot.text(m));
+		assertEquals("snapshot", "", MethodSnapshot.snapshot(m));
+		try {
+			parse(text);
+			fail("UnsupportedOperationException expected");
+		} catch (UnsupportedOperationException e) {
+			assertEquals(":", e.getMessage());
+		}
+	}
+
+	@Test
 	public void parseMaxStackMaxLocals() {
 		m.visitInsn(Opcodes.NOP);
 		m.visitMaxs(4, 2);
@@ -51,9 +160,11 @@ public class MethodSnapshotParserTest {
 				"    NOP", //
 				"    MAXSTACK = 4", //
 				"    MAXLOCALS = 2");
-		assertEquals("text before parsing", text, toText(m));
+		assertEquals("snapshot before parsing", text,
+				MethodSnapshot.snapshot(m));
 		final MethodNode parsed = parse(text);
-		assertEquals("text after parsing", text, toText(parsed));
+		assertEquals("snapshot after parsing", text,
+				MethodSnapshot.snapshot(parsed));
 		assertEquals(4, parsed.maxStack);
 		assertEquals(2, parsed.maxLocals);
 	}
@@ -73,6 +184,43 @@ public class MethodSnapshotParserTest {
 				"    LOCALVARIABLE list Ljava/util/List; L0 L2 42", //
 				"    // signature Ljava/util/List<Ljava/lang/Integer;>;", //
 				"    // declaration: list extends java.util.List<java.lang.Integer>"));
+	}
+
+	@Test
+	public void parseLocalVariableAnnotation() {
+		final Label start = new Label();
+		final Label end = new Label();
+		m.visitLabel(start);
+		m.visitLabel(end);
+		m.visitLocalVariable("s", "Ljava/lang/String;", null, start, end, 1);
+		m.visitLocalVariableAnnotation(
+				TypeReference.newTypeReference(TypeReference.LOCAL_VARIABLE)
+						.getValue(),
+				null, //
+				new Label[] { start }, new Label[] { end }, new int[] { 1 },
+				"Lorg/jspecify/annotations/Nullable;", true);
+		final String text = TextBlock.lines( //
+				"   L0", //
+				"   L1", //
+				"    LOCALVARIABLE s Ljava/lang/String; L0 L1 1", //
+				"    LOCALVARIABLE @Lorg/jspecify/annotations/Nullable;() : LOCAL_VARIABLE, null [ L0 - L1 - 1 ]", //
+				"    MAXSTACK = 0", //
+				"    MAXLOCALS = 0");
+		assertEquals("text before parsing", text, MethodSnapshot.text(m));
+		assertEquals("snapshot", TextBlock.lines( //
+				"   L0", //
+				"   L1", //
+				"    LOCALVARIABLE s Ljava/lang/String; L0 L1 1", //
+				"    MAXSTACK = 0", //
+				"    MAXLOCALS = 0"), //
+				MethodSnapshot.snapshot(m));
+		try {
+			parse(text);
+			fail("UnsupportedOperationException expected");
+		} catch (final UnsupportedOperationException e) {
+			assertEquals("@Lorg/jspecify/annotations/Nullable;()",
+					e.getMessage());
+		}
 	}
 
 	@Test
@@ -102,9 +250,43 @@ public class MethodSnapshotParserTest {
 				"   L0", //
 				"    MAXSTACK = 0", //
 				"    MAXLOCALS = 0");
-		assertEquals("text before parsing", text, toText(m));
+		assertEquals("snapshot before parsing", text,
+				MethodSnapshot.snapshot(m));
 		final MethodNode parsed = parse(text);
 		assertNull(parsed.tryCatchBlocks.get(0).type);
+		assertEquals("snapshot after parsing", text,
+				MethodSnapshot.snapshot(parsed));
+	}
+
+	@Test
+	public void parseTryCatchAnnotation() {
+		final Label start = new Label();
+		m.visitTryCatchBlock(start, new Label(), new Label(),
+				"java/lang/Exception");
+		m.visitLabel(start);
+		m.visitTryCatchAnnotation(
+				TypeReference.newTryCatchReference(0).getValue(), null,
+				"Lorg/jspecify/annotations/Nullable;", true);
+		final String text = TextBlock.lines( //
+				"    TRYCATCHBLOCK L0 L1 L2 java/lang/Exception", //
+				"    TRYCATCHBLOCK @Lorg/jspecify/annotations/Nullable;() : EXCEPTION_PARAMETER 0, null", //
+				"   L0", //
+				"    MAXSTACK = 0", //
+				"    MAXLOCALS = 0");
+		assertEquals("text before parsing", text, MethodSnapshot.text(m));
+		assertEquals("snapshot", TextBlock.lines( //
+				"    TRYCATCHBLOCK L0 L1 L2 java/lang/Exception", //
+				"   L0", //
+				"    MAXSTACK = 0", //
+				"    MAXLOCALS = 0"), //
+				MethodSnapshot.snapshot(m));
+		try {
+			parse(text);
+			fail("UnsupportedOperationException expected");
+		} catch (final UnsupportedOperationException e) {
+			assertEquals("@Lorg/jspecify/annotations/Nullable;()",
+					e.getMessage());
+		}
 	}
 
 	@Test
@@ -125,8 +307,10 @@ public class MethodSnapshotParserTest {
 				"   FRAME SAME1 J", //
 				"    MAXSTACK = 0", //
 				"    MAXLOCALS = 0");
-		assertEquals("text before parsing", text, toText(m));
-		assertEquals("text after parsing", "", toText(parse(text)));
+		assertEquals("snapshot before parsing", text,
+				MethodSnapshot.snapshot(m));
+		assertEquals("snapshot after parsing", "",
+				MethodSnapshot.snapshot(parse(text)));
 	}
 
 	@Test
@@ -521,9 +705,11 @@ public class MethodSnapshotParserTest {
 		text += TextBlock.lines( //
 				"    MAXSTACK = 0", //
 				"    MAXLOCALS = 0");
-		assertEquals("text before parsing", text, toText(m));
+		assertEquals("snapshot before parsing", text,
+				MethodSnapshot.snapshot(m));
 		final MethodNode parsed = parse(text);
-		assertEquals("text after parsing", text, toText(parsed));
+		assertEquals("snapshot after parsing", text,
+				MethodSnapshot.snapshot(parsed));
 		assertArrayEquals("method bytes", toBytes(m), toBytes(parsed));
 		assertTrue(comments.isEmpty());
 	}
@@ -542,10 +728,6 @@ public class MethodSnapshotParserTest {
 			// Must not happen with StringReader
 			throw new IllegalStateException(e);
 		}
-	}
-
-	private static String toText(final MethodNode m) {
-		return MethodSnapshot.snapshot(m);
 	}
 
 	private static byte[] toBytes(final MethodNode m) {
