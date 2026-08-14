@@ -44,7 +44,7 @@ public class WildcardMatcherTest {
 	}
 
 	@Test
-	public void asterix_should_match_any_number_of_any_character() {
+	public void asterisk_should_match_any_number_of_any_character() {
 		assertTrue(new WildcardMatcher("*").matches(""));
 		assertTrue(new WildcardMatcher("*").matches("java/lang/Object"));
 		assertTrue(new WildcardMatcher("*Test").matches("jacoco/MatcherTest"));
@@ -72,7 +72,7 @@ public class WildcardMatcherTest {
 	public void should_match_dollar_sign() {
 		assertTrue(new WildcardMatcher("*$*").matches("java/util/Map$Entry"));
 		assertTrue(new WildcardMatcher("*$$$*")
-				.matches("org/example/Enity$$$generated123"));
+				.matches("org/example/Entity$$$generated123"));
 	}
 
 }

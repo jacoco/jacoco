@@ -22,7 +22,7 @@
 
 <p class="hint">
   Implementing a coverage tool that supports statement (C0) as well as branch
-  coverage coverage (C1) requires detailed analysis of the internal control flow
+  coverage (C1) requires detailed analysis of the internal control flow
   of Java methods. Due to the architecture of JaCoCo this analysis happens on
   the bytecode of compiled class files. This document describes JaCoCo's
   strategies for inserting probes into the control flow at runtime and analyzing
@@ -32,7 +32,7 @@
 <h2>Control Flow Graphs for Java Bytecode</h2>
 
 <p>
-  As an starting point we take the following example method that contains a
+  As a starting point we take the following example method that contains a
   single branching point:
 </p>
 
@@ -171,7 +171,7 @@ public static example()V
 </p>
 
 <ul>
-  <li>If a edge has been visited, we know that the source node of the this edge
+  <li>If an edge has been visited, we know that the source node of this edge
       has been executed.</li>
   <li>If a node has been executed and the node is the target of only one edge
       we know that this edge has been visited.</li>
@@ -229,7 +229,7 @@ public static example()V
       <td><img src="resources/flow-cond.png" alt="Conditional Jump"/></td>
       <td><img src="resources/flow-cond-probe.png" alt="Conditional Jump with Probe"/></td>
       <td>
-        Adding a probe to an conditional jump is little bit more tricky. We
+        Adding a probe to a conditional jump is a little bit more tricky. We
         invert the semantic of the opcode and add the probe right after the
         conditional jump. With a subsequent <code>GOTO</code> instruction we
         jump to the original target. Note that this approach will not introduce
@@ -242,7 +242,7 @@ public static example()V
       <td><img src="resources/flow-exit.png" alt="Exit"/></td>
       <td><img src="resources/flow-exit-probe.png" alt="Exit with Probe"/></td>
       <td>
-        As is is the nature of RETURN and THROW statements to actually leave the
+        As it is the nature of RETURN and THROW statements to actually leave the
         method we add the probe right before these statements.
       </td>
     </tr>
@@ -262,7 +262,7 @@ public static example()V
 <p>
   The probe insertion strategy described so far does not consider implicit
   exceptions thrown for example from invoked methods. If the control flow
-  between two probes is interrupted by a exception not explicitly created with
+  between two probes is interrupted by an exception not explicitly created with
   a <code>throw</code> statement all instruction in between are considered as
   not covered. This leads to unexpected results especially when the block of
   instructions spans multiple lines of source code.
@@ -322,7 +322,7 @@ public static example()V
 
 <p>
   JaCoCo implements probes with a <code>boolean[]</code> array instance per
-  class. Each probe corresponds to a entry in this array. Whenever the probe is
+  class. Each probe corresponds to an entry in this array. Whenever the probe is
   executed the entry is set to <code>true</code> with the following four
   bytecode instructions:
 </p>
@@ -415,7 +415,7 @@ BASTORE
 <h2>References</h2>
 
 <ul>
-  <li><a href="https://asm.ow2.io/">ASM byte code library</a> by Eric Bruneton at al.</li>
+  <li><a href="https://asm.ow2.io/">ASM byte code library</a> by Eric Bruneton et al.</li>
   <li><a href="https://marketplace.eclipse.org/content/bytecode-outline">Bytecode Outline Plug-In</a> by Andrei Loskutov</li>
   <li><a href="http://en.wikipedia.org/wiki/Glossary_of_graph_theory">Wikipedia: Glossary of Graph Theory</a></li>
 </ul>

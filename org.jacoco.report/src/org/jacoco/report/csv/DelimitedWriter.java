@@ -111,7 +111,7 @@ class DelimitedWriter {
 	}
 
 	/**
-	 * Write muliple integer values
+	 * Write multiple integer values
 	 *
 	 * @param values
 	 *            values to write
