@@ -1,0 +1,61 @@
+   L0
+    ALOAD 0
+    DUP
+    ASTORE 1
+    INVOKEVIRTUAL java/lang/String.hashCode ()I
+    LOOKUPSWITCH
+      97: L1
+      98: L2
+      99: L3
+      default: L4
+   L1
+    ALOAD 1
+    LDC "a"
+    INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
+    IFNE L5
+    GOTO L4
+   L2
+    ALOAD 1
+    LDC "b"
+    INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
+    IFNE L6
+    GOTO L4
+   L3
+    ALOAD 1
+    LDC "c"
+    INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
+    IFNE L7
+    GOTO L4
+   L5
+    LDC "a"
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
+   L8
+    GOTO L9
+   L6
+    LDC "b"
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
+   L10
+    GOTO L9
+   L7
+    LDC "c"
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
+   L11
+    GOTO L9
+   L4
+    LDC "default"
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
+   L9
+    RETURN
+   L12
+    LOCALVARIABLE s Ljava/lang/String; L0 L12 0
+    LINENUMBER 5 L0
+    LINENUMBER 7 L5
+    LINENUMBER 8 L8
+    LINENUMBER 10 L6
+    LINENUMBER 11 L10
+    LINENUMBER 13 L7
+    LINENUMBER 14 L11
+    LINENUMBER 16 L4
+    LINENUMBER 20 L9
+    MAXSTACK = 2
+    MAXLOCALS = 2
