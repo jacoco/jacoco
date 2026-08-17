@@ -1,6 +1,6 @@
     TRYCATCHBLOCK L0 L1 L2 java/lang/NoSuchFieldError
     TRYCATCHBLOCK L3 L4 L5 java/lang/NoSuchFieldError
-   L6
+   L_method_start
     GETSTATIC org/jacoco/core/test/validation/java5/targets/EnumSwitchTarget.$SWITCH_TABLE$org$jacoco$core$test$validation$java5$targets$EnumSwitchTarget$E : [I
     DUP
     IFNULL L7
@@ -36,6 +36,6 @@
     DUP
     PUTSTATIC org/jacoco/core/test/validation/java5/targets/EnumSwitchTarget.$SWITCH_TABLE$org$jacoco$core$test$validation$java5$targets$EnumSwitchTarget$E : [I
     ARETURN
-    LINENUMBER 5 L6
+    LINENUMBER 5 L_method_start
     MAXSTACK = 3
     MAXLOCALS = 1

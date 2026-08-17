@@ -1,6 +1,6 @@
     TRYCATCHBLOCK L0 L1 L2 java/lang/NoSuchFieldError
     TRYCATCHBLOCK L3 L4 L5 java/lang/NoSuchFieldError
-   L6
+   L_method_start
     INVOKESTATIC org/jacoco/core/test/validation/java5/targets/EnumSwitchTarget$E.values ()[Lorg/jacoco/core/test/validation/java5/targets/EnumSwitchTarget$E;
     ARRAYLENGTH
     NEWARRAY T_INT
@@ -27,6 +27,6 @@
     ASTORE 0
    L7
     RETURN
-    LINENUMBER 5 L6
+    LINENUMBER 5 L_method_start
     MAXSTACK = 3
     MAXLOCALS = 1

@@ -1,28 +1,28 @@
-   L0
+   L_method_start
     INVOKESTATIC org/jacoco/core/test/validation/java5/targets/EnumSwitchTarget.$SWITCH_TABLE$org$jacoco$core$test$validation$java5$targets$EnumSwitchTarget$E ()[I
     ALOAD 0
     INVOKEVIRTUAL org/jacoco/core/test/validation/java5/targets/EnumSwitchTarget$E.ordinal ()I
     IALOAD
     TABLESWITCH
-      1: L1
-      2: L2
-      default: L2
-   L1
+      1: L_case_1
+      2: L_case_2
+      default: L_case_2
+   L_case_1
     LDC "V1"
     INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
-   L3
-    GOTO L4
-   L2
+   L_break
+    GOTO L_after
+   L_case_2
     LDC "V2"
     INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
-   L4
+   L_after
     RETURN
-   L5
-    LOCALVARIABLE e Lorg/jacoco/core/test/validation/java5/targets/EnumSwitchTarget$E; L0 L5 0
-    LINENUMBER 5 L0
-    LINENUMBER 7 L1
-    LINENUMBER 8 L3
-    LINENUMBER 11 L2
-    LINENUMBER 14 L4
+   L_method_end
+    LOCALVARIABLE e Lorg/jacoco/core/test/validation/java5/targets/EnumSwitchTarget$E; L_method_start L_method_end 0
+    LINENUMBER 5 L_method_start
+    LINENUMBER 7 L_case_1
+    LINENUMBER 8 L_break
+    LINENUMBER 11 L_case_2
+    LINENUMBER 14 L_after
     MAXSTACK = 2
     MAXLOCALS = 1
