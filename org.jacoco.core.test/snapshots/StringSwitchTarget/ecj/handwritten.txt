@@ -1,4 +1,4 @@
-   L0
+   L_method_start
     ICONST_M1
     ISTORE 1
    L1
@@ -42,7 +42,7 @@
       0: L11
       1: L12
       2: L13
-      default: L14
+      default: L_default
    L11
     LDC "case a"
     INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
@@ -58,15 +58,15 @@
     INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
    L18
     GOTO L16
-   L14
+   L_default
     LDC "default"
     INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
    L16
     RETURN
-   L19
-    LOCALVARIABLE s Ljava/lang/String; L0 L19 0
-    LOCALVARIABLE c I L1 L19 1
-    LINENUMBER 5 L0
+   L_method_end
+    LOCALVARIABLE s Ljava/lang/String; L_method_start L_method_end 0
+    LOCALVARIABLE c I L1 L_method_end 1
+    LINENUMBER 5 L_method_start
     LINENUMBER 6 L1
     LINENUMBER 8 L2
     LINENUMBER 9 L6
@@ -82,7 +82,7 @@
     LINENUMBER 26 L17
     LINENUMBER 28 L13
     LINENUMBER 29 L18
-    LINENUMBER 31 L14
+    LINENUMBER 31 L_default
     LINENUMBER 34 L16
     MAXSTACK = 2
     MAXLOCALS = 2

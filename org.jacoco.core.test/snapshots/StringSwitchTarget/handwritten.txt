@@ -1,4 +1,4 @@
-   L0
+   L_method_start
     ICONST_M1
     ISTORE 1
    L1
@@ -61,10 +61,10 @@
     INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
    L14
     RETURN
-   L17
-    LOCALVARIABLE s Ljava/lang/String; L0 L17 0
-    LOCALVARIABLE c I L1 L17 1
-    LINENUMBER 5 L0
+   L_method_end
+    LOCALVARIABLE s Ljava/lang/String; L_method_start L_method_end 0
+    LOCALVARIABLE c I L1 L_method_end 1
+    LINENUMBER 5 L_method_start
     LINENUMBER 6 L1
     LINENUMBER 8 L2
     LINENUMBER 9 L6
