@@ -1,0 +1,28 @@
+   L0
+    GETSTATIC org/jacoco/core/test/validation/java5/targets/EnumSwitchTarget$1.$SwitchMap$org$jacoco$core$test$validation$java5$targets$EnumSwitchTarget$E : [I
+    ALOAD 0
+    INVOKEVIRTUAL org/jacoco/core/test/validation/java5/targets/EnumSwitchTarget$E.ordinal ()I
+    IALOAD
+    LOOKUPSWITCH
+      1: L1
+      2: L2
+      default: L2
+   L1
+    LDC "V1"
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
+   L3
+    GOTO L4
+   L2
+    LDC "V2"
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
+   L4
+    RETURN
+   L5
+    LOCALVARIABLE e Lorg/jacoco/core/test/validation/java5/targets/EnumSwitchTarget$E; L0 L5 0
+    LINENUMBER 5 L0
+    LINENUMBER 7 L1
+    LINENUMBER 8 L3
+    LINENUMBER 11 L2
+    LINENUMBER 14 L4
+    MAXSTACK = 2
+    MAXLOCALS = 1

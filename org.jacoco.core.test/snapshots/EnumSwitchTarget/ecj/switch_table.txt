@@ -1,0 +1,41 @@
+    TRYCATCHBLOCK L0 L1 L2 java/lang/NoSuchFieldError
+    TRYCATCHBLOCK L3 L4 L5 java/lang/NoSuchFieldError
+   L6
+    GETSTATIC org/jacoco/core/test/validation/java5/targets/EnumSwitchTarget.$SWITCH_TABLE$org$jacoco$core$test$validation$java5$targets$EnumSwitchTarget$E : [I
+    DUP
+    IFNULL L7
+    ARETURN
+   L7
+    POP
+    INVOKESTATIC org/jacoco/core/test/validation/java5/targets/EnumSwitchTarget$E.values ()[Lorg/jacoco/core/test/validation/java5/targets/EnumSwitchTarget$E;
+    ARRAYLENGTH
+    NEWARRAY T_INT
+    ASTORE 0
+   L0
+    ALOAD 0
+    GETSTATIC org/jacoco/core/test/validation/java5/targets/EnumSwitchTarget$E.V1 : Lorg/jacoco/core/test/validation/java5/targets/EnumSwitchTarget$E;
+    INVOKEVIRTUAL org/jacoco/core/test/validation/java5/targets/EnumSwitchTarget$E.ordinal ()I
+    ICONST_1
+    IASTORE
+   L1
+    GOTO L3
+   L2
+    POP
+   L3
+    ALOAD 0
+    GETSTATIC org/jacoco/core/test/validation/java5/targets/EnumSwitchTarget$E.V2 : Lorg/jacoco/core/test/validation/java5/targets/EnumSwitchTarget$E;
+    INVOKEVIRTUAL org/jacoco/core/test/validation/java5/targets/EnumSwitchTarget$E.ordinal ()I
+    ICONST_2
+    IASTORE
+   L4
+    GOTO L8
+   L5
+    POP
+   L8
+    ALOAD 0
+    DUP
+    PUTSTATIC org/jacoco/core/test/validation/java5/targets/EnumSwitchTarget.$SWITCH_TABLE$org$jacoco$core$test$validation$java5$targets$EnumSwitchTarget$E : [I
+    ARETURN
+    LINENUMBER 5 L6
+    MAXSTACK = 3
+    MAXLOCALS = 1
