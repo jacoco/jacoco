@@ -31,6 +31,13 @@ public class KotlinWhenSealedTest extends ValidationTestBase {
 				"expression.txt");
 		assertSnapshot(KotlinWhenSealedTarget.class, "statement",
 				"statement.txt");
+		assertSnapshot(KotlinWhenSealedTarget.class, "indistinguishable",
+				"indistinguishable.txt");
+		assertSnapshot(KotlinWhenSealedTarget.class, "singleCase",
+				"indistinguishable_single_case.txt");
+		assertSnapshot(KotlinWhenSealedTarget.class,
+				"indistinguishableSingleCase",
+				"indistinguishable_single_case.txt");
 	}
 
 }
