@@ -1,59 +1,59 @@
-   L0
+   L_method_start
     ALOAD 0
     INVOKESTATIC java/lang/String.valueOf (Ljava/lang/Object;)Ljava/lang/String;
     DUP
     ASTORE 1
     INVOKEVIRTUAL java/lang/String.hashCode ()I
     LOOKUPSWITCH
-      97: L1
-      98: L2
-      default: L3
-   L1
+      97: L_hash_a
+      98: L_hash_b
+      default: L_default
+   L_hash_a
     ALOAD 1
     LDC "a"
     INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
-    IFNE L4
+    IFNE L_case_a
     ALOAD 1
     LDC "\u0000a"
     INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
-    IFNE L5
-    GOTO L3
-   L2
+    IFNE L_case_0a
+    GOTO L_default
+   L_hash_b
     ALOAD 1
     LDC "b"
     INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
-    IFNE L6
-    GOTO L3
-   L4
+    IFNE L_case_b
+    GOTO L_default
+   L_case_a
     LDC "case a"
     INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
-   L7
-    GOTO L8
-   L6
+   L_break_a
+    GOTO L_after
+   L_case_b
     LDC "case b"
     INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
-   L9
-    GOTO L8
-   L5
+   L_break_b
+    GOTO L_after
+   L_case_0a
     LDC "case \u0000a"
     INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
-   L10
-    GOTO L8
-   L3
+   L_break_0a
+    GOTO L_after
+   L_default
     LDC "case default"
     INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
-   L8
+   L_after
     RETURN
-   L11
-    LOCALVARIABLE s Ljava/lang/Object; L0 L11 0
-    LINENUMBER 5 L0
-    LINENUMBER 7 L4
-    LINENUMBER 8 L7
-    LINENUMBER 10 L6
-    LINENUMBER 11 L9
-    LINENUMBER 13 L5
-    LINENUMBER 14 L10
-    LINENUMBER 16 L3
-    LINENUMBER 19 L8
+   L_method_end
+    LOCALVARIABLE s Ljava/lang/Object; L_method_start L_method_end 0
+    LINENUMBER 5 L_method_start
+    LINENUMBER 7 L_case_a
+    LINENUMBER 8 L_break_a
+    LINENUMBER 10 L_case_b
+    LINENUMBER 11 L_break_b
+    LINENUMBER 13 L_case_0a
+    LINENUMBER 14 L_break_0a
+    LINENUMBER 16 L_default
+    LINENUMBER 19 L_after
     MAXSTACK = 2
     MAXLOCALS = 2
