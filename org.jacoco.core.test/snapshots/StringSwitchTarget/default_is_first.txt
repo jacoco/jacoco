@@ -7,16 +7,16 @@
     ALOAD 1
     INVOKEVIRTUAL java/lang/String.hashCode ()I
     LOOKUPSWITCH
-      97: L_hashCode_a
-      default: L_hashCode_default
-   L_hashCode_a
+      97: L_hash_a
+      default: L_hash_default
+   L_hash_a
     ALOAD 1
     LDC "a"
     INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
-    IFEQ L_hashCode_default
+    IFEQ L_hash_default
     ICONST_1
     ISTORE 2
-   L_hashCode_default
+   L_hash_default
     ILOAD 2
     LOOKUPSWITCH
       1: L_case_a
