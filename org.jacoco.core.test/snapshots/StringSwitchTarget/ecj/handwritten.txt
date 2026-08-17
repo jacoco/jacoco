@@ -5,84 +5,84 @@
     ALOAD 0
     INVOKEVIRTUAL java/lang/String.hashCode ()I
     TABLESWITCH
-      97: L2
-      98: L3
-      default: L4
-   L2
+      97: L_hash_a
+      98: L_hash_b
+      default: L_hash_default
+   L_hash_a
     LDC "a"
     ALOAD 0
     INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
-    IFEQ L5
+    IFEQ L_hash_0a
    L6
     ICONST_0
     ISTORE 1
    L7
-    GOTO L4
-   L5
+    GOTO L_hash_default
+   L_hash_0a
     LDC "\u0000a"
     ALOAD 0
     INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
-    IFEQ L4
+    IFEQ L_hash_default
    L8
     ICONST_1
     ISTORE 1
    L9
-    GOTO L4
-   L3
+    GOTO L_hash_default
+   L_hash_b
     LDC "b"
     ALOAD 0
     INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
-    IFEQ L4
+    IFEQ L_hash_default
    L10
     ICONST_2
     ISTORE 1
-   L4
+   L_hash_default
     ILOAD 1
     TABLESWITCH
-      0: L11
-      1: L12
-      2: L13
+      0: L_case_a
+      1: L_case_0a
+      2: L_case_b
       default: L_default
-   L11
+   L_case_a
     LDC "case a"
     INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
-   L15
-    GOTO L16
-   L12
+   L_break_a
+    GOTO L_after
+   L_case_0a
     LDC "case \u0000a"
     INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
-   L17
-    GOTO L16
-   L13
+   L_break_0a
+    GOTO L_after
+   L_case_b
     LDC "case b"
     INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
-   L18
-    GOTO L16
+   L_break_b
+    GOTO L_after
    L_default
     LDC "default"
     INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
-   L16
+   L_after
     RETURN
    L_method_end
     LOCALVARIABLE s Ljava/lang/String; L_method_start L_method_end 0
     LOCALVARIABLE c I L1 L_method_end 1
     LINENUMBER 5 L_method_start
     LINENUMBER 6 L1
-    LINENUMBER 8 L2
+    LINENUMBER 8 L_hash_a
     LINENUMBER 9 L6
     LINENUMBER 10 L7
     LINENUMBER 11 L8
     LINENUMBER 13 L9
-    LINENUMBER 15 L3
+    LINENUMBER 15 L_hash_b
     LINENUMBER 16 L10
-    LINENUMBER 20 L4
-    LINENUMBER 22 L11
-    LINENUMBER 23 L15
-    LINENUMBER 25 L12
-    LINENUMBER 26 L17
-    LINENUMBER 28 L13
-    LINENUMBER 29 L18
+    LINENUMBER 20 L_hash_default
+    LINENUMBER 22 L_case_a
+    LINENUMBER 23 L_break_a
+    LINENUMBER 25 L_case_0a
+    LINENUMBER 26 L_break_0a
+    LINENUMBER 28 L_case_b
+    LINENUMBER 29 L_break_b
     LINENUMBER 31 L_default
-    LINENUMBER 34 L16
+    LINENUMBER 34 L_after
     MAXSTACK = 2
     MAXLOCALS = 2
