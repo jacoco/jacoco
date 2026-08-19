@@ -84,6 +84,9 @@ public class ValueClassTarget {
 			assertEquals("org.objectweb.asm.ClassReader",
 					stackTraceTop.getClassName());
 			assertEquals("readStackMapFrame", stackTraceTop.getMethodName());
+			/*
+			 * "https://gitlab.ow2.org/asm/asm/-/blob/ASM_9_10_1/asm/src/main/java/org/objectweb/asm/ClassReader.java?ref_type=tags#L3364"
+			 */
 			assertEquals(3364, stackTraceTop.getLineNumber());
 		}
 
@@ -92,7 +95,8 @@ public class ValueClassTarget {
 		assertTrue(C.class.getDeclaredField("v").isStrictInit());
 
 		new R(1);
-		assertTrue(R.class.isValue() && R.class.isRecord());
+		assertTrue(R.class.isValue());
+		assertTrue(R.class.isRecord());
 		assertTrue(R.class.getDeclaredField("v").isStrictInit());
 	}
 
