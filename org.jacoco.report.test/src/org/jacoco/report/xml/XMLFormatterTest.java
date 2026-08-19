@@ -127,6 +127,10 @@ public class XMLFormatterTest {
 		assertPathMatches("1", "count(/report/counter[@type='CLASS'])");
 		assertPathMatches("0", "report/counter[@type='CLASS']/@missed");
 		assertPathMatches("1", "report/counter[@type='CLASS']/@covered");
+
+		assertPathMatches("1", "count(/report/counter[@type='BOUNDARY'])");
+		assertPathMatches("2", "report/counter[@type='BOUNDARY']/@missed");
+		assertPathMatches("1", "report/counter[@type='BOUNDARY']/@covered");
 	}
 
 	@Test
