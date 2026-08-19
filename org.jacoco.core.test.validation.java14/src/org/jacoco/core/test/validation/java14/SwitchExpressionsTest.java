@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.java14;
 
+import org.jacoco.core.test.validation.JavaVersion;
 import org.jacoco.core.test.validation.Source.Line;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java14.targets.SwitchExpressionsTarget;
@@ -23,6 +24,14 @@ public class SwitchExpressionsTest extends ValidationTestBase {
 
 	public SwitchExpressionsTest() {
 		super(SwitchExpressionsTarget.class);
+	}
+
+	public void assertFullyCoveredOrEmpty(final Line line) {
+		if (JavaVersion.current().isBefore("17")) {
+			assertFullyCovered(line);
+		} else {
+			assertEmpty(line);
+		}
 	}
 
 }
