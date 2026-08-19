@@ -23,7 +23,7 @@ public class AssertTarget { // assertFullyCovered()
 	}
 
 	public static void main(String[] args) {
-		assert t() : "msg"; // assertPartlyCovered(1, 1)
+		assert t() : "msg"; // assertFullyCovered()
 	}
 
 }
