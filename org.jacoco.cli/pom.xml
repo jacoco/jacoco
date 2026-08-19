@@ -21,6 +21,8 @@
   </parent>
 
   <artifactId>org.jacoco.cli</artifactId>
+  <url>https://www.jacoco.org/jacoco/trunk/doc/cli.html</url>
+
 
   <name>JaCoCo :: Command Line Interface</name>
   <description>JaCoCo Command Line Interface</description>
