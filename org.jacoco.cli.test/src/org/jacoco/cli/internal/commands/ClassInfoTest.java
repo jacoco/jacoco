@@ -26,9 +26,8 @@ public class ClassInfoTest extends CommandTestBase {
 		execute("classinfo", "--invalid");
 
 		assertFailure();
-		assertContains("\"--invalid\"", err);
-		assertContains(
-				"java -jar jacococli.jar classinfo [<classlocations> ...]",
+		assertContains("Unknown option: '--invalid'", err);
+		assertContains("Usage: java -jar jacococli.jar classinfo [--help]",
 				err);
 	}
 
