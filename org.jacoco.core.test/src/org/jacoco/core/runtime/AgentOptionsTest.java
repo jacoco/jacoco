@@ -140,6 +140,12 @@ public class AgentOptionsTest {
 	}
 
 	@Test
+	public void testGetAppendMisleading() {
+		AgentOptions options = new AgentOptions("append=yes");
+		assertFalse(options.getAppend());
+	}
+
+	@Test
 	public void testSetAppendTrue() {
 		AgentOptions options = new AgentOptions();
 		options.setAppend(true);
@@ -214,6 +220,12 @@ public class AgentOptionsTest {
 	}
 
 	@Test
+	public void testGetInclBootstrapClassesMisleading() {
+		AgentOptions options = new AgentOptions("inclbootstrapclasses=yes");
+		assertFalse(options.getInclBootstrapClasses());
+	}
+
+	@Test
 	public void testSetInclBootstrapClassesTrue() {
 		AgentOptions options = new AgentOptions();
 		options.setInclBootstrapClasses(true);
@@ -238,6 +250,12 @@ public class AgentOptionsTest {
 	@Test
 	public void testGetInclNoLocationClassesFalse() {
 		AgentOptions options = new AgentOptions("inclnolocationclasses=false");
+		assertFalse(options.getInclNoLocationClasses());
+	}
+
+	@Test
+	public void testGetInclNoLocationClassesMisleading() {
+		AgentOptions options = new AgentOptions("inclnolocationclasses=yes");
 		assertFalse(options.getInclNoLocationClasses());
 	}
 
@@ -274,6 +292,12 @@ public class AgentOptionsTest {
 	@Test
 	public void testGetDumpOnExit() {
 		AgentOptions options = new AgentOptions("dumponexit=false");
+		assertFalse(options.getDumpOnExit());
+	}
+
+	@Test
+	public void testGetDumpOnExitMisleading() {
+		AgentOptions options = new AgentOptions("dumponexit=yes");
 		assertFalse(options.getDumpOnExit());
 	}
 
@@ -428,6 +452,18 @@ public class AgentOptionsTest {
 	public void testGetJmx() {
 		AgentOptions options = new AgentOptions("jmx=true");
 		assertTrue(options.getJmx());
+	}
+
+	@Test
+	public void testGetJmxFalse() {
+		AgentOptions options = new AgentOptions("jmx=false");
+		assertFalse(options.getJmx());
+	}
+
+	@Test
+	public void testGetJmxMisleading() {
+		AgentOptions options = new AgentOptions("jmx=yes");
+		assertFalse(options.getJmx());
 	}
 
 	@Test
