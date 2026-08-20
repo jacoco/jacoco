@@ -245,6 +245,7 @@ public class MethodSnapshotParserTest {
 		m.visitVarInsn(Opcodes.FSTORE, 8);
 		m.visitVarInsn(Opcodes.DSTORE, 9);
 		m.visitVarInsn(Opcodes.ASTORE, 10);
+		m.visitVarInsn(Opcodes.RET, 11);
 		shouldParse(TextBlock.lines( //
 				"    ILOAD 1", //
 				"    LLOAD 2", //
@@ -255,7 +256,8 @@ public class MethodSnapshotParserTest {
 				"    LSTORE 7", //
 				"    FSTORE 8", //
 				"    DSTORE 9", //
-				"    ASTORE 10"));
+				"    ASTORE 10", //
+				"    RET 11"));
 	}
 
 	@Test
@@ -284,6 +286,7 @@ public class MethodSnapshotParserTest {
 		m.visitJumpInsn(Opcodes.GOTO, new Label());
 		m.visitJumpInsn(Opcodes.IFNULL, new Label());
 		m.visitJumpInsn(Opcodes.IFNONNULL, new Label());
+		m.visitJumpInsn(Opcodes.JSR, new Label());
 		shouldParse(TextBlock.lines( //
 				"    IFEQ L0", //
 				"    IFNE L1", //
@@ -302,7 +305,8 @@ public class MethodSnapshotParserTest {
 				"    IF_ACMPNE L14", //
 				"    GOTO L15", //
 				"    IFNULL L16", //
-				"    IFNONNULL L17"));
+				"    IFNONNULL L17", //
+				"    JSR L18"));
 	}
 
 	@Test
@@ -492,30 +496,6 @@ public class MethodSnapshotParserTest {
 	public void parseMultiANewArrayInsn() {
 		m.visitMultiANewArrayInsn("descriptor", 42);
 		shouldParse("    MULTIANEWARRAY descriptor 42\n");
-	}
-
-	@Test
-	public void parseInsn_JSR() {
-		m.visitInsn(Opcodes.JSR);
-		final String text = toText(m);
-		try {
-			parse(text);
-			fail("expected UnsupportedOperationException");
-		} catch (final UnsupportedOperationException e) {
-			// expected
-		}
-	}
-
-	@Test
-	public void parseInsn_RET() {
-		m.visitInsn(Opcodes.RET);
-		final String text = toText(m);
-		try {
-			parse(text);
-			fail("expected UnsupportedOperationException");
-		} catch (final UnsupportedOperationException e) {
-			// expected
-		}
 	}
 
 	@Test
