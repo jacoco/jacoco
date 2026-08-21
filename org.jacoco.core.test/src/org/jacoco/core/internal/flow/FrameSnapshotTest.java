@@ -72,7 +72,7 @@ public class FrameSnapshotTest {
 	}
 
 	@Test
-	public void should_combine_slots_when_doube_or_long_types_are_given() {
+	public void should_combine_slots_when_double_or_long_types_are_given() {
 		analyzer.visitInsn(Opcodes.DCONST_0);
 		analyzer.visitVarInsn(Opcodes.DSTORE, 1);
 		analyzer.visitInsn(Opcodes.FCONST_0);

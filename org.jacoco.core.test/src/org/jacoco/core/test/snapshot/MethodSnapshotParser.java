@@ -80,6 +80,7 @@ final class MethodSnapshotParser {
 				case Opcodes.FSTORE:
 				case Opcodes.DSTORE:
 				case Opcodes.ASTORE:
+				case Opcodes.RET:
 					parseVar(opcode);
 					break;
 				case Opcodes.IINC:
@@ -102,11 +103,9 @@ final class MethodSnapshotParser {
 				case Opcodes.GOTO:
 				case Opcodes.IFNULL:
 				case Opcodes.IFNONNULL:
+				case Opcodes.JSR:
 					parseJump(opcode);
 					break;
-				case Opcodes.JSR:
-				case Opcodes.RET:
-					throw new UnsupportedOperationException();
 				case Opcodes.TABLESWITCH:
 					parseTableSwitch();
 					break;
@@ -658,7 +657,7 @@ final class MethodSnapshotParser {
 			do {
 				s.append((char) c);
 				c = reader.read();
-			} while (c != -1 && c != '\n');
+			} while (c != -1 && c != '\r' && c != '\n');
 			return s.toString();
 		}
 	}
