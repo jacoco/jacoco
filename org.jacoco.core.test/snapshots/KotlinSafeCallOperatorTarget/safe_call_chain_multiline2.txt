@@ -1,46 +1,46 @@
-   L0
+   L_method_start
     ALOAD 0
-    IFNULL L1
+    IFNULL L_null
     ALOAD 0
     ASTORE 1
     ALOAD 1
     ASTORE 2
-   L2
+   L_before_inline
     ICONST_0
     ISTORE 3
-   L3
+   L_inline
     ALOAD 2
     INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
-   L4
+   L_after_inline
     NOP
-   L5
+   L_getB_before
     ALOAD 1
-   L6
+   L_getB
     INVOKEVIRTUAL org/jacoco/core/test/validation/kotlin/targets/KotlinSafeCallOperatorTarget$A.getB ()Lorg/jacoco/core/test/validation/kotlin/targets/KotlinSafeCallOperatorTarget$B;
     ASTORE 1
     ALOAD 1
-    IFNULL L1
-   L7
+    IFNULL L_null
+   L_getC_before
     ALOAD 1
-   L8
+   L_getC
     INVOKEVIRTUAL org/jacoco/core/test/validation/kotlin/targets/KotlinSafeCallOperatorTarget$B.getC ()Ljava/lang/String;
-    GOTO L9
-   L1
+    GOTO L_after
+   L_null
     ACONST_NULL
-   L9
+   L_after
     ARETURN
-   L10
-    LOCALVARIABLE $i$a$-also-KotlinSafeCallOperatorTarget$safeCallChainMultiline2$fullCoverage$1 I L3 L5 3
-    LOCALVARIABLE it Lorg/jacoco/core/test/validation/kotlin/targets/KotlinSafeCallOperatorTarget$A; L2 L5 2
-    LOCALVARIABLE a Lorg/jacoco/core/test/validation/kotlin/targets/KotlinSafeCallOperatorTarget$A; L0 L10 0
-    LINENUMBER 5 L0
-    LINENUMBER 6 L3
-    LINENUMBER 7 L4
-    LINENUMBER 5 L5
-    LINENUMBER 7 L6
-    LINENUMBER 5 L7
-    LINENUMBER 7 L8
-    LINENUMBER 5 L1
-    LINENUMBER 7 L9
+   L_method_end
+    LOCALVARIABLE $i$a$-also-KotlinSafeCallOperatorTarget$safeCallChainMultiline2$fullCoverage$1 I L_inline L_getB_before 3
+    LOCALVARIABLE it Lorg/jacoco/core/test/validation/kotlin/targets/KotlinSafeCallOperatorTarget$A; L_before_inline L_getB_before 2
+    LOCALVARIABLE a Lorg/jacoco/core/test/validation/kotlin/targets/KotlinSafeCallOperatorTarget$A; L_method_start L_method_end 0
+    LINENUMBER 5 L_method_start
+    LINENUMBER 6 L_inline
+    LINENUMBER 7 L_after_inline
+    LINENUMBER 5 L_getB_before
+    LINENUMBER 7 L_getB
+    LINENUMBER 5 L_getC_before
+    LINENUMBER 7 L_getC
+    LINENUMBER 5 L_null
+    LINENUMBER 7 L_after
     MAXSTACK = 1
     MAXLOCALS = 4

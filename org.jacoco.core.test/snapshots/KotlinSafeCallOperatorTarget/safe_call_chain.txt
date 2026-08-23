@@ -1,19 +1,19 @@
-   L0
+   L_method_start
     ALOAD 0
     DUP
-    IFNULL L1
+    IFNULL L_null
     INVOKEVIRTUAL org/jacoco/core/test/validation/kotlin/targets/KotlinSafeCallOperatorTarget$A.getB ()Lorg/jacoco/core/test/validation/kotlin/targets/KotlinSafeCallOperatorTarget$B;
     DUP
-    IFNULL L1
+    IFNULL L_null
     INVOKEVIRTUAL org/jacoco/core/test/validation/kotlin/targets/KotlinSafeCallOperatorTarget$B.getC ()Ljava/lang/String;
-    GOTO L2
-   L1
+    GOTO L_after
+   L_null
     POP
     ACONST_NULL
-   L2
+   L_after
     ARETURN
-   L3
-    LOCALVARIABLE a Lorg/jacoco/core/test/validation/kotlin/targets/KotlinSafeCallOperatorTarget$A; L0 L3 0
-    LINENUMBER 5 L0
+   L_method_end
+    LOCALVARIABLE a Lorg/jacoco/core/test/validation/kotlin/targets/KotlinSafeCallOperatorTarget$A; L_method_start L_method_end 0
+    LINENUMBER 5 L_method_start
     MAXSTACK = 2
     MAXLOCALS = 1
