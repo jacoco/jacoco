@@ -1,0 +1,19 @@
+  @Lkotlin/jvm/JvmExposeBoxed;() // invisible
+   L0
+    ALOAD 1
+    LDC "p"
+    INVOKESTATIC kotlin/jvm/internal/Intrinsics.checkNotNullParameter (Ljava/lang/Object;Ljava/lang/String;)V
+   L1
+    ALOAD 0
+    ALOAD 1
+    INVOKEVIRTUAL org/jacoco/core/test/validation/kotlin/targets/KotlinInlineClassExposeTarget$ValueClass.unbox-impl ()Ljava/lang/String;
+    INVOKEVIRTUAL org/jacoco/core/test/validation/kotlin/targets/KotlinInlineClassExposeTarget.exposeParameter-iNKR5zA (Ljava/lang/String;)V
+   L2
+    RETURN
+   L3
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinInlineClassExposeTarget; L0 L3 0
+    LOCALVARIABLE p Ljava/lang/String; L0 L3 1
+    LINENUMBER 5 L1
+    LINENUMBER 6 L2
+    MAXSTACK = 2
+    MAXLOCALS = 2
