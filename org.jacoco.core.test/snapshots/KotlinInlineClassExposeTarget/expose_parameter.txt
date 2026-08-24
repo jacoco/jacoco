@@ -1,5 +1,6 @@
   @Lkotlin/jvm/JvmExposeBoxed;() // invisible
    L_method_start
+// previous instruction starts ignore range 0
     ALOAD 1
     LDC "p"
     INVOKESTATIC kotlin/jvm/internal/Intrinsics.checkNotNullParameter (Ljava/lang/Object;Ljava/lang/String;)V
@@ -15,5 +16,6 @@
     LOCALVARIABLE p Ljava/lang/String; L_method_start L_method_end 1
     LINENUMBER 5 L1
     LINENUMBER 6 L2
+// previous instruction ends ignore range 0
     MAXSTACK = 2
     MAXLOCALS = 2

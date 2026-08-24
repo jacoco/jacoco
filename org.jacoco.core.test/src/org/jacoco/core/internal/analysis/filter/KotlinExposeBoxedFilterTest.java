@@ -24,63 +24,22 @@ public class KotlinExposeBoxedFilterTest extends FilterTestBase {
 
 	private final KotlinExposeBoxedFilter filter = new KotlinExposeBoxedFilter();
 
-	/**
-	 * <pre>
-	 * &#064;JvmExposeBoxed
-	 * fun example(v: ValueClass) = ...
-	 * </pre>
-	 */
 	@Test
-	public void should_filter_when_parameter_exposed() {
-		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
-				"example", "()LValueClass;", null, null);
-		m.visitAnnotation("Lkotlin/jvm/JvmExposeBoxed;", false);
-
-		m.visitVarInsn(Opcodes.ALOAD, 0);
-		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "ValueClass", "unbox-impl",
-				"()Ljava/lang/String;", false);
-
-		filter.filter(m, context, output);
-
-		assertMethodIgnored(m);
+	public void should_filter_when_parameter_exposed() throws Exception {
+		assertSnapshot(filter,
+				"snapshots/KotlinInlineClassExposeTarget/expose_parameter.txt");
 	}
 
-	/**
-	 * <pre>
-	 * &#064;JvmExposeBoxed(jvmName = "exposed")
-	 * fun example(): ValueClass = ...
-	 * </pre>
-	 */
 	@Test
-	public void should_filter_when_return_type_exposed() {
-		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
-				"exposed", "()LValueClass;", null, null);
-		m.visitAnnotation("Lkotlin/jvm/JvmExposeBoxed;", false);
-
-		m.visitMethodInsn(Opcodes.INVOKESTATIC, "ValueClass", "box-impl",
-				"(Ljava/lang/String;)LValueClass;", false);
-		m.visitInsn(Opcodes.ARETURN);
-
-		filter.filter(m, context, output);
-
-		assertMethodIgnored(m);
+	public void should_filter_when_return_type_exposed() throws Exception {
+		assertSnapshot(filter,
+				"snapshots/KotlinInlineClassExposeTarget/expose_return_type.txt");
 	}
 
-	/**
-	 * <pre>
-	 * &#064;JvmExposeBoxed
-	 * fun example() = ...
-	 * </pre>
-	 */
 	@Test
-	public void should_not_filter_when_nothing_exposed() {
-		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
-				"example", "()V", null, null);
-		m.visitAnnotation("Lkotlin/jvm/JvmExposeBoxed;", false);
-
-		filter.filter(m, context, output);
-
-		assertIgnored(m);
+	public void should_not_filter_when_nothing_exposed() throws Exception {
+		assertSnapshot(filter,
+				"snapshots/KotlinInlineClassExposeTarget/expose_useless.txt");
 	}
 
 	/**
