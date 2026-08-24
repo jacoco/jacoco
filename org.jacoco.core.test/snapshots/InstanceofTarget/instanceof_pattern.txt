@@ -1,20 +1,20 @@
-   L0
+   L_method_start
     ALOAD 0
     INSTANCEOF java/lang/String
-    IFEQ L1
+    IFEQ L_after
     ALOAD 0
     CHECKCAST java/lang/String
     ASTORE 1
-   L2
+   L_body
     ALOAD 1
     INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
-   L1
+   L_after
     RETURN
-   L3
-    LOCALVARIABLE s Ljava/lang/String; L2 L1 1
-    LOCALVARIABLE e Ljava/lang/Object; L0 L3 0
-    LINENUMBER 5 L0
-    LINENUMBER 6 L2
-    LINENUMBER 8 L1
+   L_method_end
+    LOCALVARIABLE s Ljava/lang/String; L_body L_after 1
+    LOCALVARIABLE e Ljava/lang/Object; L_method_start L_method_end 0
+    LINENUMBER 5 L_method_start
+    LINENUMBER 6 L_body
+    LINENUMBER 8 L_after
     MAXSTACK = 1
     MAXLOCALS = 2
