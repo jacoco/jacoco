@@ -21,9 +21,12 @@ object KotlinUnsafeCastOperatorTarget {
         return ""
     }
 
+    private fun example(): String =
+        nullable() as String // assertFullyCovered()
+
     @JvmStatic
     fun main(args: Array<String>) {
-        nullable() as String // assertFullyCovered()
+        example()
     }
 
 }
