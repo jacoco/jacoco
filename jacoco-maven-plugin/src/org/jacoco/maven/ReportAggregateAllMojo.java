@@ -21,15 +21,15 @@ import org.codehaus.plexus.util.StringUtils;
 
 /**
  * <p>
- * Creates a structured code coverage report (HTML, XML, and CSV) from multiple
- * projects within reactor. The report is created from all modules this project
- * depends on. From those projects class and source files as well as JaCoCo
+ * Creates a structured code coverage report (HTML, XML, and CSV) from all
+ * projects within the reactor.
+ * From those projects class and source files as well as JaCoCo
  * execution data files will be collected and aggregated. This mojo will not
  * fork any lifecycle and so need to be added after build generating jacoco
  * data.
  * </p>
  *
- * @since 0.8.13
+ * @since 0.8.16
  */
 @Mojo(name = "report-aggregate-all", threadSafe = true, aggregator = true)
 public class ReportAggregateAllMojo extends ReportAggregateMojo {
