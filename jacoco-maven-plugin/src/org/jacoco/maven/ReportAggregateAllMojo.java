@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2026 Mountainminds GmbH & Co. KG and Contributors
  * This program and the accompanying materials are made available under
  * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
+ * https://www.eclipse.org/legal/epl-2.0
  *
  * SPDX-License-Identifier: EPL-2.0
  *
@@ -22,11 +22,10 @@ import org.codehaus.plexus.util.StringUtils;
 /**
  * <p>
  * Creates a structured code coverage report (HTML, XML, and CSV) from all
- * projects within the reactor.
- * From those projects class and source files as well as JaCoCo
- * execution data files will be collected and aggregated. This mojo will not
- * fork any lifecycle and so need to be added after build generating jacoco
- * data.
+ * projects within the reactor. From those projects class and source files as
+ * well as JaCoCo execution data files will be collected and aggregated. This
+ * mojo will not fork any lifecycle and so need to be added after build
+ * generating jacoco data.
  * </p>
  *
  * @since 0.8.16
