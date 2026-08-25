@@ -12,12 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
-import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Test;
-import org.objectweb.asm.Label;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.MethodNode;
 
 /**
  * Unit tests for {@link KotlinUnsafeCastOperatorFilter}.
@@ -26,50 +21,16 @@ public class KotlinUnsafeCastOperatorFilterTest extends FilterTestBase {
 
 	private final KotlinUnsafeCastOperatorFilter filter = new KotlinUnsafeCastOperatorFilter();
 
-	private final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
-			"name", "()V", null, null);
-
 	@Test
-	public void should_filter() {
-		final Label label = new Label();
-
-		m.visitInsn(Opcodes.DUP);
-		m.visitJumpInsn(Opcodes.IFNONNULL, label);
-		final AbstractInsnNode expectedFrom = m.instructions.getLast();
-		m.visitTypeInsn(Opcodes.NEW, "kotlin/TypeCastException");
-		m.visitInsn(Opcodes.DUP);
-		m.visitLdcInsn("null cannot be cast to non-null type kotlin.String");
-		m.visitMethodInsn(Opcodes.INVOKESPECIAL, "kotlin/TypeCastException",
-				"<init>", "(Ljava/lang/String;)V", false);
-		m.visitInsn(Opcodes.ATHROW);
-		final AbstractInsnNode expectedTo = m.instructions.getLast();
-		m.visitLabel(label);
-
-		filter.filter(m, context, output);
-
-		assertIgnored(m, new Range(expectedFrom, expectedTo));
+	public void should_filter() throws Exception {
+		assertSnapshot(filter,
+				"snapshots/KotlinUnsafeCastOperatorTarget/1.3/unsafe_cast_operator.txt");
 	}
 
 	@Test
-	public void should_filter_Kotlin_1_4() {
-		final Label label = new Label();
-
-		m.visitInsn(Opcodes.DUP);
-		m.visitJumpInsn(Opcodes.IFNONNULL, label);
-		final AbstractInsnNode expectedFrom = m.instructions.getLast();
-		m.visitTypeInsn(Opcodes.NEW, "java/lang/NullPointerException");
-		m.visitInsn(Opcodes.DUP);
-		m.visitLdcInsn("null cannot be cast to non-null type kotlin.String");
-		m.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				"java/lang/NullPointerException", "<init>",
-				"(Ljava/lang/String;)V", false);
-		m.visitInsn(Opcodes.ATHROW);
-		final AbstractInsnNode expectedTo = m.instructions.getLast();
-		m.visitLabel(label);
-
-		filter.filter(m, context, output);
-
-		assertIgnored(m, new Range(expectedFrom, expectedTo));
+	public void should_filter_Kotlin_1_4() throws Exception {
+		assertSnapshot(filter,
+				"snapshots/KotlinUnsafeCastOperatorTarget/1.4/unsafe_cast_operator.txt");
 	}
 
 	/**
@@ -94,46 +55,15 @@ public class KotlinUnsafeCastOperatorFilterTest extends FilterTestBase {
 	 * </pre>
 	 */
 	@Test
-	public void should_filter_Kotlin_1_5() {
-		final Label label = new Label();
-		m.visitJumpInsn(Opcodes.IFNONNULL, label);
-		final AbstractInsnNode expectedFrom = m.instructions.getLast();
-		m.visitTypeInsn(Opcodes.NEW, "java/lang/NullPointerException");
-		m.visitInsn(Opcodes.DUP);
-		m.visitLdcInsn("null cannot be cast to non-null type kotlin.String");
-		m.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				"java/lang/NullPointerException", "<init>",
-				"(Ljava/lang/String;)V", false);
-		m.visitInsn(Opcodes.ATHROW);
-		final AbstractInsnNode expectedTo = m.instructions.getLast();
-		m.visitLabel(label);
-		m.visitVarInsn(Opcodes.ALOAD, 0);
-
-		filter.filter(m, context, output);
-
-		assertIgnored(m, new Range(expectedFrom, expectedTo));
+	public void should_filter_Kotlin_1_5() throws Exception {
+		assertSnapshot(filter,
+				"snapshots/KotlinUnsafeCastOperatorTarget/1.5/unsafe_cast_operator.txt");
 	}
 
 	@Test
-	public void should_filter_Kotlin_1_6() {
-		final Label label = new Label();
-		m.visitInsn(Opcodes.DUP);
-		m.visitJumpInsn(Opcodes.IFNONNULL, label);
-		final AbstractInsnNode expectedFrom = m.instructions.getLast();
-		m.visitInsn(Opcodes.POP);
-		m.visitTypeInsn(Opcodes.NEW, "java/lang/NullPointerException");
-		m.visitInsn(Opcodes.DUP);
-		m.visitLdcInsn("null cannot be cast to non-null type kotlin.String");
-		m.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				"java/lang/NullPointerException", "<init>",
-				"(Ljava/lang/String;)V", false);
-		m.visitInsn(Opcodes.ATHROW);
-		final AbstractInsnNode expectedTo = m.instructions.getLast();
-		m.visitLabel(label);
-
-		filter.filter(m, context, output);
-
-		assertIgnored(m, new Range(expectedFrom, expectedTo));
+	public void should_filter_Kotlin_1_6() throws Exception {
+		assertSnapshot(filter,
+				"snapshots/KotlinUnsafeCastOperatorTarget/1.6/unsafe_cast_operator.txt");
 	}
 
 }

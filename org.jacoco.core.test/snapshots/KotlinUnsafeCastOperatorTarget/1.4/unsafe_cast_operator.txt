@@ -1,0 +1,19 @@
+   L_method_start
+    ALOAD 0
+    INVOKESPECIAL org/jacoco/core/test/validation/kotlin/targets/KotlinUnsafeCastOperatorTarget.nullable ()Ljava/lang/String;
+    DUP
+    IFNONNULL L_nonnull
+// previous instruction starts ignore range 0
+    NEW java/lang/NullPointerException
+    DUP
+    LDC "null cannot be cast to non-null type kotlin.String"
+    INVOKESPECIAL java/lang/NullPointerException.<init> (Ljava/lang/String;)V
+    ATHROW
+// previous instruction ends ignore range 0
+   L_nonnull
+    ARETURN
+   L_method_end
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinUnsafeCastOperatorTarget; L_method_start L_method_end 0
+    LINENUMBER 5 L_method_start
+    MAXSTACK = 4
+    MAXLOCALS = 1
