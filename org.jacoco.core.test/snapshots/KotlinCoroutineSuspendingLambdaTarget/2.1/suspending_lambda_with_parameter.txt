@@ -1,14 +1,14 @@
-   L0
+   L_method_start
     INVOKESTATIC kotlin/coroutines/intrinsics/IntrinsicsKt.getCOROUTINE_SUSPENDED ()Ljava/lang/Object;
-   L1
+   L_switch
     ASTORE 3
     ALOAD 0
     GETFIELD org/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineSuspendingLambdaTarget$withParameter$1.label : I
     TABLESWITCH
-      0: L2
-      1: L3
-      default: L4
-   L2
+      0: L_state_0
+      1: L_state_1
+      default: L_default
+   L_state_0
     ALOAD 1
     INVOKESTATIC kotlin/ResultKt.throwOnFailure (Ljava/lang/Object;)V
    L5
@@ -16,7 +16,7 @@
     GETFIELD org/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineSuspendingLambdaTarget$withParameter$1.L$0 : Ljava/lang/Object;
     CHECKCAST java/lang/String
     ASTORE 2
-   L6
+   L_before_suspension_point
     ALOAD 2
     ALOAD 0
     CHECKCAST kotlin/coroutines/Continuation
@@ -27,32 +27,32 @@
    L7
     DUP
     ALOAD 3
-    IF_ACMPNE L8
-   L9
+    IF_ACMPNE L_after_suspension_point
+   L_suspension_point
     ALOAD 3
     ARETURN
-   L3
+   L_state_1
     ALOAD 1
     INVOKESTATIC kotlin/ResultKt.throwOnFailure (Ljava/lang/Object;)V
     ALOAD 1
-   L8
+   L_after_suspension_point
     POP
     GETSTATIC kotlin/Unit.INSTANCE : Lkotlin/Unit;
     ARETURN
-   L4
+   L_default
     NEW java/lang/IllegalStateException
     DUP
     LDC "call to 'resume' before 'invoke' with coroutine"
     INVOKESPECIAL java/lang/IllegalStateException.<init> (Ljava/lang/String;)V
     ATHROW
-   L10
-    LOCALVARIABLE p Ljava/lang/String; L6 L7 2
-    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineSuspendingLambdaTarget$withParameter$1; L0 L10 0
-    LOCALVARIABLE $result Ljava/lang/Object; L5 L4 1
-    LINENUMBER 5 L1
-    LINENUMBER 6 L6
-    LINENUMBER 5 L9
-    LINENUMBER 7 L8
-    LINENUMBER 5 L4
+   L_method_end
+    LOCALVARIABLE p Ljava/lang/String; L_before_suspension_point L7 2
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineSuspendingLambdaTarget$withParameter$1; L_method_start L_method_end 0
+    LOCALVARIABLE $result Ljava/lang/Object; L5 L_default 1
+    LINENUMBER 5 L_switch
+    LINENUMBER 6 L_before_suspension_point
+    LINENUMBER 5 L_suspension_point
+    LINENUMBER 7 L_after_suspension_point
+    LINENUMBER 5 L_default
     MAXSTACK = 4
     MAXLOCALS = 4
