@@ -1,0 +1,14 @@
+  @Lkotlin/jvm/JvmExposeBoxed;() // invisible
+  @Lorg/jetbrains/annotations/NotNull;() // invisible
+   L_method_start
+    ALOAD 0
+    INVOKEVIRTUAL org/jacoco/core/test/validation/kotlin/targets/KotlinInlineClassExposeTarget.exposeReturnType-WF2O7EA ()Ljava/lang/String;
+   L_box
+    INVOKESTATIC org/jacoco/core/test/validation/kotlin/targets/KotlinInlineClassExposeTarget$ValueClass.box-impl (Ljava/lang/String;)Lorg/jacoco/core/test/validation/kotlin/targets/KotlinInlineClassExposeTarget$ValueClass;
+    ARETURN
+   L_method_end
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinInlineClassExposeTarget; L_method_start L_method_end 0
+    LINENUMBER 5 L_method_start
+    LINENUMBER 6 L_box
+    MAXSTACK = 1
+    MAXLOCALS = 1
