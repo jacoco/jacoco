@@ -1,9 +1,9 @@
   @Lkotlin/jvm/JvmExposeBoxed;() // invisible
-   L0
+   L_method_start
     INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
     RETURN
-   L1
-    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinInlineClassExposeTarget; L0 L1 0
-    LINENUMBER 5 L0
+   L_method_end
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinInlineClassExposeTarget; L_method_start L_method_end 0
+    LINENUMBER 5 L_method_start
     MAXSTACK = 0
     MAXLOCALS = 1
