@@ -29,15 +29,21 @@
     DUP
     INVOKESTATIC kotlin/coroutines/intrinsics/IntrinsicsKt.getCOROUTINE_SUSPENDED ()Ljava/lang/Object;
     IF_ACMPNE L5
+// previous instruction starts ignore range 2
     ALOAD 1
     INVOKESTATIC kotlin/coroutines/jvm/internal/DebugProbesKt.probeCoroutineSuspended (Lkotlin/coroutines/Continuation;)V
+// previous instruction ends ignore range 2
    L5
+// previous instruction starts ignore range 0
     DUP
+// previous instruction starts ignore range 1
     INVOKESTATIC kotlin/coroutines/intrinsics/IntrinsicsKt.getCOROUTINE_SUSPENDED ()Ljava/lang/Object;
     IF_ACMPNE L6
     ARETURN
    L6
     POP
+// previous instruction ends ignore range 0
+// previous instruction ends ignore range 1
     GETSTATIC kotlin/Unit.INSTANCE : Lkotlin/Unit;
    L7
     ARETURN

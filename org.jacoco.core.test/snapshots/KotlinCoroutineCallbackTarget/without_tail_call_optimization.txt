@@ -1,5 +1,6 @@
   @Lorg/jetbrains/annotations/Nullable;() // invisible
    L0
+// previous instruction starts ignore range 1
     ALOAD 1
     INSTANCEOF org/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineCallbackTarget$withoutTailCallOptimization$1
     IFEQ L1
@@ -42,6 +43,7 @@
    L5
     ALOAD 6
     INVOKESTATIC kotlin/ResultKt.throwOnFailure (Ljava/lang/Object;)V
+// previous instruction ends ignore range 1
    L8
     ALOAD 7
     ICONST_1
@@ -76,11 +78,14 @@
     DUP
     INVOKESTATIC kotlin/coroutines/intrinsics/IntrinsicsKt.getCOROUTINE_SUSPENDED ()Ljava/lang/Object;
     IF_ACMPNE L13
+// previous instruction starts ignore range 3
     ALOAD 7
     CHECKCAST kotlin/coroutines/Continuation
     INVOKESTATIC kotlin/coroutines/jvm/internal/DebugProbesKt.probeCoroutineSuspended (Lkotlin/coroutines/Continuation;)V
+// previous instruction ends ignore range 3
    L13
     DUP
+// previous instruction starts ignore range 2
     ALOAD 8
     IF_ACMPNE L14
    L15
@@ -90,6 +95,7 @@
     ALOAD 6
     INVOKESTATIC kotlin/ResultKt.throwOnFailure (Ljava/lang/Object;)V
     ALOAD 6
+// previous instruction ends ignore range 2
    L14
     POP
    L16
@@ -99,11 +105,13 @@
     GETSTATIC kotlin/Unit.INSTANCE : Lkotlin/Unit;
     ARETURN
    L7
+// previous instruction starts ignore range 0
     NEW java/lang/IllegalStateException
     DUP
     LDC "call to 'resume' before 'invoke' with coroutine"
     INVOKESPECIAL java/lang/IllegalStateException.<init> (Ljava/lang/String;)V
     ATHROW
+// previous instruction ends ignore range 0
    L18
     LOCALVARIABLE $i$a$-suspendCoroutine-KotlinCoroutineCallbackTarget$withoutTailCallOptimization$2 I L10 L12 5
     LOCALVARIABLE continuation Lkotlin/coroutines/Continuation; L9 L12 4

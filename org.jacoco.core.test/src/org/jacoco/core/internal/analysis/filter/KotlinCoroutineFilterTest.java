@@ -119,7 +119,12 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 	 * </pre>
 	 */
 	@Test
-	public void should_filter_suspending_lambdas() {
+	public void should_filter_suspending_lambdas() throws Exception {
+		assertSnapshot(filter,
+				"snapshots/KotlinCoroutineTarget/2.1/suspending_lambda.txt");
+		assertSnapshot(filter,
+				"snapshots/KotlinCoroutineTarget/2.2/suspending_lambda.txt");
+
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"invokeSuspend", "(Ljava/lang/Object;)Ljava/lang/Object;", null,
 				null);
@@ -232,7 +237,12 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 	 * change in Kotlin compiler version 2.2</a>
 	 */
 	@Test
-	public void should_filter_suspending_lambdas_with_parameters() {
+	public void should_filter_suspending_lambdas_with_parameters()
+			throws Exception {
+		// TODO 2.1
+		assertSnapshot(filter,
+				"snapshots/KotlinCoroutineSuspendingLambdaTarget/2.2/suspending_lambda_with_parameter.txt");
+
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"invokeSuspend", "(Ljava/lang/Object;)Ljava/lang/Object;", null,
 				null);
@@ -325,7 +335,12 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 	 * </pre>
 	 */
 	@Test
-	public void should_filter_suspending_functions() {
+	public void should_filter_suspending_functions() throws Exception {
+		assertSnapshot(filter,
+				"snapshots/KotlinCoroutineTarget/2.1/suspending_function.txt");
+		assertSnapshot(filter,
+				"snapshots/KotlinCoroutineTarget/2.2/suspending_function.txt");
+
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
 				Opcodes.ACC_STATIC, "example",
 				"(Lkotlin/coroutines/Continuation;)Ljava/lang/Object;", null,
@@ -476,7 +491,13 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 	 * </pre>
 	 */
 	@Test
-	public void should_filter_suspending_functions_with_tail_call_optimization() {
+	public void should_filter_suspending_functions_with_tail_call_optimization()
+			throws Exception {
+		assertSnapshot(filter,
+				"snapshots/KotlinCoroutineTarget/2.1/suspending_function_with_tail_call_optimization.txt");
+		assertSnapshot(filter,
+				"snapshots/KotlinCoroutineTarget/2.4/suspending_function_with_tail_call_optimization.txt");
+
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 				"example",
 				"(ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;", null,
@@ -552,7 +573,11 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 	 * @see #should_filter_suspending_lambdas()
 	 */
 	@Test
-	public void should_filter_Kotlin_1_6_suspending_lambda_without_suspension_points() {
+	public void should_filter_Kotlin_1_6_suspending_lambda_without_suspension_points()
+			throws Exception {
+		assertSnapshot(filter,
+				"snapshots/KotlinCoroutineTarget/2.1/suspending_lambda_withous_suspension_points.txt");
+
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
 				Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "invokeSuspend",
 				"(Ljava/lang/Object;)Ljava/lang/Object;", null, null);
@@ -617,7 +642,12 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 	 * </pre>
 	 */
 	@Test
-	public void should_filter_suspending_lambdas_and_functions_when_suspension_point_returns_inline_value_class() {
+	public void should_filter_suspending_lambdas_and_functions_when_suspension_point_returns_inline_value_class()
+			throws Exception {
+		// TODO function
+		assertSnapshot(filter,
+				"snapshots/KotlinCoroutineInlineValueClassTarget/suspending_lambda.txt");
+
 		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
 				Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "invokeSuspend",
 				"(Ljava/lang/Object;)Ljava/lang/Object;", null, null);
@@ -705,33 +735,10 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 	 * @see #should_filter_suspendCoroutineUninterceptedOrReturn_when_no_tail_call_optimization()
 	 */
 	@Test
-	public void should_filter_suspendCoroutineUninterceptedOrReturn() {
-		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
-				Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "example",
-				"(Lkotlin/coroutines/Continuation;)Ljava/lang/Object;", null,
-				null);
-
-		m.visitInsn(Opcodes.NOP);
-
-		m.visitInsn(Opcodes.DUP);
-		final Range range0 = new Range();
-		m.visitMethodInsn(Opcodes.INVOKESTATIC,
-				"kotlin/coroutines/intrinsics/IntrinsicsKt",
-				"getCOROUTINE_SUSPENDED", "()Ljava/lang/Object;", false);
-		final Label label = new Label();
-		m.visitJumpInsn(Opcodes.IF_ACMPNE, label);
-		range0.fromInclusive = m.instructions.getLast();
-		m.visitInsn(Opcodes.ALOAD);
-		m.visitMethodInsn(Opcodes.INVOKESTATIC,
-				"kotlin/coroutines/jvm/internal/DebugProbesKt",
-				"probeCoroutineSuspended",
-				"(Lkotlin/coroutines/Continuation;)V", false);
-		range0.toInclusive = m.instructions.getLast();
-		m.visitLabel(label);
-
-		filter.filter(m, context, output);
-
-		assertIgnored(m, range0);
+	public void should_filter_suspendCoroutineUninterceptedOrReturn()
+			throws Exception {
+		assertSnapshot(filter,
+				"snapshots/KotlinCoroutineCallbackTarget/example.txt");
 	}
 
 	/**
@@ -747,34 +754,10 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 	 * @see #should_filter_suspendCoroutineUninterceptedOrReturn()
 	 */
 	@Test
-	public void should_filter_suspendCoroutineUninterceptedOrReturn_when_no_tail_call_optimization() {
-		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
-				Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, "example",
-				"(Lkotlin/coroutines/Continuation;)Ljava/lang/Object;", null,
-				null);
-
-		m.visitInsn(Opcodes.NOP);
-
-		m.visitInsn(Opcodes.DUP);
-		final Range range0 = new Range();
-		m.visitMethodInsn(Opcodes.INVOKESTATIC,
-				"kotlin/coroutines/intrinsics/IntrinsicsKt",
-				"getCOROUTINE_SUSPENDED", "()Ljava/lang/Object;", false);
-		final Label label = new Label();
-		m.visitJumpInsn(Opcodes.IF_ACMPNE, label);
-		range0.fromInclusive = m.instructions.getLast();
-		m.visitInsn(Opcodes.ALOAD);
-		m.visitTypeInsn(Opcodes.CHECKCAST, "kotlin/coroutines/Continuation");
-		m.visitMethodInsn(Opcodes.INVOKESTATIC,
-				"kotlin/coroutines/jvm/internal/DebugProbesKt",
-				"probeCoroutineSuspended",
-				"(Lkotlin/coroutines/Continuation;)V", false);
-		range0.toInclusive = m.instructions.getLast();
-		m.visitLabel(label);
-
-		filter.filter(m, context, output);
-
-		assertIgnored(m, range0);
+	public void should_filter_suspendCoroutineUninterceptedOrReturn_when_no_tail_call_optimization()
+			throws Exception {
+		assertSnapshot(filter,
+				"snapshots/KotlinCoroutineCallbackTarget/without_tail_call_optimization.txt");
 	}
 
 }
