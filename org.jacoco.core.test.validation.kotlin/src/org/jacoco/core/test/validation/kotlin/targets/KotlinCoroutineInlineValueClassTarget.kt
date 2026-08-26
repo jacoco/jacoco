@@ -20,16 +20,27 @@ import org.jacoco.core.test.validation.targets.Stubs.nop
  */
 object KotlinCoroutineInlineValueClassTarget {
 
-    suspend fun suspensionPointReturningInlineValueClass() = InlineValueClass("")
+    private suspend fun suspensionPointReturningInlineValueClass() = InlineValueClass("")
 
     @JvmInline
-    value class InlineValueClass(val value: String)
+    private value class InlineValueClass(val value: String)
 
-    @JvmStatic
-    fun main(args: Array<String>) {
+    private suspend fun suspendingFunction() { // assertEmpty()
+        nop(suspensionPointReturningInlineValueClass()) // assertFullyCovered()
+    } // assertFullyCovered()
+
+    private fun suspendingLambda() {
         runBlocking { // assertFullyCovered()
             nop(suspensionPointReturningInlineValueClass()) // assertFullyCovered()
         } // assertFullyCovered()
+    }
+
+    @JvmStatic
+    fun main(args: Array<String>) {
+        runBlocking {
+            suspendingFunction()
+            suspendingLambda()
+        }
     }
 
 }
