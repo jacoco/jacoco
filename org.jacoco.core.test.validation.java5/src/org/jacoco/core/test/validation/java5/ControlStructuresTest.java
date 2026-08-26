@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.java5;
 
+import org.jacoco.core.test.validation.JavaVersion;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java5.targets.ControlStructuresTarget;
 import org.junit.Test;
@@ -36,8 +37,19 @@ public class ControlStructuresTest extends ValidationTestBase {
 				"do_while.txt");
 		assertSnapshot(ControlStructuresTarget.class, "missedForBlock",
 				prefix + "for.txt");
-		assertSnapshot(ControlStructuresTarget.class, "missedForEachBlock",
-				prefix + "for_each.txt");
+		if (!isJDKCompiler) {
+			assertSnapshot(ControlStructuresTarget.class, "missedForEachBlock",
+					"ecj/for_each.txt");
+		} else if (JavaVersion.current().isBefore("7")) {
+			assertSnapshot(ControlStructuresTarget.class, "missedForEachBlock",
+					"6/for_each.txt");
+		} else if (JavaVersion.current().isBefore("8")) {
+			assertSnapshot(ControlStructuresTarget.class, "missedForEachBlock",
+					"7/for_each.txt");
+		} else {
+			assertSnapshot(ControlStructuresTarget.class, "missedForEachBlock",
+					"for_each.txt");
+		}
 		assertSnapshot(ControlStructuresTarget.class, "tableSwitchWithHit",
 				"tableswitch.txt");
 		// continuedTableSwitchWithHit
