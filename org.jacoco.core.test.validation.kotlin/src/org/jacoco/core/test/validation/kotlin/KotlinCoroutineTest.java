@@ -12,16 +12,39 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.kotlin;
 
-import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.kotlin.targets.KotlinCoroutineTarget;
+import org.junit.Test;
 
 /**
  * Test of coroutines.
  */
-public class KotlinCoroutineTest extends ValidationTestBase {
+public class KotlinCoroutineTest extends KotlinValidationTestBase {
 
 	public KotlinCoroutineTest() {
 		super(KotlinCoroutineTarget.class);
+	}
+
+	/** Starting from {@link #KOTLIN_2_1} */
+	@Test
+	public void bytecodeSnapshots() throws Exception {
+		assertSnapshot(KotlinCoroutineTarget.class, "suspendingFunction",
+				"suspending_function.txt", //
+				KOTLIN_2_2, KOTLIN_2_1);
+		assertSnapshot(
+				Class.forName(
+						KotlinCoroutineTarget.class.getName() + "$main$1"),
+				"invokeSuspend", "suspending_lambda.txt", //
+				KOTLIN_2_2, KOTLIN_2_1);
+		assertSnapshot(
+				Class.forName(KotlinCoroutineTarget.class.getName()
+						+ "$suspendingLambdaWithoutSuspensionPoints$1"),
+				"invokeSuspend",
+				"suspending_lambda_withous_suspension_points.txt", //
+				KOTLIN_2_2, KOTLIN_2_1);
+		assertSnapshot(KotlinCoroutineTarget.class,
+				"suspendingFunctionWithTailCallOptimization",
+				"suspending_function_with_tail_call_optimization.txt",
+				KOTLIN_2_4, KOTLIN_2_1);
 	}
 
 }

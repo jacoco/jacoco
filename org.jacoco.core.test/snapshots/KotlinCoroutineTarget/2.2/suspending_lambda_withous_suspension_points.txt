@@ -1,0 +1,32 @@
+   L0
+    INVOKESTATIC kotlin/coroutines/intrinsics/IntrinsicsKt.getCOROUTINE_SUSPENDED ()Ljava/lang/Object;
+   L1
+    POP
+    ALOAD 0
+    GETFIELD org/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineTarget$suspendingLambdaWithoutSuspensionPoints$1.label : I
+    TABLESWITCH
+      0: L2
+      default: L3
+   L2
+    ALOAD 1
+    INVOKESTATIC kotlin/ResultKt.throwOnFailure (Ljava/lang/Object;)V
+   L4
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+   L5
+    GETSTATIC kotlin/Unit.INSTANCE : Lkotlin/Unit;
+    ARETURN
+   L3
+    NEW java/lang/IllegalStateException
+    DUP
+    LDC "call to 'resume' before 'invoke' with coroutine"
+    INVOKESPECIAL java/lang/IllegalStateException.<init> (Ljava/lang/String;)V
+    ATHROW
+   L6
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineTarget$suspendingLambdaWithoutSuspensionPoints$1; L0 L6 0
+    LOCALVARIABLE $result Ljava/lang/Object; L0 L6 1
+    LINENUMBER 5 L1
+    LINENUMBER 6 L4
+    LINENUMBER 7 L5
+    LINENUMBER 5 L3
+    MAXSTACK = 3
+    MAXLOCALS = 2
