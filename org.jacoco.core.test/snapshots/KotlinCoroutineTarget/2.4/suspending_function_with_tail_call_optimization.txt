@@ -1,16 +1,16 @@
-   L0
+   L_method_start
     INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
-   L1
+   L_before_suspension_point
     ALOAD 0
     ALOAD 1
     INVOKESPECIAL org/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineTarget.anotherSuspendingFunction (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-   L2
+   L_return
     ARETURN
-   L3
-    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineTarget; L0 L3 0
-    LOCALVARIABLE $completion Lkotlin/coroutines/Continuation; L0 L3 1
-    LINENUMBER 5 L0
-    LINENUMBER 6 L1
-    LINENUMBER 7 L2
+   L_method_end
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineTarget; L_method_start L_method_end 0
+    LOCALVARIABLE $completion Lkotlin/coroutines/Continuation; L_method_start L_method_end 1
+    LINENUMBER 5 L_method_start
+    LINENUMBER 6 L_before_suspension_point
+    LINENUMBER 7 L_return
     MAXSTACK = 2
     MAXLOCALS = 2
