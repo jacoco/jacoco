@@ -1,5 +1,5 @@
   @Lorg/jetbrains/annotations/Nullable;() // invisible
-   L0
+   L_method_start
     ALOAD 1
     ASTORE 2
     NEW kotlin/coroutines/SafeContinuation
@@ -14,7 +14,7 @@
    L1
     ICONST_0
     ISTORE 5
-   L2
+   L_body
     ALOAD 4
     GETSTATIC kotlin/Result.Companion : Lkotlin/Result$Companion;
     POP
@@ -34,20 +34,20 @@
    L5
     DUP
     INVOKESTATIC kotlin/coroutines/intrinsics/IntrinsicsKt.getCOROUTINE_SUSPENDED ()Ljava/lang/Object;
-    IF_ACMPNE L6
+    IF_ACMPNE L_after_suspension_point
     ARETURN
-   L6
+   L_after_suspension_point
     POP
     GETSTATIC kotlin/Unit.INSTANCE : Lkotlin/Unit;
    L7
     ARETURN
-   L8
-    LOCALVARIABLE $i$a$-suspendCoroutine-KotlinCoroutineCallbackTarget$example$2 I L2 L4 5
+   L_method_end
+    LOCALVARIABLE $i$a$-suspendCoroutine-KotlinCoroutineCallbackTarget$example$2 I L_body L4 5
     LOCALVARIABLE continuation Lkotlin/coroutines/Continuation; L1 L4 4
-    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineCallbackTarget; L0 L8 0
-    LOCALVARIABLE $completion Lkotlin/coroutines/Continuation; L0 L8 1
-    LINENUMBER 5 L0
-    LINENUMBER 6 L2
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineCallbackTarget; L_method_start L_method_end 0
+    LOCALVARIABLE $completion Lkotlin/coroutines/Continuation; L_method_start L_method_end 1
+    LINENUMBER 5 L_method_start
+    LINENUMBER 6 L_body
     LINENUMBER 7 L3
     LINENUMBER 5 L4
     LINENUMBER 7 L7
