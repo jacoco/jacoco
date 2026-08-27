@@ -12,31 +12,25 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.kotlin;
 
-import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.kotlin.targets.KotlinNotNullOperatorTarget;
 import org.junit.Test;
-
-import kotlin.KotlinVersion;
 
 /**
  * Test of not-null assertion operator.
  */
-public class KotlinNotNullOperatorTest extends ValidationTestBase {
+public class KotlinNotNullOperatorTest extends KotlinValidationTestBase {
 
 	public KotlinNotNullOperatorTest() {
 		super(KotlinNotNullOperatorTarget.class);
 	}
 
+	/** Starting from {@link #KOTLIN_1_3} */
 	@Test
 	public void bytecodeSnapshots() throws Exception {
-		if (KotlinVersion.CURRENT.isAtLeast(1, 4)) {
-			// https://github.com/JetBrains/kotlin/commit/a7c8fdcbe2e260e5265aaf5121c5987206a676c9
-			assertSnapshot(KotlinNotNullOperatorTarget.class, "example",
-					"not_null_assertion_operator.txt");
-		} else {
-			assertSnapshot(KotlinNotNullOperatorTarget.class, "example",
-					"1.3/not_null_assertion_operator.txt");
-		}
+		assertSnapshot(KotlinNotNullOperatorTarget.class, "example",
+				"not_null_assertion_operator.txt",
+				// https://github.com/JetBrains/kotlin/commit/a7c8fdcbe2e260e5265aaf5121c5987206a676c9
+				KOTLIN_1_4, KOTLIN_1_3);
 	}
 
 }
