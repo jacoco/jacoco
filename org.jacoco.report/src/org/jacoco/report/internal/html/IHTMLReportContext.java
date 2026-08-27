@@ -69,7 +69,7 @@ public interface IHTMLReportContext {
 	/**
 	 * Returns the service for index updates.
 	 *
-	 * @return sevice for indes updates
+	 * @return service for index updates
 	 */
 	IIndexUpdate getIndexUpdate();
 

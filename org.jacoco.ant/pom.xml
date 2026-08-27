@@ -120,7 +120,7 @@
         <executions>
           <execution>
             <!--
-            None of resource tranformers from maven-shade-plugin
+            None of resource transformers from maven-shade-plugin
             (including combination of DontIncludeResourceTransformer and ManifestResourceTransformer)
             does not allow us to leave only desired entries and remove others from META-INF/MANIFEST.MF
             So we use goal "bundle" instead of "manifest".
