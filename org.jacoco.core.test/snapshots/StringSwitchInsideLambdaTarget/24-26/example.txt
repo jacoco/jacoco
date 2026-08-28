@@ -1,0 +1,79 @@
+   L_method_start
+    ALOAD 0
+    ASTORE 1
+   L1
+    ICONST_M1
+    ISTORE 2
+   L2
+    ALOAD 1
+    INVOKEVIRTUAL java/lang/String.hashCode ()I
+    TABLESWITCH
+      97: L_hash_a
+      98: L_hash_b
+      99: L_hash_c
+      default: L_hash_default
+   L_hash_a
+    ALOAD 1
+    LDC "a"
+    INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
+    IFEQ L_hash_default
+    ICONST_0
+    ISTORE 2
+    GOTO L_hash_default
+   L_hash_b
+    ALOAD 1
+    LDC "b"
+    INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
+    IFEQ L_hash_default
+    ICONST_1
+    ISTORE 2
+    GOTO L_hash_default
+   L_hash_c
+    ALOAD 1
+    LDC "c"
+    INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
+    IFEQ L_hash_default
+    ICONST_2
+    ISTORE 2
+   L_hash_default
+    ILOAD 2
+    TABLESWITCH
+      0: L_case_a
+      1: L_case_b
+      2: L_case_c
+      default: L_default
+   L_case_a
+    LDC "a"
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
+   L_break_a
+    GOTO L_after
+   L_case_b
+    LDC "b"
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
+   L_break_b
+    GOTO L_after
+   L_case_c
+    LDC "c"
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
+   L_break_c
+    GOTO L_after
+   L_default
+    LDC "default"
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
+   L_after
+    RETURN
+   L_method_end
+    LOCALVARIABLE s0$ Ljava/lang/String; L1 L_after 1
+    LOCALVARIABLE tmp1$ I L2 L_after 2
+    LOCALVARIABLE s Ljava/lang/String; L_method_start L_method_end 0
+    LINENUMBER 5 L_method_start
+    LINENUMBER 7 L_case_a
+    LINENUMBER 8 L_break_a
+    LINENUMBER 10 L_case_b
+    LINENUMBER 11 L_break_b
+    LINENUMBER 13 L_case_c
+    LINENUMBER 14 L_break_c
+    LINENUMBER 16 L_default
+    LINENUMBER 20 L_after
+    MAXSTACK = 2
+    MAXLOCALS = 3
