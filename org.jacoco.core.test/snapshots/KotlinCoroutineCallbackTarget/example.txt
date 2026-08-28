@@ -1,0 +1,55 @@
+  @Lorg/jetbrains/annotations/Nullable;() // invisible
+   L_method_start
+    ALOAD 1
+    ASTORE 2
+    NEW kotlin/coroutines/SafeContinuation
+    DUP
+    ALOAD 2
+    INVOKESTATIC kotlin/coroutines/intrinsics/IntrinsicsKt.intercepted (Lkotlin/coroutines/Continuation;)Lkotlin/coroutines/Continuation;
+    INVOKESPECIAL kotlin/coroutines/SafeContinuation.<init> (Lkotlin/coroutines/Continuation;)V
+    ASTORE 3
+    ALOAD 3
+    CHECKCAST kotlin/coroutines/Continuation
+    ASTORE 4
+   L1
+    ICONST_0
+    ISTORE 5
+   L_body
+    ALOAD 4
+    GETSTATIC kotlin/Result.Companion : Lkotlin/Result$Companion;
+    POP
+    GETSTATIC kotlin/Unit.INSTANCE : Lkotlin/Unit;
+    INVOKESTATIC kotlin/Result.constructor-impl (Ljava/lang/Object;)Ljava/lang/Object;
+    INVOKEINTERFACE kotlin/coroutines/Continuation.resumeWith (Ljava/lang/Object;)V (itf)
+   L3
+    NOP
+   L4
+    ALOAD 3
+    INVOKEVIRTUAL kotlin/coroutines/SafeContinuation.getOrThrow ()Ljava/lang/Object;
+    DUP
+    INVOKESTATIC kotlin/coroutines/intrinsics/IntrinsicsKt.getCOROUTINE_SUSPENDED ()Ljava/lang/Object;
+    IF_ACMPNE L5
+    ALOAD 1
+    INVOKESTATIC kotlin/coroutines/jvm/internal/DebugProbesKt.probeCoroutineSuspended (Lkotlin/coroutines/Continuation;)V
+   L5
+    DUP
+    INVOKESTATIC kotlin/coroutines/intrinsics/IntrinsicsKt.getCOROUTINE_SUSPENDED ()Ljava/lang/Object;
+    IF_ACMPNE L_after_suspension_point
+    ARETURN
+   L_after_suspension_point
+    POP
+    GETSTATIC kotlin/Unit.INSTANCE : Lkotlin/Unit;
+   L7
+    ARETURN
+   L_method_end
+    LOCALVARIABLE $i$a$-suspendCoroutine-KotlinCoroutineCallbackTarget$example$2 I L_body L4 5
+    LOCALVARIABLE continuation Lkotlin/coroutines/Continuation; L1 L4 4
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineCallbackTarget; L_method_start L_method_end 0
+    LOCALVARIABLE $completion Lkotlin/coroutines/Continuation; L_method_start L_method_end 1
+    LINENUMBER 5 L_method_start
+    LINENUMBER 6 L_body
+    LINENUMBER 7 L3
+    LINENUMBER 5 L4
+    LINENUMBER 7 L7
+    MAXSTACK = 3
+    MAXLOCALS = 6
