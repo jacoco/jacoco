@@ -1,0 +1,18 @@
+   L0
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+    GOTO L1
+   L2
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+   L3
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+   L1
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.f ()Z
+    IFNE L2
+   L4
+    RETURN
+    LINENUMBER 5 L0
+    LINENUMBER 6 L2
+    LINENUMBER 5 L3
+    LINENUMBER 9 L4
+    MAXSTACK = 1
+    MAXLOCALS = 0
