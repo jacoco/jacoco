@@ -1,0 +1,84 @@
+    TRYCATCHBLOCK L0 L1 L2 java/lang/Throwable
+    TRYCATCHBLOCK L3 L4 L2 java/lang/Throwable
+   L5
+    ALOAD 0
+    DUP
+    INVOKESTATIC java/util/Objects.requireNonNull (Ljava/lang/Object;)Ljava/lang/Object;
+    POP
+    ASTORE 2
+    ICONST_0
+    ISTORE 3
+   L6
+    ALOAD 2
+    ILOAD 3
+    INVOKEDYNAMIC typeSwitch(Ljava/lang/Object;I)I [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/runtime/SwitchBootstraps.typeSwitch(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;[Ljava/lang/Object;)Ljava/lang/invoke/CallSite;
+      // arguments:
+      org.jacoco.core.test.validation.java22.targets.UnnamedPatternTarget$R.class, 
+      org.jacoco.core.test.validation.java22.targets.UnnamedPatternTarget$R.class
+    ]
+    LOOKUPSWITCH
+      0: L7
+      1: L7
+      default: L8
+   L7
+    ALOAD 2
+    CHECKCAST org/jacoco/core/test/validation/java22/targets/UnnamedPatternTarget$R
+    ASTORE 4
+    ALOAD 4
+   L0
+    INVOKEVIRTUAL org/jacoco/core/test/validation/java22/targets/UnnamedPatternTarget$R.c ()Ljava/lang/Object;
+   L1
+    ASTORE 6
+    ALOAD 6
+    INSTANCEOF java/lang/Float
+    IFEQ L9
+    GOTO L10
+   L9
+    ALOAD 2
+    CHECKCAST org/jacoco/core/test/validation/java22/targets/UnnamedPatternTarget$R
+    ASTORE 5
+    ALOAD 5
+   L3
+    INVOKEVIRTUAL org/jacoco/core/test/validation/java22/targets/UnnamedPatternTarget$R.c ()Ljava/lang/Object;
+   L4
+    ASTORE 6
+    ALOAD 6
+    INSTANCEOF java/lang/Double
+    IFEQ L11
+   L10
+    ILOAD 1
+    IFGT L12
+   L11
+    ICONST_2
+    ISTORE 3
+    GOTO L6
+   L12
+    LDC "case"
+    GOTO L13
+   L8
+    LDC "default"
+    GOTO L13
+   L13
+    ARETURN
+   L2
+    ASTORE 2
+    NEW java/lang/MatchException
+    DUP
+    ALOAD 2
+    INVOKEVIRTUAL java/lang/Throwable.toString ()Ljava/lang/String;
+    ALOAD 2
+    INVOKESPECIAL java/lang/MatchException.<init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+    ATHROW
+   L14
+    LOCALVARIABLE o Ljava/lang/Object; L5 L14 0
+    LOCALVARIABLE x I L5 L14 1
+    LINENUMBER 5 L5
+    LINENUMBER 6 L7
+    LINENUMBER 7 L12
+    LINENUMBER 9 L8
+    LINENUMBER 5 L13
+    LINENUMBER 6 L2
+    MAXSTACK = 4
+    MAXLOCALS = 7
