@@ -1,0 +1,20 @@
+   L_method_start
+    ALOAD 1
+    INSTANCEOF org/jacoco/core/test/validation/kotlin/targets/KotlinWhenSealedTarget$S1$A
+    IFEQ L_else
+    LDC "S1.A"
+    GOTO L_after
+   L_else
+    NEW kotlin/NoWhenBranchMatchedException
+    DUP
+    INVOKESPECIAL kotlin/NoWhenBranchMatchedException.<init> ()V
+    CHECKCAST java/lang/Throwable
+    ATHROW
+   L_after
+    ARETURN
+   L_method_end
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWhenSealedTarget; L_method_start L_method_end 0
+    LOCALVARIABLE s Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWhenSealedTarget$S1; L_method_start L_method_end 1
+    LINENUMBER 5 L_method_start
+    MAXSTACK = 2
+    MAXLOCALS = 2
