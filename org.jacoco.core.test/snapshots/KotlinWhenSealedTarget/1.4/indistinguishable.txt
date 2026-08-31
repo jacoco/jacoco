@@ -1,36 +1,36 @@
-   L0
+   L_method_start
     ALOAD 1
     ASTORE 2
-   L1
+   L_case_1
     ALOAD 2
     INSTANCEOF org/jacoco/core/test/validation/kotlin/targets/KotlinWhenSealedTarget$Sealed$Sealed1
-    IFEQ L2
+    IFEQ L_case_2
     LDC "case 1"
     INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
-    GOTO L3
-   L2
+    GOTO L_after
+   L_case_2
     ALOAD 2
     INSTANCEOF org/jacoco/core/test/validation/kotlin/targets/KotlinWhenSealedTarget$Sealed$Sealed2
-    IFEQ L4
+    IFEQ L_else
     LDC "case 2"
     INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
-    GOTO L3
-   L4
+    GOTO L_after
+   L_else
     NEW kotlin/NoWhenBranchMatchedException
     DUP
     INVOKESPECIAL kotlin/NoWhenBranchMatchedException.<init> ()V
     CHECKCAST java/lang/Throwable
     ATHROW
-   L3
+   L_after
     RETURN
-   L5
-    LOCALVARIABLE tmp Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWhenSealedTarget$Sealed; L1 L5 2
-    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWhenSealedTarget; L0 L5 0
-    LOCALVARIABLE sealed Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWhenSealedTarget$Sealed; L0 L5 1
-    LINENUMBER 5 L0
-    LINENUMBER 6 L1
-    LINENUMBER 7 L2
-    LINENUMBER 8 L4
-    LINENUMBER 9 L3
+   L_method_end
+    LOCALVARIABLE tmp Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWhenSealedTarget$Sealed; L_case_1 L_method_end 2
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWhenSealedTarget; L_method_start L_method_end 0
+    LOCALVARIABLE sealed Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWhenSealedTarget$Sealed; L_method_start L_method_end 1
+    LINENUMBER 5 L_method_start
+    LINENUMBER 6 L_case_1
+    LINENUMBER 7 L_case_2
+    LINENUMBER 8 L_else
+    LINENUMBER 9 L_after
     MAXSTACK = 2
     MAXLOCALS = 3
