@@ -107,6 +107,16 @@
       <td><i>empty</i> (no excluded classes)</td>
     </tr>
     <tr>
+      <td><code>excludesfile</code></td>
+      <td>Path to a file that contains a list of class names that should be
+           excluded from execution analysis, the same format as excludes options
+           above. Useful for large lists that can't be passed via argument.
+           Note if the two options are present the final excluded list will
+           be the combination of both of them.
+      </td>
+      <td><i>none</i></td>
+    </tr>
+    <tr>
       <td><code>exclclassloader</code></td>
       <td>A list of class loader names that should be excluded from execution
           analysis. The list entries are separated by a colon
