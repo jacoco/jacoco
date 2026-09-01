@@ -22,6 +22,7 @@ import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.tools.ExecDumpClient;
 import org.jacoco.core.tools.ExecFileLoader;
 import org.kohsuke.args4j.Option;
+import org.kohsuke.args4j.spi.ExplicitBooleanOptionHandler;
 
 /**
  * The <code>dump</code> command.
@@ -42,6 +43,9 @@ public class Dump extends Command {
 
 	@Option(name = "--retry", usage = "number of retries (default 10)", metaVar = "<count>")
 	int retrycount = 10;
+
+	@Option(name = "--append", handler = ExplicitBooleanOptionHandler.class, usage = "destination file should be appended (default true)", metaVar = "<append>")
+	boolean append = true;
 
 	@Override
 	public String description() {
@@ -70,7 +74,7 @@ public class Dump extends Command {
 		final ExecFileLoader loader = client.dump(address, port);
 		out.printf("[INFO] Writing execution data to %s.%n",
 				destfile.getAbsolutePath());
-		loader.save(destfile, true);
+		loader.save(destfile, append);
 
 		return 0;
 	}
