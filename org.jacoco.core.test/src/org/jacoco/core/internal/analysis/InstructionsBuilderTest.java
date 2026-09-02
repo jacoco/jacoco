@@ -13,7 +13,10 @@
 package org.jacoco.core.internal.analysis;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.jacoco.core.analysis.ISourceNode;
@@ -185,6 +188,25 @@ public class InstructionsBuilderTest {
 		Map<AbstractInsnNode, Instruction> map = builder.getInstructions();
 		assertEquals(CounterImpl.COUNTER_0_1,
 				map.get(i1).getInstructionCounter());
+	}
+
+	/**
+	 * This is important to receive proper order in
+	 * {@link LineImpl#getCoveredBranches()}.
+	 */
+	@Test
+	public void getInstructions_should_return_in_the_order_of_addInstruction() {
+		final InsnNode i1 = new InsnNode(Opcodes.NOP);
+		builder.addInstruction(i1);
+		final InsnNode i2 = new InsnNode(Opcodes.NOP);
+		builder.addInstruction(i2);
+
+		final Iterator<AbstractInsnNode> i = builder.getInstructions().keySet()
+				.iterator();
+		assertSame(i.next(), i1);
+		assertSame(i.next(), i2);
+
+		assertEquals(LinkedHashMap.class, builder.getInstructions().getClass());
 	}
 
 }
