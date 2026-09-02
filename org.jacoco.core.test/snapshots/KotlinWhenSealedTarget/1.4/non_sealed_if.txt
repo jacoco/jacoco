@@ -1,0 +1,23 @@
+   L0
+    ALOAD 1
+    INSTANCEOF org/jacoco/core/test/validation/kotlin/targets/KotlinWhenSealedTarget$NonSealed$NonSealed1
+    IFEQ L1
+    LDC "case 1"
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
+    GOTO L2
+   L1
+    ALOAD 1
+    INSTANCEOF org/jacoco/core/test/validation/kotlin/targets/KotlinWhenSealedTarget$NonSealed$NonSealed2
+    IFEQ L2
+    LDC "case 2"
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
+   L2
+    RETURN
+   L3
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWhenSealedTarget; L0 L3 0
+    LOCALVARIABLE nonSealed Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWhenSealedTarget$NonSealed; L0 L3 1
+    LINENUMBER 5 L0
+    LINENUMBER 6 L1
+    LINENUMBER 8 L2
+    MAXSTACK = 1
+    MAXLOCALS = 2
