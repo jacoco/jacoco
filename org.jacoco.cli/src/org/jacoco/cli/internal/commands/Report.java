@@ -140,15 +140,24 @@ public class Report extends Command {
 		visitor.visitEnd();
 	}
 
+	private void createParent(final File file) {
+		final File folder = file.getParentFile();
+		if (!folder.exists()) {
+			final boolean dr = folder.mkdirs();
+		}
+	}
+
 	private IReportVisitor createReportVisitor() throws IOException {
 		final List<IReportVisitor> visitors = new ArrayList<IReportVisitor>();
 
 		if (xml != null) {
+			createParent(xml);
 			final XMLFormatter formatter = new XMLFormatter();
 			visitors.add(formatter.createVisitor(new FileOutputStream(xml)));
 		}
 
 		if (csv != null) {
+			createParent(csv);
 			final CSVFormatter formatter = new CSVFormatter();
 			visitors.add(formatter.createVisitor(new FileOutputStream(csv)));
 		}
