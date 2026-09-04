@@ -33,6 +33,10 @@ public class KotlinWhenSealedTest extends KotlinValidationTestBase {
 		assertSnapshot(KotlinWhenSealedTarget.class,
 				"expressionWithRedundantElse",
 				"expression_with_redundant_else.txt", //
+				KOTLIN_1_4);
+		assertSnapshot(KotlinWhenSealedTarget.class,
+				"expressionWithNonRedundantElse",
+				"expression_with_non_redundant_else.txt", //
 				KOTLIN_1_5, KOTLIN_1_4);
 		assertSnapshot(KotlinWhenSealedTarget.class, "statement",
 				"statement.txt", //
