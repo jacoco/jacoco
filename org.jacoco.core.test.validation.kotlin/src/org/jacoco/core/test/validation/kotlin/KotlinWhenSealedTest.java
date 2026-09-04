@@ -38,6 +38,12 @@ public class KotlinWhenSealedTest extends KotlinValidationTestBase {
 				"expressionWithNonRedundantElse",
 				"expression_with_non_redundant_else.txt", //
 				KOTLIN_1_5, KOTLIN_1_4);
+		assertSnapshot(KotlinWhenSealedTarget.class, "nonSealedWhen",
+				"non_sealed_when.txt", //
+				KOTLIN_1_5, KOTLIN_1_4);
+		assertSnapshot(KotlinWhenSealedTarget.class, "nonSealedIf",
+				"non_sealed_if.txt", //
+				KOTLIN_1_4);
 		assertSnapshot(KotlinWhenSealedTarget.class, "statement",
 				"statement.txt", //
 				KOTLIN_2_0, KOTLIN_1_5, KOTLIN_1_4);
