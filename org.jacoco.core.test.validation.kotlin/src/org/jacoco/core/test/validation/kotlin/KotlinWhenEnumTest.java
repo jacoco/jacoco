@@ -33,6 +33,9 @@ public class KotlinWhenEnumTest extends KotlinValidationTestBase {
 		assertSnapshot(KotlinWhenEnumTarget.class, "whenEnumRedundantElse",
 				"redundant_else.txt", //
 				KOTLIN_1_6);
+		assertSnapshot(KotlinWhenEnumTarget.class, "whenEnumNonRedundantElse",
+				"non_redundant_else.txt", //
+				KOTLIN_1_6);
 		assertSnapshot(KotlinWhenEnumTarget.class,
 				"whenByNullableEnumWithNullCaseAndWithoutElse",
 				"nullable_case_without_else.txt", //

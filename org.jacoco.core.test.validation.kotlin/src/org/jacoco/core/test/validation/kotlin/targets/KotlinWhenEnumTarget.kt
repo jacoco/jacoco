@@ -21,6 +21,10 @@ object KotlinWhenEnumTarget {
         A, B
     }
 
+    private enum class E3 {
+        A, B, C
+    }
+
     private fun whenEnum(e: Enum): String =
         when (e) {  // assertFullyCovered(0, 2)
             Enum.A -> "a" // assertFullyCovered()
@@ -29,9 +33,19 @@ object KotlinWhenEnumTarget {
 
     @Suppress("REDUNDANT_ELSE_IN_WHEN")
     private fun whenEnumRedundantElse(e: Enum): String =
-        when (e) { // assertFullyCovered(0, 2)
+        when (e) { // assertFullyCovered(1, 2)
             Enum.A -> "a" // assertFullyCovered()
             Enum.B -> "b" // assertFullyCovered()
+            else -> "else" // assertNotCovered()
+        } // assertFullyCovered()
+
+    /**
+     * Unfortunately indistinguishable from [whenEnum].
+     */
+    private fun whenEnumNonRedundantElse(e: E3): String =
+        when (e) { // assertFullyCovered(0, 2)
+            E3.A -> "a" // assertFullyCovered()
+            E3.B -> "b" // assertFullyCovered()
             else -> throw NoWhenBranchMatchedException() // assertEmpty()
         } // assertFullyCovered()
 
@@ -63,6 +77,13 @@ object KotlinWhenEnumTarget {
 
         whenEnumRedundantElse(Enum.A)
         whenEnumRedundantElse(Enum.B)
+
+        whenEnumNonRedundantElse(E3.A)
+        whenEnumNonRedundantElse(E3.B)
+        try {
+            whenEnumNonRedundantElse(E3.C)
+        } catch (_: NoWhenBranchMatchedException) {
+        }
 
         whenByNullableEnumWithNullCaseAndWithoutElse(Enum.A)
         whenByNullableEnumWithNullCaseAndWithoutElse(Enum.B)
