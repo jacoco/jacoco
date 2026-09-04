@@ -8,6 +8,9 @@
       1: L_case_a
       2: L_case_b
       default: L_default
+// previous instruction replaced by R
+// previous instruction branch 1 creates branch 0 for R
+// previous instruction branch 2 creates branch 1 for R
    L_case_a
     LDC "a"
     GOTO L_after
@@ -15,10 +18,12 @@
     LDC "b"
     GOTO L_after
    L_default
+// previous instruction starts ignore range 1
     NEW kotlin/NoWhenBranchMatchedException
     DUP
     INVOKESPECIAL kotlin/NoWhenBranchMatchedException.<init> ()V
     ATHROW
+// previous instruction ends ignore range 1
    L_after
     ARETURN
    L_method_end
