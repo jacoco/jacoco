@@ -35,9 +35,10 @@ public class MethodSnapshotLexerTest {
 	@Test
 	public void comment() throws Exception {
 		final MethodSnapshotParser.Lexer lexer = newLexer(
-				"// comment 1\n// comment 2");
+				"// comment 1\n// comment 2\r\n// comment 3");
 		assertEquals("// comment 1", lexer.nextToken());
 		assertEquals("// comment 2", lexer.nextToken());
+		assertEquals("// comment 3", lexer.nextToken());
 		assertNull(lexer.nextToken());
 	}
 

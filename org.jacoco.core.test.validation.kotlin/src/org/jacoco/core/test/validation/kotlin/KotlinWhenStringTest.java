@@ -14,6 +14,7 @@ package org.jacoco.core.test.validation.kotlin;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.kotlin.targets.KotlinWhenStringTarget;
+import org.junit.Test;
 
 /**
  * Test of code coverage in {@link KotlinWhenStringTarget}.
@@ -22,6 +23,20 @@ public class KotlinWhenStringTest extends ValidationTestBase {
 
 	public KotlinWhenStringTest() {
 		super(KotlinWhenStringTarget.class);
+	}
+
+	@Test
+	public void bytecodeSnapshots() throws Exception {
+		assertSnapshot(KotlinWhenStringTarget.class, "whenString",
+				"example.txt");
+		assertSnapshot(KotlinWhenStringTarget.class,
+				"whenStringNullableDefault", "nullable_else.txt");
+		assertSnapshot(KotlinWhenStringTarget.class, "whenStringNullableCase",
+				"nullable_case.txt");
+		assertSnapshot(KotlinWhenStringTarget.class, "implicitElseNotExecuted",
+				"implicit_else.txt");
+		assertSnapshot(KotlinWhenStringTarget.class,
+				"whenStringBiggestHashCodeFirst", "biggest_hashCode_first.txt");
 	}
 
 }

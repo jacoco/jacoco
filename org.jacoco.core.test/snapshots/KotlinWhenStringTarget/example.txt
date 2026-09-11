@@ -1,0 +1,76 @@
+   L_method_start
+    ALOAD 1
+    ASTORE 2
+    ALOAD 2
+    INVOKEVIRTUAL java/lang/String.hashCode ()I
+    TABLESWITCH
+      97: L_hash_a
+      98: L_hash_b
+      99: L_hash_c
+      default: L_else
+   L_hash_a
+    ALOAD 2
+    LDC "a"
+    INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
+    IFNE L_case_a
+    ALOAD 2
+    LDC "\u0000a"
+    INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
+    IFNE L_case_0a
+    GOTO L_else
+   L_hash_b
+    ALOAD 2
+    LDC "b"
+    INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
+    IFNE L_case_b
+    ALOAD 2
+    LDC "\u0000b"
+    INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
+    IFNE L_case_0b
+    GOTO L_else
+   L_hash_c
+    ALOAD 2
+    LDC "c"
+    INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
+    IFNE L_case_c
+    ALOAD 2
+    LDC "\u0000c"
+    INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
+    IFNE L_case_0c
+    GOTO L_else
+   L_case_a
+    LDC "case a"
+    GOTO L_after
+   L_case_b
+    LDC "case b"
+    GOTO L_after
+   L_case_c
+    LDC "case c"
+    GOTO L_after
+   L_case_0a
+    LDC "case \u0000a"
+    GOTO L_after
+   L_case_0b
+    LDC "case \u0000b"
+    GOTO L_after
+   L_case_0c
+    LDC "case \u0000c"
+    GOTO L_after
+   L_else
+    LDC "else"
+   L_after
+    ARETURN
+   L_method_end
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWhenStringTarget; L_method_start L_method_end 0
+    LOCALVARIABLE p Ljava/lang/String; L_method_start L_method_end 1
+    LINENUMBER 5 L_method_start
+    LINENUMBER 6 L_case_a
+    LINENUMBER 7 L_case_b
+    LINENUMBER 8 L_case_c
+    LINENUMBER 9 L_case_0a
+    LINENUMBER 10 L_case_0b
+    LINENUMBER 11 L_case_0c
+    LINENUMBER 12 L_else
+    LINENUMBER 13 L_after
+    MAXSTACK = 2
+    MAXLOCALS = 3

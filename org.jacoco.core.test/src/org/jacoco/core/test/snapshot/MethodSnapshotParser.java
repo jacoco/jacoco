@@ -80,6 +80,7 @@ final class MethodSnapshotParser {
 				case Opcodes.FSTORE:
 				case Opcodes.DSTORE:
 				case Opcodes.ASTORE:
+				case Opcodes.RET:
 					parseVar(opcode);
 					break;
 				case Opcodes.IINC:
@@ -102,11 +103,9 @@ final class MethodSnapshotParser {
 				case Opcodes.GOTO:
 				case Opcodes.IFNULL:
 				case Opcodes.IFNONNULL:
+				case Opcodes.JSR:
 					parseJump(opcode);
 					break;
-				case Opcodes.JSR:
-				case Opcodes.RET:
-					throw new UnsupportedOperationException();
 				case Opcodes.TABLESWITCH:
 					parseTableSwitch();
 					break;
@@ -173,13 +172,37 @@ final class MethodSnapshotParser {
 			}
 			parseLdcInsn(name);
 
+		} else if (name.startsWith("// annotable parameter count")) {
+			throw new UnsupportedOperationException(name);
+
 		} else if (name.startsWith("//")) {
 			if (commentsHandler != null) {
 				commentsHandler.onComment(name, visitor.instructions.getLast());
 			}
 
+		} else if (name.startsWith("@")) {
+			parseAnnotation(name);
+
 		} else {
 			throw new IllegalStateException(name);
+		}
+	}
+
+	private void parseAnnotation(final String name) throws IOException {
+		if (!name.endsWith("()")) {
+			throw new UnsupportedOperationException(name);
+		}
+		final String descriptor = name.substring(1, name.length() - 2);
+		final String peekToken = input.peekToken();
+		if ("// invisible".equals(peekToken)) {
+			input.nextToken();
+			visitor.visitAnnotation(descriptor, false);
+		} else if (peekToken.startsWith("// parameter")
+				|| peekToken.startsWith("// invisible, parameter")
+				|| peekToken.equals(":")) {
+			throw new UnsupportedOperationException(peekToken);
+		} else {
+			visitor.visitAnnotation(descriptor, true);
 		}
 	}
 
@@ -201,6 +224,10 @@ final class MethodSnapshotParser {
 	private void parseLocalVariable() throws IOException {
 		final String name = input.nextToken();
 		final String descriptor = input.nextToken();
+		if (name.startsWith("@") && descriptor.equals(":")) {
+			// annotation
+			throw new UnsupportedOperationException(name);
+		}
 		final Label start = getLabel(input.nextToken());
 		final Label end = getLabel(input.nextToken());
 		final int index = Integer.parseInt(input.nextToken());
@@ -228,7 +255,12 @@ final class MethodSnapshotParser {
 	}
 
 	private void parseTryCatchBlock() throws IOException {
-		final Label start = getLabel(input.nextToken());
+		final String startLabelName = input.nextToken();
+		if (startLabelName.startsWith("@")) {
+			// annotation
+			throw new UnsupportedOperationException(startLabelName);
+		}
+		final Label start = getLabel(startLabelName);
 		final Label end = getLabel(input.nextToken());
 		final Label handler = getLabel(input.nextToken());
 		final String type = input.nextToken();
@@ -403,6 +435,9 @@ final class MethodSnapshotParser {
 	}
 
 	private Label getLabel(final String labelName) {
+		if (!labelName.startsWith("L")) {
+			throw new IllegalStateException(labelName);
+		}
 		Label label = labels.get(labelName);
 		if (label == null) {
 			label = new Label();
@@ -658,7 +693,7 @@ final class MethodSnapshotParser {
 			do {
 				s.append((char) c);
 				c = reader.read();
-			} while (c != -1 && c != '\n');
+			} while (c != -1 && c != '\r' && c != '\n');
 			return s.toString();
 		}
 	}

@@ -59,6 +59,22 @@ public final class MethodSnapshot {
 		final Textifier textifier = new Textifier();
 		methodNode.accept(
 				new MethodSnapshotVisitor(new TraceMethodVisitor(textifier)));
+		return render(textifier);
+	}
+
+	/**
+	 * Returns textual representation of given {@code methodNode} without
+	 * cleanups performed by {@link MethodSnapshotVisitor}, so in contrast to
+	 * {@link #snapshot(MethodNode)} the result is not guaranteed to be
+	 * parseable by {@link #parse(Reader, MethodSnapshotCommentsHandler)}.
+	 */
+	static String text(final MethodNode methodNode) {
+		final Textifier textifier = new Textifier();
+		methodNode.accept(new TraceMethodVisitor(textifier));
+		return render(textifier);
+	}
+
+	private static String render(final Textifier textifier) {
 		final StringWriter stringWriter = new StringWriter();
 		final PrintWriter printWriter = new PrintWriter(stringWriter);
 		textifier.print(printWriter);

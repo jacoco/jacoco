@@ -12,9 +12,11 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.java16;
 
+import org.jacoco.core.test.validation.JavaVersion;
 import org.jacoco.core.test.validation.Source.Line;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java16.targets.InstanceofTarget;
+import org.junit.Test;
 
 /**
  * Test of code coverage in {@link InstanceofTarget}.
@@ -23,6 +25,20 @@ public class InstanceofTest extends ValidationTestBase {
 
 	public InstanceofTest() {
 		super(InstanceofTarget.class);
+	}
+
+	@Test
+	public void bytecodeSnapshots() throws Exception {
+		if (!isJDKCompiler) {
+			assertSnapshot(InstanceofTarget.class, "ifInstanceof",
+					"ecj/instanceof_pattern.txt");
+		} else if (JavaVersion.current().isBefore("17")) {
+			assertSnapshot(InstanceofTarget.class, "ifInstanceof",
+					"16/instanceof_pattern.txt");
+		} else {
+			assertSnapshot(InstanceofTarget.class, "ifInstanceof",
+					"instanceof_pattern.txt");
+		}
 	}
 
 }

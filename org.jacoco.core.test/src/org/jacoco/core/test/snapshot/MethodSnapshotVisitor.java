@@ -16,8 +16,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.jacoco.core.internal.instr.InstrSupport;
+import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.TypePath;
 
 final class MethodSnapshotVisitor extends MethodVisitor {
 
@@ -25,6 +27,33 @@ final class MethodSnapshotVisitor extends MethodVisitor {
 
 	MethodSnapshotVisitor(final MethodVisitor methodVisitor) {
 		super(InstrSupport.ASM_API_VERSION, methodVisitor);
+	}
+
+	/**
+	 * Ignores visit, because can not be parsed by {@link MethodSnapshotParser}.
+	 */
+	@Override
+	public AnnotationVisitor visitTypeAnnotation(final int typeRef,
+			final TypePath typePath, final String descriptor,
+			final boolean visible) {
+		return null;
+	}
+
+	/**
+	 * Ignores visit, because can not be parsed by {@link MethodSnapshotParser}.
+	 */
+	@Override
+	public void visitAnnotableParameterCount(final int parameterCount,
+			final boolean visible) {
+	}
+
+	/**
+	 * Ignores visit, because can not be parsed by {@link MethodSnapshotParser}.
+	 */
+	@Override
+	public AnnotationVisitor visitParameterAnnotation(final int parameter,
+			final String descriptor, final boolean visible) {
+		return null;
 	}
 
 	@Override
@@ -35,6 +64,26 @@ final class MethodSnapshotVisitor extends MethodVisitor {
 			throw new UnsupportedOperationException();
 		}
 		super.visitTryCatchBlock(start, end, handler, type);
+	}
+
+	/**
+	 * Ignores visit, because can not be parsed by {@link MethodSnapshotParser}.
+	 */
+	@Override
+	public AnnotationVisitor visitTryCatchAnnotation(final int typeRef,
+			final TypePath typePath, final String descriptor,
+			final boolean visible) {
+		return null;
+	}
+
+	/**
+	 * Ignores visit, because can not be parsed by {@link MethodSnapshotParser}.
+	 */
+	@Override
+	public AnnotationVisitor visitLocalVariableAnnotation(final int typeRef,
+			final TypePath typePath, final Label[] start, final Label[] end,
+			final int[] index, final String descriptor, final boolean visible) {
+		return null;
 	}
 
 	/**

@@ -12,24 +12,24 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.kotlin;
 
-import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.kotlin.targets.KotlinWhenGuardTarget;
 import org.junit.Test;
 
 /**
  * Test of code coverage in {@link KotlinWhenGuardTarget}.
  */
-public class KotlinWhenGuardTest extends ValidationTestBase {
+public class KotlinWhenGuardTest extends KotlinValidationTestBase {
 
 	public KotlinWhenGuardTest() {
 		super(KotlinWhenGuardTarget.class);
 	}
 
+	/** Starting from {@link #KOTLIN_2_2} */
 	@Test
 	public void bytecodeSnapshots() throws Exception {
 		assertSnapshot(KotlinWhenGuardTarget.class, //
-				"example", //
-				"guard.txt");
+				"example", "guard.txt", //
+				KOTLIN_2_2);
 	}
 
 }
