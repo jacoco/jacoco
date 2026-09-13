@@ -13,6 +13,7 @@
 package org.jacoco.core.internal.flow;
 
 import org.jacoco.core.internal.instr.InstrSupport;
+import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.commons.AnalyzerAdapter;
@@ -27,16 +28,26 @@ public class ClassProbesAdapter extends ClassVisitor
 	private static final MethodProbesVisitor EMPTY_METHOD_PROBES_VISITOR = new MethodProbesVisitor() {
 	};
 
+	/**
+	 * Value for the boundary probe base that disables boundary probes.
+	 */
+	public static final int NO_BOUNDARY_PROBES = -1;
+
 	private final ClassProbesVisitor cv;
 
 	private final boolean trackFrames;
 
+	private final int boundaryProbeBase;
+
 	private int counter = 0;
+
+	private int boundaryCounter;
 
 	private String name;
 
 	/**
-	 * Creates a new adapter that delegates to the given visitor.
+	 * Creates a new adapter that delegates to the given visitor and does not
+	 * generate boundary probes.
 	 *
 	 * @param cv
 	 *            instance to delegate to
@@ -45,9 +56,61 @@ public class ClassProbesAdapter extends ClassVisitor
 	 */
 	public ClassProbesAdapter(final ClassProbesVisitor cv,
 			final boolean trackFrames) {
+		this(cv, trackFrames, NO_BOUNDARY_PROBES);
+	}
+
+	/**
+	 * Creates a new adapter that delegates to the given visitor.
+	 *
+	 * @param cv
+	 *            instance to delegate to
+	 * @param trackFrames
+	 *            if <code>true</code> stackmap frames are tracked and provided
+	 * @param boundaryProbeBase
+	 *            first id to use for boundary probes, which must be the total
+	 *            number of regular probes of the class as determined by
+	 *            {@link #countRegularProbes(ClassReader)}, or
+	 *            {@link #NO_BOUNDARY_PROBES} to not generate boundary probes
+	 */
+	public ClassProbesAdapter(final ClassProbesVisitor cv,
+			final boolean trackFrames, final int boundaryProbeBase) {
 		super(InstrSupport.ASM_API_VERSION, cv);
 		this.cv = cv;
 		this.trackFrames = trackFrames;
+		this.boundaryProbeBase = boundaryProbeBase;
+		this.boundaryCounter = boundaryProbeBase;
+	}
+
+	/**
+	 * Determines how many regular probes the given class requires. Boundary
+	 * probes are allocated after these, which keeps the ids of regular probes
+	 * independent of the boundary metric.
+	 *
+	 * @param reader
+	 *            reader for the class definition
+	 * @return number of regular probes
+	 */
+	public static int countRegularProbes(final ClassReader reader) {
+		final ProbeCountVisitor counter = new ProbeCountVisitor();
+		reader.accept(new ClassProbesAdapter(counter, false), 0);
+		return counter.count;
+	}
+
+	private static class ProbeCountVisitor extends ClassProbesVisitor {
+
+		int count;
+
+		@Override
+		public MethodProbesVisitor visitMethod(final int access,
+				final String name, final String desc, final String signature,
+				final String[] exceptions) {
+			return null;
+		}
+
+		@Override
+		public void visitTotalProbeCount(final int count) {
+			this.count = count;
+		}
 	}
 
 	@Override
@@ -96,7 +159,7 @@ public class ClassProbesAdapter extends ClassVisitor
 
 	@Override
 	public void visitEnd() {
-		cv.visitTotalProbeCount(counter);
+		cv.visitTotalProbeCount(Math.max(counter, boundaryCounter));
 		super.visitEnd();
 	}
 
@@ -104,6 +167,13 @@ public class ClassProbesAdapter extends ClassVisitor
 
 	public int nextId() {
 		return counter++;
+	}
+
+	public int nextBoundaryId() {
+		if (boundaryProbeBase == NO_BOUNDARY_PROBES) {
+			return LabelInfo.NO_PROBE;
+		}
+		return boundaryCounter++;
 	}
 
 }

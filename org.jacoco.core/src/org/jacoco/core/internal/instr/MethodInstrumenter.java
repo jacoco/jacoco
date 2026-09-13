@@ -55,6 +55,37 @@ class MethodInstrumenter extends MethodProbesVisitor {
 	}
 
 	@Override
+	public void visitBoundaryProbe(final int opcode, final int probeId,
+			final IFrame frame) {
+		// The operands of the comparison are duplicated and consumed by an
+		// equality check that skips the probe, so the comparison itself sees an
+		// unchanged operand stack.
+		final Label skip = new Label();
+		if (isSingleOperand(opcode)) {
+			mv.visitInsn(Opcodes.DUP);
+			mv.visitJumpInsn(Opcodes.IFNE, skip);
+		} else {
+			mv.visitInsn(Opcodes.DUP2);
+			mv.visitJumpInsn(Opcodes.IF_ICMPNE, skip);
+		}
+		probeInserter.insertProbe(probeId);
+		mv.visitLabel(skip);
+		frame.accept(mv);
+	}
+
+	private static boolean isSingleOperand(final int opcode) {
+		switch (opcode) {
+		case Opcodes.IFLT:
+		case Opcodes.IFGE:
+		case Opcodes.IFGT:
+		case Opcodes.IFLE:
+			return true;
+		default:
+			return false;
+		}
+	}
+
+	@Override
 	public void visitJumpInsnWithProbe(final int opcode, final Label label,
 			final int probeId, final IFrame frame) {
 		if (opcode == Opcodes.GOTO) {
