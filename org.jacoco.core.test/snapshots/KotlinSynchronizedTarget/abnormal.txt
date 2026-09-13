@@ -1,0 +1,30 @@
+    TRYCATCHBLOCK L0 L1 L1 null
+    TRYCATCHBLOCK L1 L2 L1 null
+   L3
+    GETSTATIC org/jacoco/core/test/validation/kotlin/targets/KotlinSynchronizedTarget.lock : Ljava/lang/Object;
+    ASTORE 1
+    ALOAD 1
+    MONITORENTER
+   L0
+    NOP
+    ICONST_0
+    ISTORE 2
+   L4
+    NEW org/jacoco/core/test/validation/targets/Stubs$StubException
+    DUP
+    INVOKESPECIAL org/jacoco/core/test/validation/targets/Stubs$StubException.<init> ()V
+    ATHROW
+   L1
+    ASTORE 3
+   L2
+    ALOAD 1
+    MONITOREXIT
+    ALOAD 3
+    ATHROW
+   L5
+    LOCALVARIABLE $i$a$-synchronized-KotlinSynchronizedTarget$explicitException$1 I L4 L1 2
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinSynchronizedTarget; L3 L5 0
+    LINENUMBER 5 L3
+    LINENUMBER 6 L4
+    MAXSTACK = 2
+    MAXLOCALS = 4
