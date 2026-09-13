@@ -64,9 +64,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <basedir>${project.build.outputDirectory}/org/jacoco/ant</basedir>
-        </configuration>
       </plugin>
     </plugins>
   </build>
