@@ -26,7 +26,7 @@
 
   <properties>
     <!-- When upgrading Kotlin do not forget to update JVM targets in org.jacoco.core.test.validation/pom.xml -->
-    <kotlin.version>2.4.10</kotlin.version>
+    <kotlin.version>2.4.20</kotlin.version>
   </properties>
 
   <dependencies>
@@ -70,6 +70,10 @@
           <compilerPlugins>
             <plugin>kotlinx-serialization</plugin>
           </compilerPlugins>
+          <args>
+            <!-- TODO https://github.com/jacoco/jacoco/issues/1923 -->
+            <arg>-Xwhen-expressions=inline</arg>
+          </args>
         </configuration>
         <dependencies>
           <dependency>

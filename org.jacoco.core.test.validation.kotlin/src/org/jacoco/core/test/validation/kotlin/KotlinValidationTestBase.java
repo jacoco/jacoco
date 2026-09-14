@@ -29,6 +29,8 @@ public abstract class KotlinValidationTestBase extends ValidationTestBase {
 	protected static final KotlinVersion KOTLIN_2_1 = new KotlinVersion(2, 1);
 	protected static final KotlinVersion KOTLIN_2_2 = new KotlinVersion(2, 2);
 	protected static final KotlinVersion KOTLIN_2_4 = new KotlinVersion(2, 4);
+	protected static final KotlinVersion KOTLIN_2_4_20 = new KotlinVersion(2, 4,
+			20);
 
 	protected KotlinValidationTestBase(final Class<?> target) {
 		super(target);
@@ -46,7 +48,11 @@ public abstract class KotlinValidationTestBase extends ValidationTestBase {
 			if (KotlinVersion.CURRENT.isAtLeast(kotlinVersion.getMajor(),
 					kotlinVersion.getMinor())) {
 				final String versionPrefix = kotlinVersion.getMajor() + "."
-						+ kotlinVersion.getMinor() + "/";
+						+ kotlinVersion.getMinor()
+						+ (kotlinVersion.getPatch() != 0
+								? "." + kotlinVersion.getPatch()
+								: "")
+						+ "/";
 				assertSnapshot(targetClass, targetMethod,
 						versionPrefix + baseName);
 				return;

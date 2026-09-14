@@ -44,7 +44,7 @@ public class KotlinCoroutineTest extends KotlinValidationTestBase {
 		assertSnapshot(KotlinCoroutineTarget.class,
 				"suspendingFunctionWithTailCallOptimization",
 				"suspending_function_with_tail_call_optimization.txt",
-				KOTLIN_2_4, KOTLIN_2_1);
+				KOTLIN_2_4_20, KOTLIN_2_4, KOTLIN_2_1);
 	}
 
 }
