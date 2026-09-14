@@ -24,7 +24,7 @@ public class UnnamedPatternTarget {
 
 	private static String multiplePatternsInCase(Object o) {
 		return switch (o) { // assertFullyCovered(0,2)
-		case R(Float _), R(Double _) -> // assertJavacPartly(3,1) assertEcjPartly(6,2)
+		case R(Float _), R(Double _) -> // assertJavacEmpty() assertEcjPartly(6,2)
 			"case"; // assertFullyCovered()
 		default -> // assertEmpty()
 			"default"; // assertFullyCovered()
@@ -33,11 +33,23 @@ public class UnnamedPatternTarget {
 
 	private static String multiplePatternsInCaseWithGuard(Object o, int x) {
 		return switch (o) { // assertFullyCovered(0,2)
-		case R(Float _), R(Double _) when x > 0 -> // assertJavacPartly(4,2) assertEcjPartly(7,3)
+		case R(Float _), R(Double _) when x > 0 -> // assertJavacFully(1,1) assertEcjPartly(7,3)
 			"case"; // assertFullyCovered()
 		default -> // assertEmpty()
 			"default"; // assertFullyCovered()
 		}; // assertEmpty()
+	}
+
+	record RP(int c) {
+	}
+
+	private static String rp(Object o) {
+		return switch (o) {
+		case RP(int x) -> //
+			"case";
+		default -> //
+			"default";
+		};
 	}
 
 	public static void main(String[] args) {
