@@ -75,14 +75,48 @@ public class MergeTest extends CommandTestBase {
 		assertEquals(new HashSet<String>(Arrays.asList("a", "b", "c")), names);
 	}
 
+	@Test
+	public void should_append_to_existing_when_append_is_true()
+			throws Exception {
+		File execfile = createExecFile("a",
+				new File(tmp.getRoot(), "jacoco.exec"));
+		File b = createExecFile("b");
+		File c = createExecFile("c");
+		execute("merge", "--destfile", execfile.getAbsolutePath(),
+				b.getAbsolutePath(), c.getAbsolutePath(), "--append", "true");
+		assertOk();
+		Set<String> names = loadExecFile(execfile);
+		assertEquals(new HashSet<String>(Arrays.asList("a", "b", "c")), names);
+
+	}
+
+	@Test
+	public void should_overwrite_to_existing_when_append_is_false()
+			throws Exception {
+		File execfile = createExecFile("a",
+				new File(tmp.getRoot(), "jacoco.exec"));
+		File b = createExecFile("b");
+		File c = createExecFile("c");
+		execute("merge", "--destfile", execfile.getAbsolutePath(),
+				b.getAbsolutePath(), c.getAbsolutePath(), "--append", "false");
+		assertOk();
+		Set<String> names = loadExecFile(execfile);
+		assertEquals(new HashSet<String>(Arrays.asList("b", "c")), names);
+
+	}
+
 	private File createExecFile(String name) throws IOException {
 		File file = new File(tmp.getRoot(), name + ".exec");
-		final FileOutputStream execout = new FileOutputStream(file);
+		return createExecFile(name, file);
+	}
+
+	private File createExecFile(String name, File destFile) throws IOException {
+		final FileOutputStream execout = new FileOutputStream(destFile);
 		ExecutionDataWriter writer = new ExecutionDataWriter(execout);
 		writer.visitClassExecution(new ExecutionData(name.hashCode(), name,
 				new boolean[] { true }));
 		execout.close();
-		return file;
+		return destFile;
 	}
 
 	private Set<String> loadExecFile(File file) throws IOException {
