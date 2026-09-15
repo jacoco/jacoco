@@ -4,5 +4,8 @@
       <option name="CLASS_COUNT_TO_USE_IMPORT_ON_DEMAND" value="999" />
       <option name="NAMES_COUNT_TO_USE_IMPORT_ON_DEMAND" value="999" />
     </JavaCodeStyleSettings>
+    <ScalaCodeStyleSettings>
+      <option name="MULTILINE_STRING_CLOSING_QUOTES_ON_NEW_LINE" value="true" />
+    </ScalaCodeStyleSettings>
   </code_scheme>
 </component>
