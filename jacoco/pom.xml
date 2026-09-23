@@ -22,6 +22,7 @@
 
   <artifactId>jacoco</artifactId>
   <packaging>pom</packaging>
+  <url>https://www.jacoco.org/jacoco/</url>
 
   <name>JaCoCo :: Distribution</name>
   <description>JaCoCo Standalone Distribution</description>
