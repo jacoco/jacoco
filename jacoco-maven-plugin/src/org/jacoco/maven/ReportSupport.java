@@ -160,7 +160,8 @@ final class ReportSupport {
 
 		if (classesDir.isDirectory()) {
 			final Analyzer analyzer = new Analyzer(
-					loader.getExecutionDataStore(), builder);
+					loader.getExecutionDataStore(), builder,
+					new LocatorSourceProvider(locator));
 			final FileFilter filter = new FileFilter(includes, excludes);
 			for (final File file : filter.getFiles(classesDir)) {
 				analyzer.analyzeAll(file);
@@ -238,6 +239,22 @@ final class ReportSupport {
 
 		public int getTabWidth() {
 			return 4;
+		}
+	}
+
+	private static class LocatorSourceProvider
+			implements org.jacoco.core.analysis.ISourceFileProvider {
+
+		private final ISourceFileLocator locator;
+
+		public LocatorSourceProvider(final ISourceFileLocator locator) {
+			this.locator = locator;
+		}
+
+		@Override
+		public Reader getSourceFile(final String packageName,
+				final String fileName) throws IOException {
+			return locator.getSourceFile(packageName, fileName);
 		}
 	}
 
