@@ -26,20 +26,17 @@ import org.jacoco.core.data.ExecutionDataReader;
 import org.jacoco.core.data.IExecutionDataVisitor;
 import org.jacoco.core.data.ISessionInfoVisitor;
 import org.jacoco.core.data.SessionInfo;
-import org.kohsuke.args4j.Argument;
+
+import picocli.CommandLine;
 
 /**
  * The <code>execinfo</code> command.
  */
+@CommandLine.Command(name = "execinfo", description = "Print exec file content in human readable format.")
 public class ExecInfo extends Command {
 
-	@Argument(usage = "list of JaCoCo *.exec files to read", metaVar = "<execfiles>")
+	@CommandLine.Parameters(description = "list of JaCoCo *.exec files to read", paramLabel = "<execfiles>")
 	List<File> execfiles = new ArrayList<File>();
-
-	@Override
-	public String description() {
-		return "Print exec file content in human readable format.";
-	}
 
 	@Override
 	public int execute(final PrintWriter out, final PrintWriter err)

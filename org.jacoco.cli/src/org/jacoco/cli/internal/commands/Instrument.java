@@ -26,26 +26,22 @@ import java.util.List;
 import org.jacoco.cli.internal.Command;
 import org.jacoco.core.instr.Instrumenter;
 import org.jacoco.core.runtime.OfflineInstrumentationAccessGenerator;
-import org.kohsuke.args4j.Argument;
-import org.kohsuke.args4j.Option;
+
+import picocli.CommandLine;
 
 /**
  * The <code>instrument</code> command.
  */
+@CommandLine.Command(name = "instrument", description = "Off-line instrumentation of Java class files and JAR files.")
 public class Instrument extends Command {
 
-	@Option(name = "--dest", usage = "path to write instrumented Java classes to", metaVar = "<dir>", required = true)
+	@CommandLine.Option(names = "--dest", description = "path to write instrumented Java classes to", paramLabel = "<dir>", required = true)
 	File dest;
 
-	@Argument(usage = "list of folder or files to instrument recursively", metaVar = "<sourcefiles>")
+	@CommandLine.Parameters(description = "list of folder or files to instrument recursively", paramLabel = "<sourcefiles>")
 	List<File> source = new ArrayList<File>();
 
 	private Instrumenter instrumenter;
-
-	@Override
-	public String description() {
-		return "Off-line instrumentation of Java class files and JAR files.";
-	}
 
 	@Override
 	public int execute(final PrintWriter out, final PrintWriter err)

@@ -35,8 +35,8 @@
       <artifactId>org.jacoco.report</artifactId>
     </dependency>
     <dependency>
-      <groupId>args4j</groupId>
-      <artifactId>args4j</artifactId>
+      <groupId>info.picocli</groupId>
+      <artifactId>picocli</artifactId>
     </dependency>
   </dependencies>
 
@@ -84,8 +84,8 @@
                   <shadedPattern>org.jacoco.cli.internal.asm</shadedPattern>
                 </relocation>
                 <relocation>
-                  <pattern>org.kohsuke.args4j</pattern>
-                  <shadedPattern>org.jacoco.cli.internal.args4j</shadedPattern>
+                  <pattern>picocli</pattern>
+                  <shadedPattern>org.jacoco.cli.internal.picocli</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>org.jacoco.core</pattern>
@@ -111,6 +111,7 @@
                   <artifact>*:*</artifact>
                   <excludes>
                     <exclude>META-INF/MANIFEST.MF</exclude>
+                    <exclude>**/module-info.class</exclude>
                   </excludes>
                 </filter>
                 <filter>
@@ -123,18 +124,6 @@
                   <artifact>org.jacoco:org.jacoco.report</artifact>
                   <excludes>
                     <exclude>about.html</exclude>
-                  </excludes>
-                </filter>
-                <filter>
-                  <artifact>args4j:args4j</artifact>
-                  <excludes>
-                    <exclude>**/Messages_*.properties</exclude>
-                  </excludes>
-                </filter>
-                <filter>
-                  <artifact>org.ow2.asm:*</artifact>
-                  <excludes>
-                    <exclude>module-info.class</exclude>
                   </excludes>
                 </filter>
               </filters>
