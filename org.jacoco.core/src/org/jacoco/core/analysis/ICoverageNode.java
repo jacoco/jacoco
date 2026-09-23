@@ -64,7 +64,14 @@ public interface ICoverageNode {
 		METHOD,
 
 		/** Counter for classes */
-		CLASS
+		CLASS,
+
+		/**
+		 * Counter for the boundary values of ordered numeric comparisons, i.e.
+		 * the case where the two compared values are equal. Only comparisons
+		 * where both branches are covered are counted.
+		 */
+		BOUNDARY
 	}
 
 	/**

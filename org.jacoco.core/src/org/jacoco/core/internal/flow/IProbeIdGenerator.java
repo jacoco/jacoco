@@ -24,4 +24,14 @@ public interface IProbeIdGenerator {
 	 */
 	int nextId();
 
+	/**
+	 * Returns the next unique id for a boundary probe. Boundary probe ids are
+	 * allocated after all regular probe ids of the class, so that adding this
+	 * metric does not shift the id of any regular probe.
+	 *
+	 * @return unique probe id, or {@link LabelInfo#NO_PROBE} if boundary probes
+	 *         are not generated
+	 */
+	int nextBoundaryId();
+
 }
