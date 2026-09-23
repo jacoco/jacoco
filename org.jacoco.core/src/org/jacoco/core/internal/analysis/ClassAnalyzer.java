@@ -155,15 +155,18 @@ public class ClassAnalyzer extends ClassProbesVisitor
 		if (smap == null) {
 			return;
 		}
+
 		for (final KotlinSMAP.Mapping mapping : smap.mappings()) {
-			if (coverage.getName().equals(mapping.inputClassName())
+			final String inputClassName = stringPool
+					.get(mapping.inputClassName());
+			if (coverage.getName().equals(inputClassName)
 					&& mapping.inputStartLine() == mapping.outputStartLine()) {
 				continue;
 			}
-			SourceNodeImpl fragment = fragments.get(mapping.inputClassName());
+			SourceNodeImpl fragment = fragments.get(inputClassName);
 			if (fragment == null) {
-				fragment = new SourceNodeImpl(null, mapping.inputClassName());
-				fragments.put(mapping.inputClassName(), fragment);
+				fragment = new SourceNodeImpl(null, inputClassName);
+				fragments.put(inputClassName, fragment);
 			}
 			final int mappingOutputEndLine = mapping.outputStartLine()
 					+ mapping.repeatCount() - 1;
