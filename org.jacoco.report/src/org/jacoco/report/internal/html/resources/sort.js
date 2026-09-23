@@ -17,7 +17,7 @@
    * Sets the initial sorting derived from the hash.
    *
    * @param linkelementids
-   *          list of element ids to search for links to add sort inidcator
+   *          list of element ids to search for links to add sort indicator
    *          hash links
    */
   function initialSort(linkelementids) {
@@ -44,7 +44,7 @@
   }
 
   /**
-   * Sorts the columns with the given header dependening on the current sort state.
+   * Sorts the columns with the given header depending on the current sort state.
    */
   function toggleSort(header) {
     var sortup = header.className.indexOf('down ') == 0;

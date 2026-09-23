@@ -31,10 +31,10 @@ public class SessionInfo implements Comparable<SessionInfo> {
 	 * @param id
 	 *            arbitrary session identifier, must not be <code>null</code>
 	 * @param start
-	 *            the epoc based time stamp when execution data recording has
+	 *            the epoch based time stamp when execution data recording has
 	 *            been started
 	 * @param dump
-	 *            the epoc based time stamp when execution data was collected
+	 *            the epoch based time stamp when execution data was collected
 	 */
 	public SessionInfo(final String id, final long start, final long dump) {
 		if (id == null) {
@@ -53,7 +53,7 @@ public class SessionInfo implements Comparable<SessionInfo> {
 	}
 
 	/**
-	 * @return the epoc based time stamp when execution data recording has been
+	 * @return the epoch based time stamp when execution data recording has been
 	 *         started
 	 */
 	public long getStartTimeStamp() {
@@ -61,7 +61,7 @@ public class SessionInfo implements Comparable<SessionInfo> {
 	}
 
 	/**
-	 * @return the epoc based time stamp when execution data was collected
+	 * @return the epoch based time stamp when execution data was collected
 	 */
 	public long getDumpTimeStamp() {
 		return dump;

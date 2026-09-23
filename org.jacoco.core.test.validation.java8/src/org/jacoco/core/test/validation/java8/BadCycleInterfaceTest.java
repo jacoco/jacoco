@@ -39,7 +39,7 @@ public class BadCycleInterfaceTest extends ValidationTestBase {
 
 	public void assertBaseClInit(final Line line) {
 		if (JavaVersion.current().isBefore("1.8.0_152")) {
-			// Incorrect interpetation of JVMS 5.5 in JDK 8 causes a default
+			// Incorrect interpretation of JVMS 5.5 in JDK 8 causes a default
 			// method to be called before the static initializer of an interface
 			// (see JDK-8098557 and JDK-8164302):
 			assertFullyCovered(line);
@@ -53,7 +53,7 @@ public class BadCycleInterfaceTest extends ValidationTestBase {
 
 	public void assertChildDefault(final Line line) throws Exception {
 		if (JavaVersion.current().isBefore("1.8.0_152")) {
-			// Incorrect interpetation of JVMS 5.5 in JDK 8 causes a default
+			// Incorrect interpretation of JVMS 5.5 in JDK 8 causes a default
 			// method to be called before the static initializer of an interface
 			// (see JDK-8098557 and JDK-8164302):
 			assertFullyCovered(line);
