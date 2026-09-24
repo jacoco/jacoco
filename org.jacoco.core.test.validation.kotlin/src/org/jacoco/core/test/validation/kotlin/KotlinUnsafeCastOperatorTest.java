@@ -12,16 +12,24 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.kotlin;
 
-import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.kotlin.targets.KotlinUnsafeCastOperatorTarget;
+import org.junit.Test;
 
 /**
  * Test of "unsafe" cast operator.
  */
-public class KotlinUnsafeCastOperatorTest extends ValidationTestBase {
+public class KotlinUnsafeCastOperatorTest extends KotlinValidationTestBase {
 
 	public KotlinUnsafeCastOperatorTest() {
 		super(KotlinUnsafeCastOperatorTarget.class);
+	}
+
+	/** Starting from {@link #KOTLIN_1_3} */
+	@Test
+	public void bytecodeSnapshots() throws Exception {
+		assertSnapshot(KotlinUnsafeCastOperatorTarget.class, "example",
+				"unsafe_cast_operator.txt", //
+				KOTLIN_1_7, KOTLIN_1_6, KOTLIN_1_5, KOTLIN_1_4, KOTLIN_1_3);
 	}
 
 }

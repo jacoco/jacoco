@@ -153,8 +153,8 @@
     <junit.version>4.13.2</junit.version>
     <googlecodeprettify.version>20100721</googlecodeprettify.version>
 
-    <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
-    <maven-surefire-plugin.version>3.5.6</maven-surefire-plugin.version>
+    <maven-compiler-plugin.version>3.16.0</maven-compiler-plugin.version>
+    <maven-surefire-plugin.version>3.6.0</maven-surefire-plugin.version>
 
     <!-- ================== -->
     <!-- For SonarQube analysis -->
@@ -333,7 +333,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-deploy-plugin</artifactId>
-          <version>3.1.4</version>
+          <version>3.2.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -343,7 +343,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-install-plugin</artifactId>
-          <version>3.1.4</version>
+          <version>3.2.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -437,27 +437,27 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>animal-sniffer-maven-plugin</artifactId>
-          <version>1.27</version>
+          <version>1.28</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>build-helper-maven-plugin</artifactId>
-          <version>3.6.1</version>
+          <version>3.6.2</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>buildnumber-maven-plugin</artifactId>
-          <version>3.3.0</version>
+          <version>3.3.1</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>xml-maven-plugin</artifactId>
-          <version>1.2.1</version>
+          <version>1.2.2</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>exec-maven-plugin</artifactId>
-          <version>3.6.3</version>
+          <version>3.6.4</version>
         </plugin>
         <!-- Third-party plugins -->
         <plugin>
@@ -468,7 +468,7 @@
         <plugin>
           <groupId>org.apache.felix</groupId>
           <artifactId>maven-bundle-plugin</artifactId>
-          <version>6.1.0</version>
+          <version>6.1.2</version>
         </plugin>
         <plugin>
           <groupId>com.diffplug.spotless</groupId>
@@ -478,7 +478,7 @@
        <plugin>
          <groupId>org.sonarsource.scanner.maven</groupId>
          <artifactId>sonar-maven-plugin</artifactId>
-         <version>5.7.0.6970</version>
+         <version>5.8.0.7211</version>
        </plugin>
       </plugins>
     </pluginManagement>
