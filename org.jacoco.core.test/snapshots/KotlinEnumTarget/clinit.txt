@@ -1,0 +1,17 @@
+   L0
+    NEW org/jacoco/core/test/validation/kotlin/targets/KotlinEnumTarget$EnumClass
+    DUP
+    LDC "E"
+    ICONST_0
+    INVOKESPECIAL org/jacoco/core/test/validation/kotlin/targets/KotlinEnumTarget$EnumClass.<init> (Ljava/lang/String;I)V
+    PUTSTATIC org/jacoco/core/test/validation/kotlin/targets/KotlinEnumTarget$EnumClass.E : Lorg/jacoco/core/test/validation/kotlin/targets/KotlinEnumTarget$EnumClass;
+    INVOKESTATIC org/jacoco/core/test/validation/kotlin/targets/KotlinEnumTarget$EnumClass.$values ()[Lorg/jacoco/core/test/validation/kotlin/targets/KotlinEnumTarget$EnumClass;
+    PUTSTATIC org/jacoco/core/test/validation/kotlin/targets/KotlinEnumTarget$EnumClass.$VALUES : [Lorg/jacoco/core/test/validation/kotlin/targets/KotlinEnumTarget$EnumClass;
+    GETSTATIC org/jacoco/core/test/validation/kotlin/targets/KotlinEnumTarget$EnumClass.$VALUES : [Lorg/jacoco/core/test/validation/kotlin/targets/KotlinEnumTarget$EnumClass;
+    CHECKCAST [Ljava/lang/Enum;
+    INVOKESTATIC kotlin/enums/EnumEntriesKt.enumEntries ([Ljava/lang/Enum;)Lkotlin/enums/EnumEntries;
+    PUTSTATIC org/jacoco/core/test/validation/kotlin/targets/KotlinEnumTarget$EnumClass.$ENTRIES : Lkotlin/enums/EnumEntries;
+    RETURN
+    LINENUMBER 5 L0
+    MAXSTACK = 4
+    MAXLOCALS = 0
