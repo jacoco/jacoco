@@ -1,0 +1,85 @@
+   L_method_start
+    ICONST_M1
+    ISTORE 1
+   L1
+    ALOAD 0
+    INVOKEVIRTUAL java/lang/String.hashCode ()I
+    LOOKUPSWITCH
+      97: L_hash_a
+      98: L_hash_b
+      default: L_hash_default
+   L_hash_a
+    LDC "a"
+    ALOAD 0
+    INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
+    IFEQ L_hash_0a
+   L6
+    ICONST_0
+    ISTORE 1
+    GOTO L_hash_default
+   L_hash_0a
+    LDC "\u0000a"
+    ALOAD 0
+    INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
+    IFEQ L_hash_default
+   L7
+    ICONST_1
+    ISTORE 1
+    GOTO L_hash_default
+   L_hash_b
+    LDC "b"
+    ALOAD 0
+    INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
+    IFEQ L_hash_default
+   L8
+    ICONST_2
+    ISTORE 1
+   L_hash_default
+    ILOAD 1
+    TABLESWITCH
+      0: L_case_a
+      1: L_case_0a
+      2: L_case_b
+      default: L_default
+   L_case_a
+    LDC "case a"
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
+   L_break_a
+    GOTO L_after
+   L_case_0a
+    LDC "case \u0000a"
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
+   L_break_0a
+    GOTO L_after
+   L_case_b
+    LDC "case b"
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
+   L_break_b
+    GOTO L_after
+   L_default
+    LDC "default"
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
+   L_after
+    RETURN
+   L_method_end
+    LOCALVARIABLE s Ljava/lang/String; L_method_start L_method_end 0
+    LOCALVARIABLE c I L1 L_method_end 1
+    LINENUMBER 5 L_method_start
+    LINENUMBER 6 L1
+    LINENUMBER 8 L_hash_a
+    LINENUMBER 9 L6
+    LINENUMBER 10 L_hash_0a
+    LINENUMBER 11 L7
+    LINENUMBER 15 L_hash_b
+    LINENUMBER 16 L8
+    LINENUMBER 20 L_hash_default
+    LINENUMBER 22 L_case_a
+    LINENUMBER 23 L_break_a
+    LINENUMBER 25 L_case_0a
+    LINENUMBER 26 L_break_0a
+    LINENUMBER 28 L_case_b
+    LINENUMBER 29 L_break_b
+    LINENUMBER 31 L_default
+    LINENUMBER 34 L_after
+    MAXSTACK = 2
+    MAXLOCALS = 2
