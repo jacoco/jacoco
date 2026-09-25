@@ -1,0 +1,81 @@
+    TRYCATCHBLOCK L0 L1 L2 java/lang/Throwable
+    TRYCATCHBLOCK L3 L4 L2 java/lang/Throwable
+   L5
+    ALOAD 0
+    DUP
+    INVOKESTATIC java/util/Objects.requireNonNull (Ljava/lang/Object;)Ljava/lang/Object;
+    POP
+    ASTORE 1
+    ICONST_0
+    ISTORE 2
+   L6
+    ALOAD 1
+    ILOAD 2
+    INVOKEDYNAMIC typeSwitch(Ljava/lang/Object;I)I [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/runtime/SwitchBootstraps.typeSwitch(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;[Ljava/lang/Object;)Ljava/lang/invoke/CallSite;
+      // arguments:
+      org.jacoco.core.test.validation.java22.targets.UnnamedPatternTarget$R.class, 
+      org.jacoco.core.test.validation.java22.targets.UnnamedPatternTarget$R.class
+    ]
+    LOOKUPSWITCH
+      0: L7
+      1: L7
+      default: L8
+   L7
+    ALOAD 1
+    CHECKCAST org/jacoco/core/test/validation/java22/targets/UnnamedPatternTarget$R
+    ASTORE 3
+    ALOAD 3
+   L0
+    INVOKEVIRTUAL org/jacoco/core/test/validation/java22/targets/UnnamedPatternTarget$R.c ()Ljava/lang/Object;
+   L1
+    ASTORE 5
+    ALOAD 5
+    INSTANCEOF java/lang/Float
+    IFEQ L9
+    GOTO L10
+   L9
+    ALOAD 1
+    CHECKCAST org/jacoco/core/test/validation/java22/targets/UnnamedPatternTarget$R
+    ASTORE 4
+    ALOAD 4
+   L3
+    INVOKEVIRTUAL org/jacoco/core/test/validation/java22/targets/UnnamedPatternTarget$R.c ()Ljava/lang/Object;
+   L4
+    ASTORE 5
+    ALOAD 5
+    INSTANCEOF java/lang/Double
+    IFEQ L11
+    GOTO L10
+   L11
+    ICONST_2
+    ISTORE 2
+    GOTO L6
+   L10
+    LDC "case"
+    GOTO L12
+   L8
+    LDC "default"
+    GOTO L12
+   L12
+    ARETURN
+   L2
+    ASTORE 1
+    NEW java/lang/MatchException
+    DUP
+    ALOAD 1
+    INVOKEVIRTUAL java/lang/Throwable.toString ()Ljava/lang/String;
+    ALOAD 1
+    INVOKESPECIAL java/lang/MatchException.<init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+    ATHROW
+   L13
+    LOCALVARIABLE o Ljava/lang/Object; L5 L13 0
+    LINENUMBER 5 L5
+    LINENUMBER 6 L7
+    LINENUMBER 7 L10
+    LINENUMBER 9 L8
+    LINENUMBER 5 L12
+    LINENUMBER 6 L2
+    MAXSTACK = 4
+    MAXLOCALS = 6
