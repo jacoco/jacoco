@@ -12,16 +12,29 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.kotlin;
 
-import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.kotlin.targets.KotlinCoroutineInlineValueClassTarget;
+import org.junit.Test;
 
 /**
  * Test of code coverage in {@link KotlinCoroutineInlineValueClassTarget}.
  */
-public class KotlinCoroutineInlineValueClassTest extends ValidationTestBase {
+public class KotlinCoroutineInlineValueClassTest
+		extends KotlinValidationTestBase {
 
 	public KotlinCoroutineInlineValueClassTest() {
 		super(KotlinCoroutineInlineValueClassTarget.class);
+	}
+
+	/** Starting from {@link #KOTLIN_2_2} */
+	@Test
+	public void bytecodeSnapshots() throws Exception {
+		assertSnapshot(KotlinCoroutineInlineValueClassTarget.class,
+				"suspendingFunction", "suspending_function.txt");
+		assertSnapshot(
+				Class.forName(
+						KotlinCoroutineInlineValueClassTarget.class.getName()
+								+ "$suspendingLambda$1"),
+				"invokeSuspend", "suspending_lambda.txt");
 	}
 
 }

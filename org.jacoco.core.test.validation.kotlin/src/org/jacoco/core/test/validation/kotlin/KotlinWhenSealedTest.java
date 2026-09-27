@@ -12,32 +12,51 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.kotlin;
 
-import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.kotlin.targets.KotlinWhenSealedTarget;
 import org.junit.Test;
 
 /**
  * Test of code coverage in {@link KotlinWhenSealedTarget}.
  */
-public class KotlinWhenSealedTest extends ValidationTestBase {
+public class KotlinWhenSealedTest extends KotlinValidationTestBase {
 
 	public KotlinWhenSealedTest() {
 		super(KotlinWhenSealedTarget.class);
 	}
 
+	/** Starting from {@link #KOTLIN_1_4} */
 	@Test
 	public void bytecodeSnapshots() throws Exception {
 		assertSnapshot(KotlinWhenSealedTarget.class, "expression",
-				"expression.txt");
+				"expression.txt", //
+				KOTLIN_2_0, KOTLIN_1_4);
+		assertSnapshot(KotlinWhenSealedTarget.class,
+				"expressionWithRedundantElse",
+				"expression_with_redundant_else.txt", //
+				KOTLIN_1_4);
+		assertSnapshot(KotlinWhenSealedTarget.class,
+				"expressionWithNonRedundantElse",
+				"expression_with_non_redundant_else.txt", //
+				KOTLIN_1_5, KOTLIN_1_4);
+		assertSnapshot(KotlinWhenSealedTarget.class, "nonSealedWhen",
+				"non_sealed_when.txt", //
+				KOTLIN_1_5, KOTLIN_1_4);
+		assertSnapshot(KotlinWhenSealedTarget.class, "nonSealedIf",
+				"non_sealed_if.txt", //
+				KOTLIN_1_4);
 		assertSnapshot(KotlinWhenSealedTarget.class, "statement",
-				"statement.txt");
+				"statement.txt", //
+				KOTLIN_2_0, KOTLIN_1_5, KOTLIN_1_4);
 		assertSnapshot(KotlinWhenSealedTarget.class, "indistinguishable",
-				"indistinguishable.txt");
+				"indistinguishable.txt", //
+				KOTLIN_1_5, KOTLIN_1_4);
 		assertSnapshot(KotlinWhenSealedTarget.class, "singleCase",
-				"indistinguishable_single_case.txt");
+				"single_case.txt", //
+				KOTLIN_1_6, KOTLIN_1_4);
 		assertSnapshot(KotlinWhenSealedTarget.class,
 				"indistinguishableSingleCase",
-				"indistinguishable_single_case.txt");
+				"indistinguishable_single_case.txt", //
+				KOTLIN_1_5, KOTLIN_1_4);
 	}
 
 }

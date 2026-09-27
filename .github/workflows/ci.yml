@@ -39,6 +39,7 @@ jobs:
           - { jdk: 24, distribution: 'zulu' }
           - { jdk: 25, distribution: 'temurin' }
           - { jdk: 26, distribution: 'zulu' }
+          - { jdk: 27, distribution: 'zulu' }
     name: JDK ${{ matrix.jdk }}${{ matrix.ecj && ' with ECJ' || ''}}
     runs-on: ubuntu-24.04
     steps:

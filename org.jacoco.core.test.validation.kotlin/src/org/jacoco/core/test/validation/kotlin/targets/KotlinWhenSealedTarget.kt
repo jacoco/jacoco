@@ -34,7 +34,17 @@ object KotlinWhenSealedTarget {
     private fun expressionWithRedundantElse(sealed: Sealed): String =
         when (sealed) { // assertFullyCovered()
             is Sealed.Sealed1 -> "case 1" // assertFullyCovered(0, 2)
-            is Sealed.Sealed2 -> "case 2" // assertFullyCovered(0, 0)
+            is Sealed.Sealed2 -> "case 2" // assertFullyCovered(1, 1)
+            else -> "else" // assertNotCovered()
+        } // assertFullyCovered()
+
+    /**
+     * Unfortunately indistinguishable from [expression] starting from Kotlin 1.5
+     */
+    private fun expressionWithNonRedundantElse(sealed: Sealed3): String =
+        when (sealed) { // assertFullyCovered()
+            is Sealed3.A -> "case 1" // assertFullyCovered(0, 2)
+            is Sealed3.B -> "case 2" // assertFullyCovered()
             else -> throw NoWhenBranchMatchedException() // assertEmpty()
         } // assertFullyCovered()
 
@@ -93,6 +103,12 @@ object KotlinWhenSealedTarget {
         object A : S1()
     }
 
+    private sealed class Sealed3 {
+        object A : Sealed3()
+        object B : Sealed3()
+        object C : Sealed3()
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
         expression(Sealed.Sealed1)
@@ -100,6 +116,13 @@ object KotlinWhenSealedTarget {
 
         expressionWithRedundantElse(Sealed.Sealed1)
         expressionWithRedundantElse(Sealed.Sealed2)
+
+        expressionWithNonRedundantElse(Sealed3.A)
+        expressionWithNonRedundantElse(Sealed3.B)
+        try {
+            expressionWithNonRedundantElse(Sealed3.C)
+        } catch (_: NoWhenBranchMatchedException) {
+        }
 
         statement(Sealed.Sealed1)
         statement(Sealed.Sealed2)

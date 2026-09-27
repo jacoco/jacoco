@@ -16,15 +16,21 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.FileReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.jacoco.core.test.snapshot.MethodSnapshot;
+import org.jacoco.core.test.snapshot.MethodSnapshotCommentsHandler;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
@@ -58,6 +64,104 @@ public abstract class FilterTestBase {
 			actualReplacements.put(source, replacements.values());
 		}
 	};
+
+	final void assertSnapshot(final IFilter filter, final String snapshotPath)
+			throws Exception {
+		final FileReader reader = new FileReader(snapshotPath);
+		assertSnapshot(filter, context, reader);
+		reader.close();
+	}
+
+	static void assertSnapshot(final IFilter filter,
+			final IFilterContext context, final Reader snapshot)
+			throws Exception {
+		final TreeMap<String, Range> rangesByName = new TreeMap<String, Range>();
+		final HashMap<String, ArrayList<Replacement>> replacementsByName = new HashMap<String, ArrayList<Replacement>>();
+		final HashMap<String, AbstractInsnNode> replacedInstructionsByName = new HashMap<String, AbstractInsnNode>();
+		final MethodSnapshotCommentsHandler commentsHandler = new MethodSnapshotCommentsHandler() {
+			final Pattern pattern = Pattern
+					.compile("// previous instruction (?:" //
+							+ "starts ignore range (.++)|" //
+							+ "ends ignore range (.++)|" //
+							+ "replaced by (.++)|" //
+							+ "branch ([0-9]++) creates branch ([0-9]++) for (.++)" //
+							+ ")");
+
+			public void onComment(final String comment,
+					final AbstractInsnNode precedingInstruction) {
+				if (precedingInstruction == null) {
+					return;
+				}
+				final Matcher matcher = pattern.matcher(comment);
+				if (!matcher.matches()) {
+					throw new IllegalStateException(
+							"Invalid syntax: " + comment);
+				}
+				final String group1 = matcher.group(1);
+				final String group2 = matcher.group(2);
+				final String group3 = matcher.group(3);
+				if (group1 != null) {
+					final Range range = new Range();
+					if (rangesByName.containsKey(group1)) {
+						throw new IllegalStateException(
+								"Duplicate start for range " + group1);
+					}
+					rangesByName.put(group1, range);
+					range.fromInclusive = precedingInstruction;
+				} else if (group2 != null) {
+					final Range range = rangesByName.get(group2);
+					if (range == null) {
+						throw new IllegalStateException(
+								"Missing start for range " + group2);
+					} else if (range.toInclusive != null) {
+						throw new IllegalStateException(
+								"Duplicate end for range " + group2);
+					}
+					range.toInclusive = precedingInstruction;
+				} else if (group3 != null) {
+					replacedInstructionsByName.put(group3,
+							precedingInstruction);
+				} else {
+					final int instructionBranch = Integer
+							.parseInt(matcher.group(4));
+					final int newBranch = Integer.parseInt(matcher.group(5));
+					final String name = matcher.group(6);
+					ArrayList<Replacement> r = replacementsByName.get(name);
+					if (r == null) {
+						r = new ArrayList<Replacement>();
+						replacementsByName.put(name, r);
+					}
+					r.add(new Replacement(newBranch, precedingInstruction,
+							instructionBranch));
+				}
+			}
+		};
+		final MethodNode methodNode = MethodSnapshot.parse(snapshot,
+				commentsHandler);
+		for (final Map.Entry<String, Range> e : rangesByName.entrySet()) {
+			if (e.getValue().toInclusive == null) {
+				throw new IllegalStateException(
+						"Missing end for range " + e.getKey());
+			}
+		}
+		final HashMap<AbstractInsnNode, List<Replacement>> replacements = new HashMap<AbstractInsnNode, List<Replacement>>();
+		for (Map.Entry<String, AbstractInsnNode> e : replacedInstructionsByName
+				.entrySet()) {
+			final ArrayList<Replacement> value = replacementsByName
+					.get(e.getKey());
+			if (value == null) {
+				throw new IllegalStateException(
+						"Missing branches for replacement " + e.getKey());
+			}
+			replacements.put(e.getValue(), value);
+		}
+		final FilterTestBase output = new FilterTestBase() {
+		};
+		filter.filter(methodNode, context, output.output);
+		output.assertIgnored(methodNode,
+				rangesByName.values().toArray(new Range[0]));
+		output.assertReplacedBranches(methodNode, replacements);
+	}
 
 	final void assertIgnored(final MethodNode methodNode,
 			final Range... expected) {
@@ -132,7 +236,8 @@ public abstract class FilterTestBase {
 		}
 		Collections.sort(actualStrings);
 
-		assertEquals(expectedStrings.toString(), actualStrings.toString());
+		assertEquals("replacements", expectedStrings.toString(),
+				actualStrings.toString());
 	}
 
 	static class Replacement {

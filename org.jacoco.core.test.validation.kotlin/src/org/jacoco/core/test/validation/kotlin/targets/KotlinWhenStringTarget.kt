@@ -20,15 +20,16 @@ import org.jacoco.core.test.validation.targets.Stubs.string
  */
 object KotlinWhenStringTarget {
 
-    private fun whenString(p: String): Int = when (p) { // assertFullyCovered(0, 7)
-        "a" -> 1 // assertFullyCovered()
-        "b" -> 2 // assertFullyCovered()
-        "c" -> 3 // assertFullyCovered()
-        "\u0000a" -> 4 // assertFullyCovered()
-        "\u0000b" -> 5 // assertFullyCovered()
-        "\u0000c" -> 6 // assertFullyCovered()
-        else -> 7 // assertFullyCovered()
-    } // assertFullyCovered()
+    private fun whenString(p: String): String =
+        when (p) { // assertFullyCovered(0, 7)
+            "a" -> "case a" // assertFullyCovered()
+            "b" -> "case b" // assertFullyCovered()
+            "c" -> "case c" // assertFullyCovered()
+            "\u0000a" -> "case \u0000a" // assertFullyCovered()
+            "\u0000b" -> "case \u0000b" // assertFullyCovered()
+            "\u0000c" -> "case \u0000c" // assertFullyCovered()
+            else -> "else" // assertFullyCovered()
+        } // assertFullyCovered()
 
     private fun whenStringNullableDefault(p: String?): String =
         when (p) { // assertFullyCovered(0, 4)
@@ -71,14 +72,15 @@ object KotlinWhenStringTarget {
      * Unlike [whenString]
      * in this example first case is the only case with biggest hashCode value.
      */
-    private fun whenStringBiggestHashCodeFirst(p: String): Int = when (p) { // assertFullyCovered(0, 6)
-        "c" -> 1 // assertFullyCovered()
-        "b" -> 2 // assertFullyCovered()
-        "\u0000b" -> 3 // assertFullyCovered()
-        "a" -> 4 // assertFullyCovered()
-        "\u0000a" -> 5 // assertFullyCovered()
-        else -> 6 // assertFullyCovered()
-    } // assertFullyCovered()
+    private fun whenStringBiggestHashCodeFirst(p: String): String =
+        when (p) { // assertFullyCovered(0, 6)
+            "c" -> "case c" // assertFullyCovered()
+            "b" -> "case b" // assertFullyCovered()
+            "\u0000b" -> "case \u0000b" // assertFullyCovered()
+            "a" -> "case a" // assertFullyCovered()
+            "\u0000a" -> "case \u0000a" // assertFullyCovered()
+            else -> "else" // assertFullyCovered()
+        } // assertFullyCovered()
 
     @JvmStatic
     fun main(args: Array<String>) {

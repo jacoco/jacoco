@@ -15,6 +15,13 @@
       "enabled": false
     },
     {
+      "description": "Reconfigure commit message",
+      "matchDepNames": ["*"],
+      "commitMessageAction": "Upgrade",
+      "commitMessageTopic": "{{depName}}",
+      "commitMessageExtra": "to {{newValue}}"
+    },
+    {
       "description": "Enable updates of GitHub Actions",
       "matchManagers": ["github-actions"],
       "pinDigests": true,

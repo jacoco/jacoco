@@ -1,0 +1,37 @@
+   L_method_start
+    ALOAD 0
+    IFNULL L_null
+   L_getB_before
+    ALOAD 0
+   L_getB
+    INVOKEVIRTUAL org/jacoco/core/test/validation/kotlin/targets/KotlinSafeCallOperatorTarget$A.getB ()Lorg/jacoco/core/test/validation/kotlin/targets/KotlinSafeCallOperatorTarget$B;
+    ASTORE 1
+   L_getB_after
+    ALOAD 1
+    IFNULL L_null
+   L_getC_before
+    ALOAD 1
+   L_getC
+    INVOKEVIRTUAL org/jacoco/core/test/validation/kotlin/targets/KotlinSafeCallOperatorTarget$B.getC ()Ljava/lang/String;
+   L_getC_after
+    ASTORE 2
+    ALOAD 2
+    IFNULL L_null
+    ALOAD 2
+    GOTO L_after
+   L_null
+    LDC ""
+   L_after
+    ARETURN
+   L_method_end
+    LOCALVARIABLE a Lorg/jacoco/core/test/validation/kotlin/targets/KotlinSafeCallOperatorTarget$A; L_method_start L_method_end 0
+    LINENUMBER 6 L_method_start
+    LINENUMBER 5 L_getB_before
+    LINENUMBER 6 L_getB
+    LINENUMBER 7 L_getB_after
+    LINENUMBER 5 L_getC_before
+    LINENUMBER 7 L_getC
+    LINENUMBER 5 L_getC_after
+    LINENUMBER 8 L_null
+    MAXSTACK = 1
+    MAXLOCALS = 3
