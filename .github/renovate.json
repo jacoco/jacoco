@@ -5,6 +5,24 @@
     ":disableDependencyDashboard",
     ":semanticCommitsDisabled"
   ],
+  "customManagers": [
+    {
+      "description": "Enable comment-based updates in pom.xml files",
+      "customType": "regex",
+      "managerFilePatterns": ["**/pom.xml"],
+      "datasourceTemplate": "maven",
+      "versioningTemplate": "maven",
+      "matchStrings": ["<!-- renovate depName=(?<depName>.+?) packageName=(?<packageName>.+?) -->\\s+<version>(?<currentValue>.+)</version>"]
+    },
+    {
+      "description": "Enable comment-based updates in html files",
+      "customType": "regex",
+      "managerFilePatterns": ["**/*.html"],
+      "datasourceTemplate": "maven",
+      "versioningTemplate": "maven",
+      "matchStrings": ["<!-- renovate depName=(?<depName>.*?) packageName=(?<packageName>.+?) -->\\s+(?<currentValue>.+?)\\s"]
+     }
+  ],
   "rebaseWhen": "conflicted",
   "ignorePaths": ["jacoco-maven-plugin.test/it/**"],
   "labels": ["dependencies"],

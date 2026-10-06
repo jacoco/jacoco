@@ -540,6 +540,7 @@
                   <version>21</version>
                 </requireJavaVersion>
                 <requireMavenVersion>
+                  <!-- renovate depName=maven packageName=org.apache.maven:apache-maven -->
                   <version>3.9.16</version>
                 </requireMavenVersion>
                 <requireNoRepositories>
