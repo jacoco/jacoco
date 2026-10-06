@@ -541,7 +541,7 @@
                 </requireJavaVersion>
                 <requireMavenVersion>
                   <!-- renovate depName=maven packageName=org.apache.maven:apache-maven -->
-                  <version>3.9.16</version>
+                  <version>3.10.0</version>
                 </requireMavenVersion>
                 <requireNoRepositories>
                   <message>The rules for repo1.maven.org are that pom.xml files should not include repository definitions.</message>
