@@ -5,6 +5,22 @@
     ":disableDependencyDashboard",
     ":semanticCommitsDisabled"
   ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["**/pom.xml"],
+      "datasourceTemplate": "maven",
+      "versioningTemplate": "maven",
+      "matchStrings": ["<!-- renovate depName=(?<depName>.+?) packageName=(?<packageName>.+?) -->\\s+<version>(?<currentValue>.+)</version>"]
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["**/*.html"],
+      "datasourceTemplate": "maven",
+      "versioningTemplate": "maven",
+      "matchStrings": ["<!-- renovate depName=(?<depName>.*?) packageName=(?<packageName>.+?) -->\\s+(?<currentValue>.+?)\\s"]
+     }
+  ],
   "rebaseWhen": "conflicted",
   "ignorePaths": ["jacoco-maven-plugin.test/it/**"],
   "labels": ["dependencies"],
@@ -20,6 +36,11 @@
       "commitMessageAction": "Upgrade",
       "commitMessageTopic": "{{depName}}",
       "commitMessageExtra": "to {{newValue}}"
+    },
+    {
+      "description": "Enable comment-based updates",
+      "matchManagers": ["custom.regex"],
+      "enabled": true
     },
     {
       "description": "Enable updates of GitHub Actions",
