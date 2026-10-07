@@ -24,16 +24,30 @@ public class RecordPatternsTarget {
 	}
 
 	private static void instanceofOperator(Object o) {
-		if (o instanceof Point(int x, int y)) { // assertInstanceof()
+		if (o instanceof Point(int x, int y)) { // assertFullyCovered(0,2)
 			nop(x + y); // assertFullyCovered()
 		} // assertEmpty()
 	}
 
 	private static void switchStatement(Object p) {
 		switch (p) { // assertFullyCovered(0, 2)
-		case Point(int x, int y) -> nop(x + y); // assertSwitchStatementLastCase()
-		default -> nop(); // assertFullyCovered()
+		case Point(int x, int y) -> // assertJavacFully() assertEcjPartly(0,0)
+			nop(x + y); // assertFullyCovered()
+		default -> // assertEmpty()
+			nop(); // assertFullyCovered()
 		} // assertEmpty()
+	}
+
+	record RR(Object c1, String c2) {
+	}
+
+	private static String wip(Object o) {
+		return switch (o) {
+		case RR(String c1, String c2) -> //
+			"case";
+		default -> //
+			"default";
+		};
 	}
 
 	record R(Object component) {

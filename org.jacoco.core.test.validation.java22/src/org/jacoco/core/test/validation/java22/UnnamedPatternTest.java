@@ -25,10 +25,23 @@ public class UnnamedPatternTest extends ValidationTestBase {
 		super(UnnamedPatternTarget.class);
 	}
 
+	public void assertJavacFully(final Source.Line line,
+			final int missedBranches, final int coveredBranches) {
+		if (isJDKCompiler) {
+			assertFullyCovered(line, missedBranches, coveredBranches);
+		}
+	}
+
 	public void assertJavacPartly(final Source.Line line,
 			final int missedBranches, final int coveredBranches) {
 		if (isJDKCompiler) {
 			assertPartlyCovered(line, missedBranches, coveredBranches);
+		}
+	}
+
+	public void assertJavacEmpty(final Source.Line line) {
+		if (isJDKCompiler) {
+			assertEmpty(line);
 		}
 	}
 
