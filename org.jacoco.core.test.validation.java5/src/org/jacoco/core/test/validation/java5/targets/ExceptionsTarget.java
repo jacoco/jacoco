@@ -50,6 +50,10 @@ public class ExceptionsTarget {
 			implicitExceptionFinally();
 		} catch (StubException e) {
 		}
+		try {
+			implicitExceptionAfterBranch();
+		} catch (StubException e) {
+		}
 	}
 
 	/**
@@ -151,5 +155,12 @@ public class ExceptionsTarget {
 			nop(); // assertFullyCovered()
 		} // assertBlockEndImplicitException()
 	} // assertEmpty()
+
+	private static void implicitExceptionAfterBranch() {
+		if (f()) { // assertFullyCovered(1, 1)
+			return; // assertNotCovered()
+		}
+		ex(); // assertNotCovered()
+	}
 
 }
