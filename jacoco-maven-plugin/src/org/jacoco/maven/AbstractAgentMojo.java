@@ -41,6 +41,11 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 	 */
 	static final String SUREFIRE_ARG_LINE = "argLine";
 	/**
+	 * Flag used to suppress execution in 'pom' packaged projects.
+	 */
+	@Parameter(property = "jacoco.skip-poms", defaultValue = "false")
+	private boolean skipPoms;
+	/**
 	 * Map of plugin artifacts.
 	 */
 	@Parameter(property = "plugin.artifactMap", required = true, readonly = true)
@@ -156,6 +161,13 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 
 	@Override
 	public void executeMojo() {
+		if (skipPoms && getProject().getPackaging().equals("pom")) {
+			getLog().info(
+					"Skipping JaCoCo execution in POM project because property jacoco.skip-poms is set.");
+			skipMojo();
+			return;
+		}
+
 		final String name = getEffectivePropertyName();
 		final Properties projectProperties = getProject().getProperties();
 		final String oldValue = projectProperties.getProperty(name);
