@@ -30,6 +30,14 @@ final class KotlinWhenFilter implements IFilter {
 
 	private static final String EXCEPTION = "kotlin/NoWhenBranchMatchedException";
 
+	private static final String NOTHING_EXCEPTION = "kotlin/KotlinNothingValueException";
+
+	private static final String THROW_HELPER_OWNER = "kotlin/internal/ThrowNoWhenBranchMatchedExceptionKt";
+
+	private static final String THROW_HELPER_NAME = "throwNoWhenBranchMatchedException";
+
+	private static final String THROW_HELPER_DESC = "(Ljava/lang/Object;)Ljava/lang/Void;";
+
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
 		final Matcher matcher = new Matcher();
@@ -50,12 +58,9 @@ final class KotlinWhenFilter implements IFilter {
 			if (start.getType() != AbstractInsnNode.LABEL) {
 				return;
 			}
-			cursor = start;
-
-			nextIsType(Opcodes.NEW, EXCEPTION);
-			nextIs(Opcodes.DUP);
-			nextIsInvoke(Opcodes.INVOKESPECIAL, EXCEPTION, "<init>", "()V");
-			nextIs(Opcodes.ATHROW);
+			if (!matchException(start) && !matchThrowHelper(start)) {
+				return;
+			}
 
 			for (AbstractInsnNode i = cursor; i != null; i = i.getPrevious()) {
 				if (i.getOpcode() == Opcodes.IFEQ
@@ -72,6 +77,53 @@ final class KotlinWhenFilter implements IFilter {
 
 				}
 			}
+		}
+
+		/**
+		 * Before Kotlin 2.5.0:
+		 *
+		 * <pre>
+		 * NEW kotlin/NoWhenBranchMatchedException
+		 * DUP
+		 * INVOKESPECIAL kotlin/NoWhenBranchMatchedException.&lt;init&gt; ()V
+		 * ATHROW
+		 * </pre>
+		 */
+		private boolean matchException(final AbstractInsnNode start) {
+			cursor = start;
+			nextIsType(Opcodes.NEW, EXCEPTION);
+			nextIs(Opcodes.DUP);
+			nextIsInvoke(Opcodes.INVOKESPECIAL, EXCEPTION, "<init>", "()V");
+			nextIs(Opcodes.ATHROW);
+			return cursor != null;
+		}
+
+		/**
+		 * Kotlin 2.5.0 and later (see
+		 * https://github.com/JetBrains/kotlin/commit/d3fba8aebfc39eea10ceba72eac85faee5abd7d0):
+		 *
+		 * <pre>
+		 * ALOAD subject
+		 * INVOKESTATIC kotlin/internal/ThrowNoWhenBranchMatchedExceptionKt.throwNoWhenBranchMatchedException (Ljava/lang/Object;)Ljava/lang/Void;
+		 * POP
+		 * NEW kotlin/KotlinNothingValueException
+		 * DUP
+		 * INVOKESPECIAL kotlin/KotlinNothingValueException.&lt;init&gt; ()V
+		 * ATHROW
+		 * </pre>
+		 */
+		private boolean matchThrowHelper(final AbstractInsnNode start) {
+			cursor = start;
+			nextIs(Opcodes.ALOAD);
+			nextIsInvoke(Opcodes.INVOKESTATIC, THROW_HELPER_OWNER,
+					THROW_HELPER_NAME, THROW_HELPER_DESC);
+			nextIs(Opcodes.POP);
+			nextIsType(Opcodes.NEW, NOTHING_EXCEPTION);
+			nextIs(Opcodes.DUP);
+			nextIsInvoke(Opcodes.INVOKESPECIAL, NOTHING_EXCEPTION, "<init>",
+					"()V");
+			nextIs(Opcodes.ATHROW);
+			return cursor != null;
 		}
 
 		void matchNullableEnum(final AbstractInsnNode start,
