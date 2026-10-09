@@ -88,10 +88,11 @@
   <li>Different compiler settings (e.g. debug vs. non-debug) </li>
 </ul>
 <p>
-  Also post-processing class files (obfuscation, AspectJ, etc.) will typically
-  change the class files. JaCoCo will work well if you simply use the same class
-  files for runtime as well as for analysis. So the tool chain to create these
-  class files does not matter.
+  Also post-processing class files (obfuscation, AspectJ, Android Gradle Plugin
+  bytecode transforms such as the one used by Hilt, etc.) will typically change
+  the class files. JaCoCo will work well if you simply use the same class files
+  for runtime as well as for analysis. So the tool chain to create these class
+  files does not matter.
 </p>
 <p>
   Even if the class files on the file system are the same there is possible that
