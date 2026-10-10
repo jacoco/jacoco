@@ -14,6 +14,7 @@ package org.jacoco.core.test.validation.kotlin;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.kotlin.targets.KotlinCoroutineCallbackTarget;
+import org.junit.Test;
 
 /**
  * Test of code coverage in {@link KotlinCoroutineCallbackTarget}.
@@ -22,6 +23,15 @@ public class KotlinCoroutineCallbackTest extends ValidationTestBase {
 
 	public KotlinCoroutineCallbackTest() {
 		super(KotlinCoroutineCallbackTarget.class);
+	}
+
+	@Test
+	public void bytecodeSnapshots() throws Exception {
+		assertSnapshot(KotlinCoroutineCallbackTarget.class, "example",
+				"example.txt");
+		assertSnapshot(KotlinCoroutineCallbackTarget.class,
+				"withoutTailCallOptimization",
+				"without_tail_call_optimization.txt");
 	}
 
 }
