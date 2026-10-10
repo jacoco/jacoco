@@ -1,0 +1,15 @@
+   L0
+    ILOAD 3
+    ICONST_1
+    IAND
+    IFEQ L1
+    LCONST_0
+    LSTORE 1
+   L1
+    ALOAD 0
+    LLOAD 1
+    INVOKESPECIAL org/jacoco/core/test/validation/kotlin/targets/KotlinDefaultArgumentsTarget.longParameter (J)V
+    RETURN
+    LINENUMBER 5 L0
+    MAXSTACK = 3
+    MAXLOCALS = 5
