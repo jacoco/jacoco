@@ -19,7 +19,7 @@ import org.jacoco.core.test.validation.targets.Stubs.nop
  */
 object KotlinEnumTarget {
 
-    private enum class EnumClass { // assertEmpty()
+    enum class EnumClass { // assertEmpty()
         E // assertFullyCovered()
     } // assertEmpty()
 

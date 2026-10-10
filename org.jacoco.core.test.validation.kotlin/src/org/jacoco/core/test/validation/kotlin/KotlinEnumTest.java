@@ -14,6 +14,7 @@ package org.jacoco.core.test.validation.kotlin;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.kotlin.targets.KotlinEnumTarget;
+import org.junit.Test;
 
 /**
  * Test of code coverage in {@link KotlinEnumTarget}.
@@ -22,6 +23,14 @@ public class KotlinEnumTest extends ValidationTestBase {
 
 	public KotlinEnumTest() {
 		super(KotlinEnumTarget.class);
+	}
+
+	@Test
+	public void bytecodeSnapshots() throws Exception {
+		assertSnapshot(KotlinEnumTarget.EnumClass.class, "getEntries",
+				"entries.txt");
+		assertSnapshot(KotlinEnumTarget.EnumClass.class, "<clinit>",
+				"clinit.txt");
 	}
 
 }
