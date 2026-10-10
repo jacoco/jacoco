@@ -17,6 +17,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,16 +66,19 @@ public abstract class FilterTestBase {
 		}
 	};
 
-	final void assertSnapshot(final IFilter filter, final String snapshotPath)
-			throws Exception {
-		final FileReader reader = new FileReader(snapshotPath);
-		assertSnapshot(filter, context, reader);
-		reader.close();
+	final void assertSnapshot(final IFilter filter, final String snapshotPath) {
+		try {
+			final FileReader reader = new FileReader(snapshotPath);
+			assertSnapshot(filter, context, reader);
+			reader.close();
+		} catch (final IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	static void assertSnapshot(final IFilter filter,
 			final IFilterContext context, final Reader snapshot)
-			throws Exception {
+			throws IOException {
 		final TreeMap<String, Range> rangesByName = new TreeMap<String, Range>();
 		final HashMap<String, ArrayList<Replacement>> replacementsByName = new HashMap<String, ArrayList<Replacement>>();
 		final HashMap<String, AbstractInsnNode> replacedInstructionsByName = new HashMap<String, AbstractInsnNode>();

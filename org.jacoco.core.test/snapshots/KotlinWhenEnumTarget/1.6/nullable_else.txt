@@ -1,6 +1,7 @@
    L_method_start
     ALOAD 1
     DUP
+// previous instruction starts ignore range 1
     IFNONNULL L_mapping
     POP
     ICONST_M1
@@ -11,6 +12,7 @@
     INVOKEVIRTUAL org/jacoco/core/test/validation/kotlin/targets/KotlinWhenEnumTarget$Enum.ordinal ()I
     IALOAD
    L_switch
+// previous instruction ends ignore range 1
     TABLESWITCH
       1: L_case_a
       2: L_case_b
