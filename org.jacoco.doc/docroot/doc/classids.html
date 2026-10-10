@@ -117,7 +117,7 @@
   <li>Specify the <code>classdumpdir</code> option of the
       <a href="agent.html">JaCoCo agent</a> and use the dumped classes at report
       generation. Note that only loaded classes will be dumped, i.e. classes not
-      executed at all will not show-up in your report as not covered.</li>
+      executed at all will not show up in your report as not covered.</li>
   <li>Use <a href="offline.html">offline instrumentation</a> before you run your
       tests. This way classes get instrumented by JaCoCo before any runtime
       modification can take place. Note that in this case the report has to be
@@ -155,7 +155,7 @@
 <p>
   If we would use just slightly different classes at analysis time than at
   runtime &mdash; e.g. different method ordering or additional branches &mdash;
-  we would end-up with different probes. For example the probe at index
+  we would end up with different probes. For example the probe at index
   <code>i</code> would be in method <code>a()</code> and not in method
   <code>b()</code>. Obviously this will create random coverage results.
 </p>

@@ -21,11 +21,11 @@ import org.jacoco.core.test.TargetLoader;
  * Scenario to measure the overhead in terms of additional byte code size
  * through instrumentation.
  */
-public class InstrumentationSizeSzenario implements IPerfScenario {
+public class InstrumentationSizeScenario implements IPerfScenario {
 
 	private final Class<?> target;
 
-	public InstrumentationSizeSzenario(Class<?> target) {
+	public InstrumentationSizeScenario(Class<?> target) {
 		this.target = target;
 	}
 

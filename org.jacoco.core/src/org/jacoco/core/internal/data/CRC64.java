@@ -15,7 +15,7 @@ package org.jacoco.core.internal.data;
 import org.objectweb.asm.Opcodes;
 
 /**
- * CRC64 checksum calculator based on the polynom specified in ISO 3309. The
+ * CRC64 checksum calculator based on the polynomial specified in ISO 3309. The
  * implementation is based on the following publications:
  *
  * <ul>

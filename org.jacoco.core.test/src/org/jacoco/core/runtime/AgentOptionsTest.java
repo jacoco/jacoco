@@ -114,13 +114,13 @@ public class AgentOptionsTest {
 	}
 
 	@Test
-	public void testGetDestile() {
+	public void testGetDestfile() {
 		AgentOptions options = new AgentOptions("destfile=/var/test.exec");
 		assertEquals("/var/test.exec", options.getDestfile());
 	}
 
 	@Test
-	public void testSetDestile() {
+	public void testSetDestfile() {
 		AgentOptions options = new AgentOptions();
 		options.setDestfile("/var/test.exec");
 		assertEquals("/var/test.exec", options.getDestfile());

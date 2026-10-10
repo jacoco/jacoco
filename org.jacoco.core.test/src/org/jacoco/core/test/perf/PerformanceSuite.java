@@ -30,7 +30,7 @@ public class PerformanceSuite implements IPerfScenario {
 				.run(output);
 		new ExecuteInstrumentedCodeScenario("game of life", Target03.class)
 				.run(output);
-		new InstrumentationSizeSzenario(Target03.class).run(output);
+		new InstrumentationSizeScenario(Target03.class).run(output);
 		new InstrumentationTimeScenario(Target03.class, 1000).run(output);
 		new AnalysisTimeScenario(Target03.class, 1000).run(output);
 	}

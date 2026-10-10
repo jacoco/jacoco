@@ -35,7 +35,7 @@ class StatementParser {
 	public interface IStatementVisitor {
 
 		/**
-		 * Called when a method invocation has been paresed.
+		 * Called when a method invocation has been parsed.
 		 *
 		 * @param ctx
 		 *            context information for error messages

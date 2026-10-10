@@ -214,7 +214,7 @@ public class ProbeInserterTest {
 	}
 
 	@Test
-	public void new_stack_size_should_be_big_enought_to_store_probe_array() {
+	public void new_stack_size_should_be_big_enough_to_store_probe_array() {
 		ProbeInserter pi = new ProbeInserter(0, "m", "(II)V", actualVisitor,
 				arrayStrategy);
 		pi.visitCode();

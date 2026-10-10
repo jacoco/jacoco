@@ -80,14 +80,14 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	@Test
 	public void linear_instruction_sequence_should_create_1_probe() {
 		createLinearSequence();
-		runMethodAnalzer();
+		runMethodAnalyzer();
 		assertEquals(1, nextProbeId);
 	}
 
 	@Test
 	public void linear_instruction_sequence_should_show_missed_when_no_probe_is_executed() {
 		createLinearSequence();
-		runMethodAnalzer();
+		runMethodAnalyzer();
 
 		assertLine(1001, 2, 0, 0, 0);
 		assertLine(1002, 1, 0, 0, 0);
@@ -97,7 +97,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	public void linear_instruction_sequence_should_show_missed_when_probearray_is_null() {
 		createLinearSequence();
 		probes = null;
-		runMethodAnalzer();
+		runMethodAnalyzer();
 
 		assertLine(1001, 2, 0, 0, 0);
 		assertLine(1002, 1, 0, 0, 0);
@@ -107,7 +107,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	public void linear_instruction_sequence_should_show_covered_when_probe_is_executed() {
 		createLinearSequence();
 		probes[0] = true;
-		runMethodAnalzer();
+		runMethodAnalyzer();
 
 		assertLine(1001, 0, 2, 0, 0);
 		assertLine(1002, 0, 1, 0, 0);
@@ -129,7 +129,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	public void linear_instruction_sequence_should_ignore_instructions_when_filter_is_applied() {
 		createLinearSequence();
 		probes[0] = true;
-		runMethodAnalzer(NOP_FILTER);
+		runMethodAnalyzer(NOP_FILTER);
 
 		assertEquals(1002, result.getFirstLine());
 		assertEquals(1002, result.getLastLine());
@@ -165,7 +165,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	@Test
 	public void zero_line_number_should_create_1_probe() {
 		createZeroLineNumber();
-		runMethodAnalzer();
+		runMethodAnalyzer();
 		assertEquals(1, nextProbeId);
 
 		// workaround for zero line number can be removed if needed
@@ -176,7 +176,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	@Test
 	public void zero_line_number_should_show_missed_when_no_probes_are_executed() {
 		createZeroLineNumber();
-		runMethodAnalzer();
+		runMethodAnalyzer();
 
 		assertLine(1001, 1, 0, 0, 0);
 		assertLine(0, 2, 0, 0, 0);
@@ -187,7 +187,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	public void zero_line_number_should_show_covered_when_probe_is_executed() {
 		createZeroLineNumber();
 		probes[0] = true;
-		runMethodAnalzer();
+		runMethodAnalyzer();
 
 		assertLine(1001, 0, 1, 0, 0);
 		assertLine(0, 0, 2, 0, 0);
@@ -217,14 +217,14 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	@Test
 	public void if_branch_should_create_2_probes() {
 		createIfBranch();
-		runMethodAnalzer();
+		runMethodAnalyzer();
 		assertEquals(2, nextProbeId);
 	}
 
 	@Test
 	public void if_branch_should_show_missed_when_no_probes_are_executed() {
 		createIfBranch();
-		runMethodAnalzer();
+		runMethodAnalyzer();
 
 		assertLine(1001, 2, 0, 2, 0);
 		assertLine(1002, 2, 0, 0, 0);
@@ -235,7 +235,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	public void if_branch_should_show_partial_branch_coverage_when_probe_for_first_branch_is_executed() {
 		createIfBranch();
 		probes[0] = true;
-		runMethodAnalzer();
+		runMethodAnalyzer();
 
 		assertLine(1001, 0, 2, 1, 1);
 		assertLine(1002, 0, 2, 0, 0);
@@ -246,7 +246,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	public void if_branch_should_show_partial_branch_coverage_when_probe_for_second_branch_is_executed() {
 		createIfBranch();
 		probes[1] = true;
-		runMethodAnalzer();
+		runMethodAnalyzer();
 
 		assertLine(1001, 0, 2, 1, 1);
 		assertLine(1002, 2, 0, 0, 0);
@@ -258,7 +258,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		createIfBranch();
 		probes[0] = true;
 		probes[1] = true;
-		runMethodAnalzer();
+		runMethodAnalyzer();
 
 		assertLine(1001, 0, 2, 0, 2);
 		assertLine(1002, 0, 2, 0, 0);
@@ -291,14 +291,14 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	@Test
 	public void if_branch_before_probes_should_create_4_probes() {
 		createIfBranchBeforeProbe();
-		runMethodAnalzer();
+		runMethodAnalyzer();
 		assertEquals(4, nextProbeId);
 	}
 
 	@Test
 	public void if_branch_before_probes_should_show_missed_when_no_probes_are_executed() {
 		createIfBranchBeforeProbe();
-		runMethodAnalzer();
+		runMethodAnalyzer();
 
 		assertLine(1001, 2, 0, 2, 0);
 		assertLine(1002, 1, 0, 0, 0);
@@ -310,7 +310,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		createIfBranchBeforeProbe();
 		probes[0] = true;
 		probes[3] = true;
-		runMethodAnalzer();
+		runMethodAnalyzer();
 
 		assertLine(1001, 0, 2, 1, 1);
 		assertLine(1002, 1, 0, 0, 0);
@@ -323,7 +323,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		probes[1] = true;
 		probes[2] = true;
 		probes[3] = true;
-		runMethodAnalzer();
+		runMethodAnalyzer();
 
 		assertLine(1001, 0, 2, 1, 1);
 		assertLine(1002, 0, 1, 0, 0);
@@ -337,7 +337,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		probes[1] = true;
 		probes[2] = true;
 		probes[3] = true;
-		runMethodAnalzer();
+		runMethodAnalyzer();
 
 		assertLine(1001, 0, 2, 0, 2);
 		assertLine(1002, 0, 1, 0, 0);
@@ -365,14 +365,14 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	@Test
 	public void if_branch_merge_should_create_3_probes() {
 		createIfBranchMerge();
-		runMethodAnalzer();
+		runMethodAnalyzer();
 		assertEquals(3, nextProbeId);
 	}
 
 	@Test
 	public void if_branch_merge_should_show_missed_when_no_probes_are_executed() {
 		createIfBranchMerge();
-		runMethodAnalzer();
+		runMethodAnalyzer();
 
 		assertLine(1001, 2, 0, 2, 0);
 		assertLine(1002, 1, 0, 0, 0);
@@ -384,7 +384,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		createIfBranchMerge();
 		probes[0] = true;
 		probes[2] = true;
-		runMethodAnalzer();
+		runMethodAnalyzer();
 
 		assertLine(1001, 0, 2, 1, 1);
 		assertLine(1002, 1, 0, 0, 0);
@@ -396,7 +396,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		createIfBranchMerge();
 		probes[1] = true;
 		probes[2] = true;
-		runMethodAnalzer();
+		runMethodAnalyzer();
 
 		assertLine(1001, 0, 2, 1, 1);
 		assertLine(1002, 0, 1, 0, 0);
@@ -409,7 +409,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		probes[0] = true;
 		probes[1] = true;
 		probes[2] = true;
-		runMethodAnalzer();
+		runMethodAnalyzer();
 
 		assertLine(1001, 0, 2, 0, 2);
 		assertLine(1002, 0, 1, 0, 0);
@@ -436,14 +436,14 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	@Test
 	public void jump_backwards_should_create_1_probe() {
 		createJumpBackwards();
-		runMethodAnalzer();
+		runMethodAnalyzer();
 		assertEquals(1, nextProbeId);
 	}
 
 	@Test
 	public void jump_backwards_should_show_missed_when_no_probes_are_executed() {
 		createJumpBackwards();
-		runMethodAnalzer();
+		runMethodAnalyzer();
 
 		assertLine(1001, 1, 0, 0, 0);
 		assertLine(1002, 1, 0, 0, 0);
@@ -454,7 +454,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	public void jump_backwards_should_show_covered_when_probe_is_executed() {
 		createJumpBackwards();
 		probes[0] = true;
-		runMethodAnalzer();
+		runMethodAnalyzer();
 
 		assertLine(1001, 0, 1, 0, 0);
 		assertLine(1002, 0, 1, 0, 0);
@@ -480,14 +480,14 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	@Test
 	public void jump_to_first_instruction_should_create_2_probes() {
 		createJumpToFirst();
-		runMethodAnalzer();
+		runMethodAnalyzer();
 		assertEquals(2, nextProbeId);
 	}
 
 	@Test
 	public void jump_to_first_instruction_should_show_missed_when_no_probes_are_executed() {
 		createJumpToFirst();
-		runMethodAnalzer();
+		runMethodAnalyzer();
 
 		assertLine(1001, 3, 0, 2, 0);
 		assertLine(1002, 1, 0, 0, 0);
@@ -497,7 +497,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	public void jump_to_first_instruction_should_show_partial_branch_coverage_when_probe_for_first_branch_is_executed() {
 		createJumpToFirst();
 		probes[0] = true;
-		runMethodAnalzer();
+		runMethodAnalyzer();
 
 		assertLine(1001, 0, 3, 1, 1);
 		assertLine(1002, 1, 0, 0, 0);
@@ -508,7 +508,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		createJumpToFirst();
 		probes[0] = true;
 		probes[1] = true;
-		runMethodAnalzer();
+		runMethodAnalyzer();
 
 		assertLine(1001, 0, 3, 0, 2);
 		assertLine(1002, 0, 1, 0, 0);
@@ -551,7 +551,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	@Test
 	public void kotlin_safe_call_elvis_should_create_4_probes() {
 		createKotlinSafeCallElvis();
-		runMethodAnalzer();
+		runMethodAnalyzer();
 		assertEquals(5, nextProbeId);
 	}
 
@@ -586,7 +586,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		createKotlinSafeCallElvis();
 		probes[1] = true;
 		probes[4] = true;
-		runMethodAnalzer(KOTLIN_SAFE_CALL_ELVIS_FILTER);
+		runMethodAnalyzer(KOTLIN_SAFE_CALL_ELVIS_FILTER);
 
 		assertLine(1001, 2, 7, 2, 2);
 	}
@@ -603,7 +603,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		createKotlinSafeCallElvis();
 		probes[0] = true;
 		probes[3] = true;
-		runMethodAnalzer(KOTLIN_SAFE_CALL_ELVIS_FILTER);
+		runMethodAnalyzer(KOTLIN_SAFE_CALL_ELVIS_FILTER);
 
 		assertLine(1001, 3, 6, 2, 2);
 	}
@@ -625,7 +625,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		// null case
 		probes[0] = true;
 		probes[3] = true;
-		runMethodAnalzer(KOTLIN_SAFE_CALL_ELVIS_FILTER);
+		runMethodAnalyzer(KOTLIN_SAFE_CALL_ELVIS_FILTER);
 
 		assertLine(1001, 0, 9, 0, 4);
 	}
@@ -639,7 +639,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		// null case
 		probes[0] = true;
 		probes[3] = true;
-		runMethodAnalzer();
+		runMethodAnalyzer();
 
 		assertLine(1001, 0, 9, 1, 3);
 	}
@@ -685,14 +685,14 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	@Test
 	public void table_switch_should_create_4_probes() {
 		createTableSwitch();
-		runMethodAnalzer();
+		runMethodAnalyzer();
 		assertEquals(4, nextProbeId);
 	}
 
 	@Test
 	public void table_switch_should_show_missed_when_no_probes_are_executed() {
 		createTableSwitch();
-		runMethodAnalzer();
+		runMethodAnalyzer();
 
 		assertLine(1001, 2, 0, 3, 0);
 		assertLine(1002, 2, 0, 0, 0);
@@ -708,7 +708,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		createTableSwitch();
 		probes[0] = true;
 		probes[3] = true;
-		runMethodAnalzer();
+		runMethodAnalyzer();
 
 		assertLine(1001, 0, 2, 2, 1);
 		assertLine(1002, 0, 2, 0, 0);
@@ -724,7 +724,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		createTableSwitch();
 		probes[2] = true;
 		probes[3] = true;
-		runMethodAnalzer();
+		runMethodAnalyzer();
 
 		assertLine(1001, 0, 2, 2, 1);
 		assertLine(1002, 2, 0, 0, 0);
@@ -742,7 +742,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		probes[1] = true;
 		probes[2] = true;
 		probes[3] = true;
-		runMethodAnalzer();
+		runMethodAnalyzer();
 
 		assertLine(1001, 0, 2, 0, 3);
 		assertLine(1002, 0, 2, 0, 0);
@@ -784,14 +784,14 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	@Test
 	public void table_switch_with_merge_should_create_5_probes() {
 		createTableSwitchMerge();
-		runMethodAnalzer();
+		runMethodAnalyzer();
 		assertEquals(5, nextProbeId);
 	}
 
 	@Test
 	public void table_switch_with_merge_should_show_missed_when_no_probes_are_executed() {
 		createTableSwitchMerge();
-		runMethodAnalzer();
+		runMethodAnalyzer();
 
 		assertLine(1001, 2, 0, 0, 0);
 		assertLine(1002, 2, 0, 3, 0);
@@ -805,7 +805,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		createTableSwitchMerge();
 		probes[0] = true;
 		probes[4] = true;
-		runMethodAnalzer();
+		runMethodAnalyzer();
 
 		assertLine(1001, 0, 2, 0, 0);
 		assertLine(1002, 0, 2, 2, 1);
@@ -820,7 +820,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		probes[1] = true;
 		probes[3] = true;
 		probes[4] = true;
-		runMethodAnalzer();
+		runMethodAnalyzer();
 
 		assertLine(1001, 0, 2, 0, 0);
 		assertLine(1002, 0, 2, 2, 1);
@@ -835,7 +835,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		probes[2] = true;
 		probes[3] = true;
 		probes[4] = true;
-		runMethodAnalzer();
+		runMethodAnalyzer();
 
 		assertLine(1001, 0, 2, 0, 0);
 		assertLine(1002, 0, 2, 2, 1);
@@ -852,7 +852,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		probes[2] = true;
 		probes[3] = true;
 		probes[4] = true;
-		runMethodAnalzer();
+		runMethodAnalyzer();
 
 		assertLine(1001, 0, 2, 0, 0);
 		assertLine(1002, 0, 2, 0, 3);
@@ -887,14 +887,14 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	@Test
 	public void try_catch_should_create_3_probes() {
 		createTryCatchBlock();
-		runMethodAnalzer();
+		runMethodAnalyzer();
 		assertEquals(3, nextProbeId);
 	}
 
 	@Test
 	public void try_catch_should_show_missed_when_no_probes_are_executed() {
 		createTryCatchBlock();
-		runMethodAnalzer();
+		runMethodAnalyzer();
 
 		assertLine(1001, 3, 0, 0, 0);
 		assertLine(1002, 1, 0, 0, 0);
@@ -906,7 +906,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		createTryCatchBlock();
 		probes[0] = true;
 		probes[2] = true;
-		runMethodAnalzer();
+		runMethodAnalyzer();
 
 		assertLine(1001, 0, 3, 0, 0);
 		assertLine(1002, 1, 0, 0, 0);
@@ -919,7 +919,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		probes[0] = true;
 		probes[1] = true;
 		probes[2] = true;
-		runMethodAnalzer();
+		runMethodAnalyzer();
 
 		assertLine(1001, 0, 3, 0, 0);
 		assertLine(1002, 0, 1, 0, 0);
@@ -958,7 +958,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	@Test
 	public void try_finally_should_create_4_probes() {
 		createTryFinally();
-		runMethodAnalzer();
+		runMethodAnalyzer();
 		assertEquals(4, nextProbeId);
 	}
 
@@ -967,7 +967,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		createTryFinally();
 		probes[0] = true;
 		probes[3] = true;
-		runMethodAnalzer();
+		runMethodAnalyzer();
 
 		assertLine(1001, 2, 4, 2, 2);
 	}
@@ -990,7 +990,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		createTryFinally();
 		probes[0] = true;
 		probes[2] = true;
-		runMethodAnalzer(TRY_FINALLY_FILTER);
+		runMethodAnalyzer(TRY_FINALLY_FILTER);
 		assertLine(1001, 2, 3, 1, 1);
 	}
 
@@ -999,7 +999,7 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		createTryFinally();
 		probes[0] = true;
 		probes[3] = true;
-		runMethodAnalzer(TRY_FINALLY_FILTER);
+		runMethodAnalyzer(TRY_FINALLY_FILTER);
 		assertLine(1001, 2, 3, 0, 2);
 	}
 
@@ -1024,9 +1024,9 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 	}
 
 	@Test
-	public void decending_line_numbers_should_report_lines_correctly() {
+	public void descending_line_numbers_should_report_lines_correctly() {
 		createDescendingLineNumbers();
-		runMethodAnalzer();
+		runMethodAnalyzer();
 
 		assertEquals(1001, result.getFirstLine());
 		assertEquals(1003, result.getLastLine());
@@ -1035,11 +1035,11 @@ public class MethodAnalyzerTest implements IProbeIdGenerator {
 		assertLine(1003, 3, 0, 0, 0);
 	}
 
-	private void runMethodAnalzer() {
-		runMethodAnalzer(Filters.NONE);
+	private void runMethodAnalyzer() {
+		runMethodAnalyzer(Filters.NONE);
 	}
 
-	private void runMethodAnalzer(IFilter filter) {
+	private void runMethodAnalyzer(IFilter filter) {
 		LabelFlowAnalyzer.markLabels(method);
 		InstructionsBuilder builder = new InstructionsBuilder(probes);
 		final MethodAnalyzer analyzer = new MethodAnalyzer(builder);
