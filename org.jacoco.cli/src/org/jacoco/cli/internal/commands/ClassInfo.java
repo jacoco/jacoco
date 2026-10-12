@@ -28,24 +28,20 @@ import org.jacoco.core.analysis.ICoverageVisitor;
 import org.jacoco.core.analysis.ILine;
 import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.data.ExecutionDataStore;
-import org.kohsuke.args4j.Argument;
-import org.kohsuke.args4j.Option;
+
+import picocli.CommandLine;
 
 /**
  * The <code>classinfo</code> command.
  */
+@CommandLine.Command(name = "classinfo", description = "Print information about Java class files at the provided location.")
 public class ClassInfo extends Command {
 
-	@Argument(usage = "location of Java class files", metaVar = "<classlocations>")
+	@CommandLine.Parameters(description = "location of Java class files", paramLabel = "<classlocations>")
 	List<File> classfiles = new ArrayList<File>();
 
-	@Option(name = "--verbose", usage = "show method and line number details")
+	@CommandLine.Option(names = "--verbose", description = "show method and line number details")
 	boolean verbose = false;
-
-	@Override
-	public String description() {
-		return "Print information about Java class files at the provided location.";
-	}
 
 	@Override
 	public int execute(final PrintWriter out, final PrintWriter err)

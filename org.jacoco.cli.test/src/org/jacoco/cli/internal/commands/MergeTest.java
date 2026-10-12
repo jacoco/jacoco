@@ -44,8 +44,10 @@ public class MergeTest extends CommandTestBase {
 		execute("merge");
 
 		assertFailure();
-		assertContains("\"--destfile\"", err);
-		assertContains("java -jar jacococli.jar merge [<execfiles> ...]", err);
+		assertContains("Missing required option: '--destfile <path>'", err);
+		assertContains(
+				"Usage: java -jar jacococli.jar merge [--help] [--quiet] --destfile <path>",
+				err);
 	}
 
 	@Test

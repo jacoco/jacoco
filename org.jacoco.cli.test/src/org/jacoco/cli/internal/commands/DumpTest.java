@@ -52,9 +52,8 @@ public class DumpTest extends CommandTestBase {
 			throws Exception {
 		execute("dump");
 		assertFailure();
-		assertContains("\"--destfile\"", err);
-		assertContains("java -jar jacococli.jar dump [--address <address>]",
-				err);
+		assertContains("Missing required option: '--destfile <path>'", err);
+		assertContains("Usage: java -jar jacococli.jar dump [--help]", err);
 	}
 
 	@Test
@@ -80,12 +79,12 @@ public class DumpTest extends CommandTestBase {
 		File execfile = new File(tmp.getRoot(), "jacoco.exec");
 		int port = unusedPort();
 
-		try {
-			execute("dump", "--destfile", execfile.getAbsolutePath(), "--port",
-					String.valueOf(port), "--retry", "1");
-			fail("IOException expected");
-		} catch (IOException ignore) {
-		}
+		execute("dump", "--destfile", execfile.getAbsolutePath(), "--port",
+				String.valueOf(port), "--retry", "1");
+		assertFailure();
+		// Should print stack trace:
+		assertContains("java.net.ConnectException: Connection refused", err);
+		assertContains("at org.jacoco.cli.internal.commands.Dump.execute", err);
 
 		// Locale independent parts of error message:
 		assertContains("[WARN]", err);

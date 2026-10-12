@@ -20,24 +20,20 @@ import java.util.List;
 
 import org.jacoco.cli.internal.Command;
 import org.jacoco.core.tools.ExecFileLoader;
-import org.kohsuke.args4j.Argument;
-import org.kohsuke.args4j.Option;
+
+import picocli.CommandLine;
 
 /**
  * The <code>merge</code> command.
  */
+@CommandLine.Command(name = "merge", description = "Merges multiple exec files into a new one.")
 public class Merge extends Command {
 
-	@Argument(usage = "list of JaCoCo *.exec files to read", metaVar = "<execfiles>")
+	@CommandLine.Parameters(description = "list of JaCoCo *.exec files to read", paramLabel = "<execfiles>")
 	List<File> execfiles = new ArrayList<File>();
 
-	@Option(name = "--destfile", usage = "file to write merged execution data to", metaVar = "<path>", required = true)
+	@CommandLine.Option(names = "--destfile", description = "file to write merged execution data to", paramLabel = "<path>", required = true)
 	File destfile;
-
-	@Override
-	public String description() {
-		return "Merges multiple exec files into a new one.";
-	}
 
 	@Override
 	public int execute(final PrintWriter out, final PrintWriter err)

@@ -14,14 +14,18 @@ package org.jacoco.cli.internal;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.net.URLDecoder;
 
 import org.junit.Before;
+
+import picocli.CommandLine;
 
 /**
  * Base class for command tests.
@@ -39,8 +43,8 @@ public abstract class CommandTestBase {
 	}
 
 	protected int execute(String... args) throws Exception {
-		result = new Main(args).execute(new PrintWriter(out),
-				new PrintWriter(err));
+		result = Main.commandLine(CommandLine.Help.Ansi.OFF,
+				new PrintWriter(out), new PrintWriter(err)).execute(args);
 		return result;
 	}
 
@@ -49,7 +53,7 @@ public abstract class CommandTestBase {
 	}
 
 	protected void assertFailure() {
-		assertEquals(-1, result);
+		assertNotEquals(0, result);
 	}
 
 	protected void assertNoOutput(StringWriter buffer) {

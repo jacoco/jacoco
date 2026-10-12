@@ -49,9 +49,8 @@ public class InstrumentTest extends CommandTestBase {
 			throws Exception {
 		execute("instrument");
 		assertFailure();
-		assertContains("\"--dest\"", err);
-		assertContains(
-				"Usage: java -jar jacococli.jar instrument [<sourcefiles> ...]",
+		assertContains("Missing required option: '--dest <dir>'", err);
+		assertContains("Usage: java -jar jacococli.jar instrument [--help]",
 				err);
 	}
 
@@ -126,12 +125,12 @@ public class InstrumentTest extends CommandTestBase {
 		out.write((byte) 50);
 		out.close();
 
-		try {
-			execute("instrument", "--dest", destdir.getAbsolutePath(),
-					srcdir.getAbsolutePath());
-			fail("exception expected");
-		} catch (IOException expected) {
-		}
+		execute("instrument", "--dest", destdir.getAbsolutePath(),
+				srcdir.getAbsolutePath());
+		assertFailure();
+		// Should print stack trace:
+		assertContains("java.io.IOException: Error while instrumenting", err);
+		assertContains("at org.jacoco.cli.internal.commands.Instrument", err);
 
 		assertFalse(new File(destdir, "Broken.class").exists());
 	}
