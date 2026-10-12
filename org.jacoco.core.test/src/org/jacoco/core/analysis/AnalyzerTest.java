@@ -161,7 +161,7 @@ public class AnalyzerTest {
 			fail("exception expected");
 		} catch (IOException e) {
 			assertExceptionMessage("UnsupportedVersion", e);
-			assertEquals("Unsupported class file major version 73",
+			assertEquals("Unsupported class file version 73.0",
 					e.getCause().getMessage());
 		}
 	}
@@ -248,7 +248,7 @@ public class AnalyzerTest {
 			fail("exception expected");
 		} catch (IOException e) {
 			assertExceptionMessage("UnsupportedVersion", e);
-			assertEquals("Unsupported class file major version 73",
+			assertEquals("Unsupported class file version 73.0",
 					e.getCause().getMessage());
 		}
 	}
