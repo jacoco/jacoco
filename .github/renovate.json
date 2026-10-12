@@ -53,6 +53,7 @@
       "description": "Enable updates of Maven and Maven Wrapper",
       "matchManagers": ["maven-wrapper"],
       "enabled": true,
+      "commitMessageTopic": "Maven",
       "addLabels": ["component: build"]
     },
     {
@@ -79,12 +80,14 @@
       "description": "Enable updates of ASM",
       "matchPackageNames": ["org.ow2.asm:*"],
       "enabled": true,
+      "commitMessageTopic": "ASM",
       "addLabels": ["component: core"]
     },
     {
       "description": "Enable updates of Kotlin",
       "matchPackageNames": ["org.jetbrains.kotlin:*"],
       "enabled": true,
+      "commitMessageTopic": "Kotlin",
       "addLabels": ["component: test", "language: Kotlin"]
     }
   ]
