@@ -63,6 +63,45 @@ public class KotlinWhenFilterTest extends FilterTestBase {
 		assertNoReplacedBranches();
 	}
 
+	/**
+	 * Kotlin 2.5.0+ uses {@code throwNoWhenBranchMatchedException} helper.
+	 */
+	@Test
+	public void should_filter_implicit_else_kotlin_2_5() {
+		final Label label = new Label();
+
+		final Range range1 = new Range();
+
+		m.visitInsn(Opcodes.NOP);
+
+		m.visitJumpInsn(Opcodes.IFEQ, label);
+		range1.fromInclusive = m.instructions.getLast();
+		range1.toInclusive = m.instructions.getLast();
+
+		m.visitInsn(Opcodes.NOP);
+
+		final Range range2 = new Range();
+		m.visitLabel(label);
+		range2.fromInclusive = m.instructions.getLast();
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		m.visitMethodInsn(Opcodes.INVOKESTATIC,
+				"kotlin/internal/ThrowNoWhenBranchMatchedExceptionKt",
+				"throwNoWhenBranchMatchedException",
+				"(Ljava/lang/Object;)Ljava/lang/Void;", false);
+		m.visitInsn(Opcodes.POP);
+		m.visitTypeInsn(Opcodes.NEW, "kotlin/KotlinNothingValueException");
+		m.visitInsn(Opcodes.DUP);
+		m.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				"kotlin/KotlinNothingValueException", "<init>", "()V", false);
+		m.visitInsn(Opcodes.ATHROW);
+		range2.toInclusive = m.instructions.getLast();
+
+		filter.filter(m, context, output);
+
+		assertIgnored(m, range1, range2);
+		assertNoReplacedBranches();
+	}
+
 	@Test
 	public void should_not_filter_explicit_else() {
 		final Label label = new Label();
@@ -110,6 +149,49 @@ public class KotlinWhenFilterTest extends FilterTestBase {
 		m.visitInsn(Opcodes.DUP);
 		m.visitMethodInsn(Opcodes.INVOKESPECIAL,
 				"kotlin/NoWhenBranchMatchedException", "<init>", "()V", false);
+		m.visitInsn(Opcodes.ATHROW);
+		range1.toInclusive = m.instructions.getLast();
+
+		m.visitLabel(after);
+
+		filter.filter(m, context, output);
+
+		assertIgnored(m, range1);
+		assertReplacedBranches(m, switchNode, replacements);
+	}
+
+	/**
+	 * Kotlin 2.5.0+ uses {@code throwNoWhenBranchMatchedException} helper.
+	 */
+	@Test
+	public void should_filter_implicit_default_kotlin_2_5() {
+		final Label case1 = new Label();
+		final Label caseDefault = new Label();
+		final Label after = new Label();
+
+		m.visitInsn(Opcodes.NOP);
+
+		m.visitTableSwitchInsn(0, 0, caseDefault, case1);
+		final AbstractInsnNode switchNode = m.instructions.getLast();
+		replacements.add(new Replacement(0, switchNode, 1));
+
+		m.visitLabel(case1);
+		m.visitInsn(Opcodes.ICONST_1);
+		m.visitJumpInsn(Opcodes.GOTO, after);
+
+		final Range range1 = new Range();
+		m.visitLabel(caseDefault);
+		range1.fromInclusive = m.instructions.getLast();
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		m.visitMethodInsn(Opcodes.INVOKESTATIC,
+				"kotlin/internal/ThrowNoWhenBranchMatchedExceptionKt",
+				"throwNoWhenBranchMatchedException",
+				"(Ljava/lang/Object;)Ljava/lang/Void;", false);
+		m.visitInsn(Opcodes.POP);
+		m.visitTypeInsn(Opcodes.NEW, "kotlin/KotlinNothingValueException");
+		m.visitInsn(Opcodes.DUP);
+		m.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				"kotlin/KotlinNothingValueException", "<init>", "()V", false);
 		m.visitInsn(Opcodes.ATHROW);
 		range1.toInclusive = m.instructions.getLast();
 
@@ -190,6 +272,91 @@ public class KotlinWhenFilterTest extends FilterTestBase {
 		m.visitInsn(Opcodes.DUP);
 		m.visitMethodInsn(Opcodes.INVOKESPECIAL,
 				"kotlin/NoWhenBranchMatchedException", "<init>", "()V", false);
+		m.visitInsn(Opcodes.ATHROW);
+		range2.toInclusive = m.instructions.getLast();
+
+		m.visitLabel(after);
+		m.visitInsn(Opcodes.ARETURN);
+
+		filter.filter(m, context, output);
+
+		assertIgnored(m, range1, range2);
+		assertReplacedBranches(m, switchNode, replacements);
+	}
+
+	/**
+	 * Same as
+	 * {@link #should_filter_when_by_nullable_enum_with_null_case_and_without_else()}
+	 * but with Kotlin 2.5.0+ exception helper.
+	 */
+	@Test
+	public void should_filter_when_by_nullable_enum_with_null_case_and_without_else_kotlin_2_5() {
+		final Range range1 = new Range();
+		final Range range2 = new Range();
+		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
+				"example", "(LE;)Ljava/lang/String;", null, null);
+		final Label l1 = new Label();
+		final Label l2 = new Label();
+		final Label caseNull = new Label();
+		final Label caseElse = new Label();
+		final Label caseA = new Label();
+		final Label caseB = new Label();
+		final Label after = new Label();
+
+		// subject is stored in a local for the throw helper (Kotlin 2.5.0+)
+		m.visitVarInsn(Opcodes.ALOAD, 1);
+		m.visitVarInsn(Opcodes.ASTORE, 2);
+		m.visitVarInsn(Opcodes.ALOAD, 2);
+		m.visitInsn(Opcodes.DUP);
+		range1.fromInclusive = m.instructions.getLast();
+		m.visitJumpInsn(Opcodes.IFNONNULL, l1);
+		m.visitInsn(Opcodes.POP);
+		m.visitInsn(Opcodes.ICONST_M1);
+		m.visitJumpInsn(Opcodes.GOTO, l2);
+		m.visitLabel(l1);
+		m.visitFieldInsn(Opcodes.GETSTATIC, "ExampleKt$WhenMappings",
+				"$EnumSwitchMapping$0", "[I");
+		m.visitInsn(Opcodes.SWAP);
+		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "ExampleKt$Enum", "ordinal",
+				"()I", false);
+		m.visitInsn(Opcodes.IALOAD);
+		m.visitLabel(l2);
+		range1.toInclusive = m.instructions.getLast();
+		m.visitTableSwitchInsn(-1, 2, //
+				caseElse, // branch 0
+				caseNull, // branch 1
+				caseElse, // branch 0
+				caseA, // branch 2
+				caseB); // branch 3
+		final AbstractInsnNode switchNode = m.instructions.getLast();
+		replacements.add(new Replacement(0, switchNode, 1));
+		replacements.add(new Replacement(1, switchNode, 2));
+		replacements.add(new Replacement(2, switchNode, 3));
+
+		m.visitLabel(caseA);
+		m.visitLdcInsn("a");
+		m.visitJumpInsn(Opcodes.GOTO, after);
+
+		m.visitLabel(caseB);
+		m.visitLdcInsn("b");
+		m.visitJumpInsn(Opcodes.GOTO, after);
+
+		m.visitLabel(caseNull);
+		m.visitLdcInsn("null");
+		m.visitJumpInsn(Opcodes.GOTO, after);
+
+		m.visitLabel(caseElse);
+		range2.fromInclusive = m.instructions.getLast();
+		m.visitVarInsn(Opcodes.ALOAD, 2);
+		m.visitMethodInsn(Opcodes.INVOKESTATIC,
+				"kotlin/internal/ThrowNoWhenBranchMatchedExceptionKt",
+				"throwNoWhenBranchMatchedException",
+				"(Ljava/lang/Object;)Ljava/lang/Void;", false);
+		m.visitInsn(Opcodes.POP);
+		m.visitTypeInsn(Opcodes.NEW, "kotlin/KotlinNothingValueException");
+		m.visitInsn(Opcodes.DUP);
+		m.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				"kotlin/KotlinNothingValueException", "<init>", "()V", false);
 		m.visitInsn(Opcodes.ATHROW);
 		range2.toInclusive = m.instructions.getLast();
 
