@@ -1,0 +1,23 @@
+    TRYCATCHBLOCK L0 L1 L2 null
+   L3
+    GETSTATIC org/jacoco/core/test/validation/java5/targets/SynchronizedTarget.lock : Ljava/lang/Object;
+    DUP
+    ASTORE 0
+    MONITORENTER
+   L0
+    NEW org/jacoco/core/test/validation/targets/Stubs$StubException
+    DUP
+    INVOKESPECIAL org/jacoco/core/test/validation/targets/Stubs$StubException.<init> ()V
+    ATHROW
+   L2
+    ASTORE 1
+    ALOAD 0
+    MONITOREXIT
+   L1
+    ALOAD 1
+    ATHROW
+    LINENUMBER 5 L3
+    LINENUMBER 6 L0
+    LINENUMBER 7 L2
+    MAXSTACK = 2
+    MAXLOCALS = 2
