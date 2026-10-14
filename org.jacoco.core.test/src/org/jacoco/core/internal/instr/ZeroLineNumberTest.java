@@ -53,7 +53,8 @@ public class ZeroLineNumberTest {
 			assertEquals(0, e.getStackTrace()[1].getLineNumber());
 		}
 
-		data.getExecutionData(CRC64.classId(original), "Sample", 2);
+		data.getExecutionData(Long.valueOf(CRC64.classId(original)), "Sample",
+				2);
 	}
 
 	private static byte[] createClass() {
