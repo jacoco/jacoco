@@ -167,7 +167,7 @@
   If you use <a href="offline.html">offline instrumentation</a> the instrumented
   classes get a direct dependency on the JaCoCo runtime. Therefore
   <code>jacocoagent.jar</code> of the same JaCoCo version must be on the
-  classpath and accessible from by the instrumented classes.
+  classpath and accessible by the instrumented classes.
 </p>
 
 <h3>Why do I get a <code>StackOverflowError</code> during code coverage analysis?</h3>
@@ -176,7 +176,7 @@
 </p>
 <ul>
   <li>Misconfiguration: If you configure two JaCoCo agents of different releases
-      they will instrument each other and cause a endless recursion. Check the
+      they will instrument each other and cause an endless recursion. Check the
       effective java command line and avoid such configurations.</li>
   <li>Heavy stack usage: JaCoCo instrumentation adds a small runtime overhead
       by adding a local variable to each method. If your application is already
