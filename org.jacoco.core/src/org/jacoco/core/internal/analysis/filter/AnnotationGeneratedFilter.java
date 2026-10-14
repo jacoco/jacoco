@@ -12,7 +12,9 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.objectweb.asm.tree.AnnotationNode;
 import org.objectweb.asm.tree.MethodNode;
@@ -25,23 +27,49 @@ import org.objectweb.asm.tree.MethodNode;
  */
 final class AnnotationGeneratedFilter implements IFilter {
 
+	private final Set<String> ignoredMethods = new HashSet<String>();
+
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
 
-		for (String annotation : context.getClassAnnotations()) {
-			if (matches(annotation)) {
-				output.ignore(methodNode.instructions.getFirst(),
-						methodNode.instructions.getLast());
-				return;
+		if (isAnnotated(methodNode, context)) {
+			// Find lambdas generated inside this method
+			for (org.objectweb.asm.tree.AbstractInsnNode i : methodNode.instructions) {
+				if (i.getType() == org.objectweb.asm.tree.AbstractInsnNode.INVOKE_DYNAMIC_INSN) {
+					org.objectweb.asm.tree.InvokeDynamicInsnNode indy = (org.objectweb.asm.tree.InvokeDynamicInsnNode) i;
+					if (indy.bsmArgs != null && indy.bsmArgs.length > 1) {
+						Object arg1 = indy.bsmArgs[1];
+						if (arg1 instanceof org.objectweb.asm.Handle) {
+							ignoredMethods.add(((org.objectweb.asm.Handle) arg1)
+									.getName());
+						}
+					}
+				}
 			}
-		}
 
-		if (presentIn(methodNode.invisibleAnnotations)
-				|| presentIn(methodNode.visibleAnnotations)) {
+			ignoredMethods.add(methodNode.name);
 			output.ignore(methodNode.instructions.getFirst(),
 					methodNode.instructions.getLast());
+			return;
 		}
 
+		if (methodNode.name.startsWith("lambda$")) {
+			if (ignoredMethods.contains(methodNode.name)) {
+				output.ignore(methodNode.instructions.getFirst(),
+						methodNode.instructions.getLast());
+			}
+		}
+	}
+
+	private boolean isAnnotated(final MethodNode methodNode,
+			final IFilterContext context) {
+		for (String annotation : context.getClassAnnotations()) {
+			if (matches(annotation)) {
+				return true;
+			}
+		}
+		return presentIn(methodNode.invisibleAnnotations)
+				|| presentIn(methodNode.visibleAnnotations);
 	}
 
 	private static boolean matches(final String annotation) {
