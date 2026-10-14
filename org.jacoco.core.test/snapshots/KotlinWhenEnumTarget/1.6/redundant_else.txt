@@ -15,10 +15,7 @@
     LDC "b"
     GOTO L_after
    L_default
-    NEW kotlin/NoWhenBranchMatchedException
-    DUP
-    INVOKESPECIAL kotlin/NoWhenBranchMatchedException.<init> ()V
-    ATHROW
+    LDC "else"
    L_after
     ARETURN
    L_method_end
