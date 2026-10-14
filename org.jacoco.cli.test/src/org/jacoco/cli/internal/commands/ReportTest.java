@@ -99,9 +99,33 @@ public class ReportTest extends CommandTestBase {
 	}
 
 	@Test
+	public void should_create_xml_report_when_xml_option_is_provided_and_the_path_is_not_exist()
+			throws Exception {
+		File xml = new File(new File(tmp.getRoot(), "xml"), "coverage.xml");
+
+		execute("report", "--classfiles", getClassPath(), "--xml",
+				xml.getAbsolutePath());
+
+		assertOk();
+		assertTrue(xml.isFile());
+	}
+
+	@Test
 	public void should_create_csv_report_when_csv_option_is_provided()
 			throws Exception {
 		File csv = new File(tmp.getRoot(), "coverage.csv");
+
+		execute("report", "--classfiles", getClassPath(), "--csv",
+				csv.getAbsolutePath());
+
+		assertOk();
+		assertTrue(csv.isFile());
+	}
+
+	@Test
+	public void should_create_csv_report_when_csv_option_is_provided_and_the_path_is_not_exist()
+			throws Exception {
+		File csv = new File(new File(tmp.getRoot(), "csv"), "coverage.csv");
 
 		execute("report", "--classfiles", getClassPath(), "--csv",
 				csv.getAbsolutePath());
