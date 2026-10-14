@@ -65,6 +65,50 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	 * </ul>
 	 *
 	 * <p>
+	 * This example requires a line coverage minimum of 50% for every class
+	 * except test classes:
+	 * </p>
+	 *
+	 * <pre>
+	 * {@code
+	 * <rules>
+	 *   <rule>
+	 *     <element>CLASS</element>
+	 *     <excludes>
+	 *       <exclude>*Test</exclude>
+	 *     </excludes>
+	 *     <limits>
+	 *       <limit>
+	 *         <counter>LINE</counter>
+	 *         <value>COVEREDRATIO</value>
+	 *         <minimum>50%</minimum>
+	 *       </limit>
+	 *     </limits>
+	 *   </rule>
+	 * </rules>}
+	 * </pre>
+	 *
+	 * <p>
+	 * This example requires all methods are covered at least once in every class:
+	 * </p>
+	 *
+	 * <pre>
+	 * {@code
+	 * <rules>
+	 *   <rule>
+	 *     <element>CLASS</element>
+	 *     <limits>
+	 *       <limit>
+	 *         <counter>METHOD</counter>
+	 *         <value>MISSEDCOUNT</value>
+	 *         <minimum>0</minimum>
+	 *       </limit>
+	 *     </limits>
+	 *   </rule>
+	 * </rules>}
+	 * </pre>
+	 *
+	 * <p>
 	 * This example requires an overall instruction coverage of 80% and no class
 	 * must be missed:
 	 * </p>
@@ -90,29 +134,6 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	 * </rules>}
 	 * </pre>
 	 *
-	 * <p>
-	 * This example requires a line coverage minimum of 50% for every class
-	 * except test classes:
-	 * </p>
-	 *
-	 * <pre>
-	 * {@code
-	 * <rules>
-	 *   <rule>
-	 *     <element>CLASS</element>
-	 *     <excludes>
-	 *       <exclude>*Test</exclude>
-	 *     </excludes>
-	 *     <limits>
-	 *       <limit>
-	 *         <counter>LINE</counter>
-	 *         <value>COVEREDRATIO</value>
-	 *         <minimum>50%</minimum>
-	 *       </limit>
-	 *     </limits>
-	 *   </rule>
-	 * </rules>}
-	 * </pre>
 	 */
 	@Parameter(required = true)
 	private List<RuleConfiguration> rules;
