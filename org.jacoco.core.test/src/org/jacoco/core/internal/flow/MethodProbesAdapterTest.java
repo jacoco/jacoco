@@ -35,6 +35,8 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 
 	private int id;
 
+	private int boundaryId = 2000;
+
 	private MethodRecorder expected, actual;
 
 	private MethodProbesVisitor expectedVisitor;
@@ -453,6 +455,10 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 
 	public int nextId() {
 		return id++;
+	}
+
+	public int nextBoundaryId() {
+		return boundaryId++;
 	}
 
 }

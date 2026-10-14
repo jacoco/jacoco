@@ -114,11 +114,39 @@ public final class MethodProbesAdapter extends MethodVisitor {
 
 	@Override
 	public void visitJumpInsn(final int opcode, final Label label) {
+		if (isOrderedComparison(opcode)) {
+			final int boundaryId = idGenerator.nextBoundaryId();
+			if (boundaryId != LabelInfo.NO_PROBE) {
+				probesVisitor.visitBoundaryProbe(opcode, boundaryId, frame(0));
+			}
+		}
 		if (LabelInfo.isMultiTarget(label)) {
 			probesVisitor.visitJumpInsnWithProbe(opcode, label,
 					idGenerator.nextId(), frame(jumpPopCount(opcode)));
 		} else {
 			probesVisitor.visitJumpInsn(opcode, label);
+		}
+	}
+
+	/**
+	 * Ordered comparisons are the ones where the boundary value, i.e. the case
+	 * where both operands are equal, is not implied by executing both branches.
+	 * Equality comparisons are excluded, as well as the reference comparisons
+	 * IF_ACMPEQ, IF_ACMPNE, IFNULL and IFNONNULL, which have no boundary.
+	 */
+	private static boolean isOrderedComparison(final int opcode) {
+		switch (opcode) {
+		case Opcodes.IFLT:
+		case Opcodes.IFGE:
+		case Opcodes.IFGT:
+		case Opcodes.IFLE:
+		case Opcodes.IF_ICMPLT:
+		case Opcodes.IF_ICMPGE:
+		case Opcodes.IF_ICMPGT:
+		case Opcodes.IF_ICMPLE:
+			return true;
+		default:
+			return false;
 		}
 	}
 
