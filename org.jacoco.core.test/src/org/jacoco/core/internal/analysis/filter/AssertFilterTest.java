@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
+import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 /**
@@ -124,8 +125,7 @@ public class AssertFilterTest extends FilterTestBase {
 				"Z");
 		final Label label = new Label();
 		m.visitJumpInsn(Opcodes.IFNE, label);
-		final Range range = new Range(m.instructions.getLast(),
-				m.instructions.getLast());
+		final AbstractInsnNode fromInclusive = m.instructions.getLast();
 		m.visitVarInsn(Opcodes.ILOAD, 1);
 		m.visitJumpInsn(Opcodes.IFNE, label);
 		m.visitTypeInsn(Opcodes.NEW, "java/lang/AssertionError");
@@ -135,10 +135,12 @@ public class AssertFilterTest extends FilterTestBase {
 				"<init>", "(Ljava/lang/Object;)V", false);
 		m.visitInsn(Opcodes.ATHROW);
 		m.visitLabel(label);
+		final AbstractInsnNode toInclusive = m.instructions.getLast();
 		m.visitInsn(Opcodes.NOP);
 
 		filter.filter(m, context, output);
 
+		final Range range = new Range(fromInclusive, toInclusive);
 		assertIgnored(m, range);
 	}
 
