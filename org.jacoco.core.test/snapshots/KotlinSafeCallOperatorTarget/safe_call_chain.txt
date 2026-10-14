@@ -2,13 +2,19 @@
     ALOAD 0
     DUP
     IFNULL L_null
+// previous instruction replaced by R1
+// previous instruction branch 0 creates branch 0 for R1
     INVOKEVIRTUAL org/jacoco/core/test/validation/kotlin/targets/KotlinSafeCallOperatorTarget$A.getB ()Lorg/jacoco/core/test/validation/kotlin/targets/KotlinSafeCallOperatorTarget$B;
     DUP
     IFNULL L_null
+// previous instruction replaced by R2
+// previous instruction branch 0 creates branch 0 for R2
     INVOKEVIRTUAL org/jacoco/core/test/validation/kotlin/targets/KotlinSafeCallOperatorTarget$B.getC ()Ljava/lang/String;
     GOTO L_after
    L_null
     POP
+// previous instruction branch 0 creates branch 1 for R1
+// previous instruction branch 0 creates branch 1 for R2
     ACONST_NULL
    L_after
     ARETURN
