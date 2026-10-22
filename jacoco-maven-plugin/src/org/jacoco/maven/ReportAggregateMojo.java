@@ -95,7 +95,7 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 	 * The projects in the reactor.
 	 */
 	@Parameter(property = "reactorProjects", readonly = true)
-	private List<MavenProject> reactorProjects;
+	protected List<MavenProject> reactorProjects;
 
 	@Override
 	boolean canGenerateReportRegardingDataFiles() {
@@ -179,7 +179,7 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 		return "JaCoCo Aggregate";
 	}
 
-	private List<MavenProject> findDependencies(final String... scopes) {
+	protected List<MavenProject> findDependencies(final String... scopes) {
 		final List<MavenProject> result = new ArrayList<MavenProject>();
 		final List<String> scopeList = Arrays.asList(scopes);
 		for (final Object dependencyObject : project.getDependencies()) {
