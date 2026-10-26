@@ -351,7 +351,7 @@ public class ReportTask extends Task {
 		private final List<Rule> rules = new ArrayList<Rule>();
 		private boolean violations = false;
 		private boolean failOnViolation = true;
-		private String violationsPropery = null;
+		private String violationsProperty = null;
 
 		/**
 		 * Creates and adds a new rule.
@@ -382,7 +382,7 @@ public class ReportTask extends Task {
 		 *            name of a property
 		 */
 		public void setViolationsProperty(final String property) {
-			this.violationsPropery = property;
+			this.violationsProperty = property;
 		}
 
 		@Override
@@ -396,11 +396,11 @@ public class ReportTask extends Task {
 				final Limit limit, final String message) {
 			log(message, Project.MSG_ERR);
 			violations = true;
-			if (violationsPropery != null) {
-				final String old = getProject().getProperty(violationsPropery);
+			if (violationsProperty != null) {
+				final String old = getProject().getProperty(violationsProperty);
 				final String value = old == null ? message
 						: String.format("%s\n%s", old, message);
-				getProject().setProperty(violationsPropery, value);
+				getProject().setProperty(violationsProperty, value);
 			}
 		}
 
