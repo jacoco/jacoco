@@ -62,7 +62,6 @@
       "matchDepTypes": ["build"],
       "matchPackageNames": [
         "org.apache.maven.plugins:*",
-        "org.codehaus.plexus:plexus-compiler-eclipse",
         "org.codehaus.mojo:*",
         "com.diffplug.spotless:*",
         "org.apache.felix:*",
@@ -75,6 +74,13 @@
       "description": "Disable updates of maven-plugin-plugin to 3.7.0 and above, because they require additional changes",
       "matchPackageNames": ["org.apache.maven.plugins:maven-plugin-plugin"],
       "allowedVersions": "<3.7.0"
+    },
+    {
+      "description": "Enable updates of plexus-compiler-eclipse",
+      "matchPackageNames": ["org.codehaus.plexus:plexus-compiler-*"],
+      "groupName": "plexus-compiler-eclipse",
+      "enabled": true,
+      "addLabels": ["component: build"]
     },
     {
       "description": "Enable updates of ASM",
