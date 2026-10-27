@@ -16,7 +16,7 @@
   <parent>
     <groupId>org.jacoco</groupId>
     <artifactId>org.jacoco.build</artifactId>
-    <version>0.8.16-SNAPSHOT</version>
+    <version>0.8.17-SNAPSHOT</version>
     <relativePath>../org.jacoco.build</relativePath>
   </parent>
 
@@ -111,7 +111,7 @@
             <configuration>
               <rules>
                 <requireFilesSize>
-                  <maxsize>4700000</maxsize>
+                  <maxsize>4720000</maxsize>
                   <minsize>4100000</minsize>
                   <files>
                     <file>${project.build.directory}/jacoco-${qualified.bundle.version}.zip</file>

@@ -85,9 +85,9 @@ public class ValueClassTarget {
 					stackTraceTop.getClassName());
 			assertEquals("readStackMapFrame", stackTraceTop.getMethodName());
 			/*
-			 * "https://gitlab.ow2.org/asm/asm/-/blob/ASM_9_10_1/asm/src/main/java/org/objectweb/asm/ClassReader.java?ref_type=tags#L3364"
+			 * "https://gitlab.ow2.org/asm/asm/-/blob/ASM_9_11/asm/src/main/java/org/objectweb/asm/ClassReader.java?ref_type=tags#L3405"
 			 */
-			assertEquals(3364, stackTraceTop.getLineNumber());
+			assertEquals(3405, stackTraceTop.getLineNumber());
 		}
 
 		new C(1);

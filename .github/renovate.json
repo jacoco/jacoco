@@ -5,6 +5,22 @@
     ":disableDependencyDashboard",
     ":semanticCommitsDisabled"
   ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["**/pom.xml"],
+      "datasourceTemplate": "maven",
+      "versioningTemplate": "maven",
+      "matchStrings": ["<!-- renovate depName=(?<depName>.+?) packageName=(?<packageName>.+?) -->\\s+<version>(?<currentValue>.+)</version>"]
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["**/*.html"],
+      "datasourceTemplate": "maven",
+      "versioningTemplate": "maven",
+      "matchStrings": ["<!-- renovate depName=(?<depName>.*?) packageName=(?<packageName>.+?) -->\\s+(?<currentValue>.+?)\\s"]
+     }
+  ],
   "rebaseWhen": "conflicted",
   "ignorePaths": ["jacoco-maven-plugin.test/it/**"],
   "labels": ["dependencies"],
@@ -22,6 +38,11 @@
       "commitMessageExtra": "to {{newValue}}"
     },
     {
+      "description": "Enable comment-based updates",
+      "matchManagers": ["custom.regex"],
+      "enabled": true
+    },
+    {
       "description": "Enable updates of GitHub Actions",
       "matchManagers": ["github-actions"],
       "pinDigests": true,
@@ -32,6 +53,7 @@
       "description": "Enable updates of Maven and Maven Wrapper",
       "matchManagers": ["maven-wrapper"],
       "enabled": true,
+      "commitMessageTopic": "Maven",
       "addLabels": ["component: build"]
     },
     {
@@ -40,7 +62,6 @@
       "matchDepTypes": ["build"],
       "matchPackageNames": [
         "org.apache.maven.plugins:*",
-        "org.codehaus.plexus:plexus-compiler-eclipse",
         "org.codehaus.mojo:*",
         "com.diffplug.spotless:*",
         "org.apache.felix:*",
@@ -55,15 +76,24 @@
       "allowedVersions": "<3.7.0"
     },
     {
+      "description": "Enable updates of plexus-compiler-eclipse",
+      "matchPackageNames": ["org.codehaus.plexus:plexus-compiler-*"],
+      "groupName": "plexus-compiler-eclipse",
+      "enabled": true,
+      "addLabels": ["component: build"]
+    },
+    {
       "description": "Enable updates of ASM",
       "matchPackageNames": ["org.ow2.asm:*"],
       "enabled": true,
+      "commitMessageTopic": "ASM",
       "addLabels": ["component: core"]
     },
     {
       "description": "Enable updates of Kotlin",
       "matchPackageNames": ["org.jetbrains.kotlin:*"],
       "enabled": true,
+      "groupName": "Kotlin",
       "addLabels": ["component: test", "language: Kotlin"]
     }
   ]
