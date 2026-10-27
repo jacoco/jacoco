@@ -17,6 +17,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,16 +66,23 @@ public abstract class FilterTestBase {
 		}
 	};
 
-	final void assertSnapshot(final IFilter filter, final String snapshotPath)
-			throws Exception {
-		final FileReader reader = new FileReader(snapshotPath);
+	final void assertSnapshot(final IFilter filter, final String snapshotPath) {
+		final FileReader reader;
+		try {
+			reader = new FileReader(snapshotPath);
+		} catch (final IOException e) {
+			throw new RuntimeException(e);
+		}
 		assertSnapshot(filter, context, reader);
-		reader.close();
+		try {
+			reader.close();
+		} catch (final IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	static void assertSnapshot(final IFilter filter,
-			final IFilterContext context, final Reader snapshot)
-			throws Exception {
+			final IFilterContext context, final Reader snapshot) {
 		final TreeMap<String, Range> rangesByName = new TreeMap<String, Range>();
 		final HashMap<String, ArrayList<Replacement>> replacementsByName = new HashMap<String, ArrayList<Replacement>>();
 		final HashMap<String, AbstractInsnNode> replacedInstructionsByName = new HashMap<String, AbstractInsnNode>();
@@ -136,8 +144,12 @@ public abstract class FilterTestBase {
 				}
 			}
 		};
-		final MethodNode methodNode = MethodSnapshot.parse(snapshot,
-				commentsHandler);
+		final MethodNode methodNode;
+		try {
+			methodNode = MethodSnapshot.parse(snapshot, commentsHandler);
+		} catch (final IOException e) {
+			throw new RuntimeException(e);
+		}
 		for (final Map.Entry<String, Range> e : rangesByName.entrySet()) {
 			if (e.getValue().toInclusive == null) {
 				throw new IllegalStateException(
