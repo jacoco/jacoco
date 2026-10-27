@@ -27,10 +27,10 @@ public class KotlinElvisOperatorTest extends ValidationTestBase {
 
 	@Test
 	public void bytecodeSnapshots() throws Exception {
-		assertSnapshot(KotlinElvisOperatorTarget.class, "elvis$fullCoverage",
+		assertSnapshot(KotlinElvisOperatorTarget.class, "elvis\\$fullCoverage",
 				"elvis.txt");
 		assertSnapshot(KotlinElvisOperatorTarget.class,
-				"elvisChain$fullCoverage", "elvis_chain.txt");
+				"elvisChain\\$fullCoverage", "elvis_chain.txt");
 	}
 
 }
