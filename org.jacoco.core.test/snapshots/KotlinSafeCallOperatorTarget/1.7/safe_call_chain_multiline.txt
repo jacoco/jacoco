@@ -1,6 +1,8 @@
    L_method_start
     ALOAD 0
     IFNULL L_null
+// previous instruction replaced by R1
+// previous instruction branch 0 creates branch 0 for R1
    L_getB_before
     ALOAD 0
    L_getB
@@ -9,6 +11,8 @@
    L_getB_after
     ALOAD 1
     IFNULL L_null
+// previous instruction replaced by R2
+// previous instruction branch 0 creates branch 0 for R2
    L_getC_before
     ALOAD 1
    L_getC
@@ -16,6 +20,8 @@
     GOTO L_after
    L_null
     ACONST_NULL
+// previous instruction branch 0 creates branch 1 for R1
+// previous instruction branch 0 creates branch 1 for R2
    L_after
     ARETURN
    L_method_end
