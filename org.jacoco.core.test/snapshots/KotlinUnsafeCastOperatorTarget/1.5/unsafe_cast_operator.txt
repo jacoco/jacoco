@@ -4,11 +4,13 @@
     ASTORE 1
     ALOAD 1
     IFNONNULL L_nonnull
+// previous instruction starts ignore range 0
     NEW java/lang/NullPointerException
     DUP
     LDC "null cannot be cast to non-null type kotlin.String"
     INVOKESPECIAL java/lang/NullPointerException.<init> (Ljava/lang/String;)V
     ATHROW
+// previous instruction ends ignore range 0
    L_nonnull
     ALOAD 1
     ARETURN
