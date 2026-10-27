@@ -28,6 +28,7 @@ public abstract class KotlinValidationTestBase extends ValidationTestBase {
 	protected static final KotlinVersion KOTLIN_2_0 = new KotlinVersion(2, 0);
 	protected static final KotlinVersion KOTLIN_2_1 = new KotlinVersion(2, 1);
 	protected static final KotlinVersion KOTLIN_2_2 = new KotlinVersion(2, 2);
+	protected static final KotlinVersion KOTLIN_2_3 = new KotlinVersion(2, 3);
 	protected static final KotlinVersion KOTLIN_2_4 = new KotlinVersion(2, 4);
 	protected static final KotlinVersion KOTLIN_2_4_20 = new KotlinVersion(2, 4,
 			20);
