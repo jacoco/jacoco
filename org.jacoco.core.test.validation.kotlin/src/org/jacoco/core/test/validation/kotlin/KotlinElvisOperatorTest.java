@@ -12,25 +12,27 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.kotlin;
 
-import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.kotlin.targets.KotlinElvisOperatorTarget;
 import org.junit.Test;
 
 /**
  * Test of code coverage in {@link KotlinElvisOperatorTarget}.
  */
-public class KotlinElvisOperatorTest extends ValidationTestBase {
+public class KotlinElvisOperatorTest extends KotlinValidationTestBase {
 
 	public KotlinElvisOperatorTest() {
 		super(KotlinElvisOperatorTarget.class);
 	}
 
+	/** Starting from {@link #KOTLIN_1_7} */
 	@Test
 	public void bytecodeSnapshots() throws Exception {
-		assertSnapshot(KotlinElvisOperatorTarget.class, "elvis\\$fullCoverage",
-				"elvis.txt");
 		assertSnapshot(KotlinElvisOperatorTarget.class,
-				"elvisChain\\$fullCoverage", "elvis_chain.txt");
+				"elvis\\$fullCoverage([-$][0-9]++)?", "elvis.txt", //
+				KOTLIN_1_7);
+		assertSnapshot(KotlinElvisOperatorTarget.class,
+				"elvisChain\\$fullCoverage([-$][0-9]++)?", "elvis_chain.txt", //
+				KOTLIN_1_7);
 	}
 
 }
