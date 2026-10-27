@@ -1,0 +1,6 @@
+  @Lkotlin/jvm/JvmStatic;()
+    GETSTATIC org/jacoco/core/test/validation/kotlin/targets/KotlinJvmStaticTarget$Class.Companion : Lorg/jacoco/core/test/validation/kotlin/targets/KotlinJvmStaticTarget$Class$Companion;
+    INVOKEVIRTUAL org/jacoco/core/test/validation/kotlin/targets/KotlinJvmStaticTarget$Class$Companion.target ()V
+    RETURN
+    MAXSTACK = 1
+    MAXLOCALS = 0

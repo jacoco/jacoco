@@ -12,31 +12,35 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.kotlin;
 
-import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.kotlin.targets.KotlinJvmStaticTarget;
 import org.junit.Test;
 
 /**
  * Test of code coverage in {@link KotlinJvmStaticTarget}.
  */
-public class KotlinJvmStaticTest extends ValidationTestBase {
+public class KotlinJvmStaticTest extends KotlinValidationTestBase {
 
 	public KotlinJvmStaticTest() {
 		super(KotlinJvmStaticTarget.class);
 	}
 
+	/** Starting from {@link #KOTLIN_1_3} */
 	@Test
 	public void bytecodeSnapshots() throws Exception {
 		assertSnapshot(KotlinJvmStaticTarget.Interface.class, "target",
-				"interface.txt");
+				"interface.txt", //
+				KOTLIN_2_0, KOTLIN_1_3);
 		assertSnapshot(KotlinJvmStaticTarget.Interface.Companion.class,
-				"target", "interface_companion.txt");
-		assertSnapshot(KotlinJvmStaticTarget.Class.class, "target",
-				"class.txt");
+				"target", "interface_companion.txt", //
+				KOTLIN_1_3);
+		assertSnapshot(KotlinJvmStaticTarget.Class.class, "target", "class.txt", //
+				KOTLIN_2_0, KOTLIN_1_3);
 		assertSnapshot(KotlinJvmStaticTarget.Class.Companion.class, "target",
-				"class_companion.txt");
+				"class_companion.txt", //
+				KOTLIN_1_3);
 		assertSnapshot(KotlinJvmStaticTarget.NamedObject.class, "target",
-				"named_object.txt");
+				"named_object.txt", //
+				KOTLIN_1_3);
 	}
 
 }
