@@ -162,13 +162,13 @@ public final class MethodSnapshot {
 	}
 
 	/**
-	 * @return method with given {@code name} from given {@code classNode}
+	 * @return method with given {@code nameRegex} from given {@code classNode}
 	 */
 	private static MethodNode find(final ClassNode classNode,
-			final String name) {
+			final String nameRegex) {
 		MethodNode result = null;
 		for (MethodNode methodNode : classNode.methods) {
-			if (methodNode.name.equals(name)) {
+			if (methodNode.name.matches(nameRegex)) {
 				assertNull(result);
 				result = methodNode;
 			}

@@ -24,39 +24,40 @@ public class KotlinSafeCallOperatorTest extends KotlinValidationTestBase {
 		super(KotlinSafeCallOperatorTarget.class);
 	}
 
-	/** Starting from {@link #KOTLIN_2_0} */
+	/** Starting from {@link #KOTLIN_1_7} */
 	@Test
 	public void bytecodeSnapshots() throws Exception {
 		assertSnapshot(KotlinSafeCallOperatorTarget.class,
-				"safeCall$fullCoverage", "safe_call.txt", //
-				KOTLIN_2_0);
+				"safeCall\\$fullCoverage", "safe_call.txt", //
+				KOTLIN_1_7);
 		assertSnapshot(KotlinSafeCallOperatorTarget.class,
-				"safeCallChain$fullCoverage", "safe_call_chain.txt",
-				KOTLIN_2_0);
+				"safeCallChain\\$fullCoverage([-$][0-9]++)?",
+				"safe_call_chain.txt", //
+				KOTLIN_1_7);
 		assertSnapshot(KotlinSafeCallOperatorTarget.class,
-				"safeCallChainMultiline$fullCoverage",
+				"safeCallChainMultiline\\$fullCoverage([-$][0-9]++)?",
 				"safe_call_chain_multiline.txt", //
-				KOTLIN_2_0);
+				KOTLIN_2_0, KOTLIN_1_7);
 		assertSnapshot(KotlinSafeCallOperatorTarget.class,
-				"safeCallChainMultiline2$fullCoverage",
+				"safeCallChainMultiline2\\$fullCoverage([-$][0-9]++)?",
 				"safe_call_chain_multiline2.txt", //
-				KOTLIN_2_0);
+				KOTLIN_2_0, KOTLIN_1_7);
 		assertSnapshot(KotlinSafeCallOperatorTarget.class,
-				"safeCallFollowedByElvis$fullCoverage",
+				"safeCallFollowedByElvis\\$fullCoverage([-$][0-9]++)?",
 				"safe_call_followed_by_elvis.txt", //
-				KOTLIN_2_0);
+				KOTLIN_1_7);
 		assertSnapshot(KotlinSafeCallOperatorTarget.class,
-				"safeCallFollowedByElvisMultiline$fullCoverage",
+				"safeCallFollowedByElvisMultiline\\$fullCoverage([-$][0-9]++)?",
 				"safe_call_followed_by_elvis_multiline.txt", //
-				KOTLIN_2_0);
+				KOTLIN_1_7);
 		assertSnapshot(KotlinSafeCallOperatorTarget.class,
-				"safeCallChainFollowedByElvis$fullCoverage",
+				"safeCallChainFollowedByElvis\\$fullCoverage([-$][0-9]++)?",
 				"safe_call_chain_followed_by_elvis.txt", //
-				KOTLIN_2_0);
+				KOTLIN_1_7);
 		assertSnapshot(KotlinSafeCallOperatorTarget.class,
-				"safeCallChainFollowedByElvisMultiline$fullCoverage",
+				"safeCallChainFollowedByElvisMultiline\\$fullCoverage([-$][0-9]++)?",
 				"safe_call_chain_followed_by_elvis_multiline.txt", //
-				KOTLIN_2_0);
+				KOTLIN_2_0, KOTLIN_1_7);
 	}
 
 }
