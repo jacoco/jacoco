@@ -1,0 +1,7 @@
+  @Lorg/jetbrains/annotations/NotNull;() // invisible
+    GETSTATIC org/jacoco/core/test/validation/kotlin/targets/KotlinEnumTarget$EnumClass.$ENTRIES : Lkotlin/enums/EnumEntries;
+   L_method_start
+    ARETURN
+    LINENUMBER 5 L_method_start
+    MAXSTACK = 1
+    MAXLOCALS = 0
