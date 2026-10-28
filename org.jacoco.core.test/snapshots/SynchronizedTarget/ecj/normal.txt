@@ -15,10 +15,12 @@
    L_body_exit
     GOTO L_after
    L_handler
+// previous instruction starts ignore range 0
     ALOAD 0
     MONITOREXIT
    L_handler_end
     ATHROW
+// previous instruction ends ignore range 0
    L_after
     INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
    L_method_end
