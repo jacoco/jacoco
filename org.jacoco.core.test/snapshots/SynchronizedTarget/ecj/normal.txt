@@ -1,33 +1,33 @@
-    TRYCATCHBLOCK L0 L1 L2 null
-    TRYCATCHBLOCK L2 L3 L2 null
-   L4
+    TRYCATCHBLOCK L_body_start L_body_exit L_handler null
+    TRYCATCHBLOCK L_handler L_handler_end L_handler null
+   L_method_start
     INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
-   L5
+   L_expression
     GETSTATIC org/jacoco/core/test/validation/java5/targets/SynchronizedTarget.lock : Ljava/lang/Object;
     DUP
     ASTORE 0
     MONITORENTER
-   L0
+   L_body_start
     INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
-   L6
+   L_body_end
     ALOAD 0
     MONITOREXIT
-   L1
-    GOTO L7
-   L2
+   L_body_exit
+    GOTO L_after
+   L_handler
     ALOAD 0
     MONITOREXIT
-   L3
+   L_handler_end
     ATHROW
-   L7
+   L_after
     INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
-   L8
+   L_method_end
     RETURN
-    LINENUMBER 5 L4
-    LINENUMBER 7 L5
-    LINENUMBER 8 L0
-    LINENUMBER 7 L6
-    LINENUMBER 10 L7
-    LINENUMBER 11 L8
+    LINENUMBER 5 L_method_start
+    LINENUMBER 7 L_expression
+    LINENUMBER 8 L_body_start
+    LINENUMBER 7 L_body_end
+    LINENUMBER 10 L_after
+    LINENUMBER 11 L_method_end
     MAXSTACK = 2
     MAXLOCALS = 1
