@@ -10,12 +10,14 @@
     INVOKESPECIAL org/jacoco/core/test/validation/targets/Stubs$StubException.<init> ()V
     ATHROW
    L_handler
+// previous instruction starts ignore range 0
     ASTORE 1
     ALOAD 0
     MONITOREXIT
    L_handler_end
     ALOAD 1
     ATHROW
+// previous instruction ends ignore range 0
     LINENUMBER 5 L_method_start
     LINENUMBER 6 L_body_start
     LINENUMBER 7 L_handler
