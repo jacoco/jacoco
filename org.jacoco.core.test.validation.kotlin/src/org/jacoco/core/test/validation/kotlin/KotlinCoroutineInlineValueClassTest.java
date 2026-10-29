@@ -25,16 +25,18 @@ public class KotlinCoroutineInlineValueClassTest
 		super(KotlinCoroutineInlineValueClassTarget.class);
 	}
 
-	/** Starting from {@link #KOTLIN_2_2} */
+	/** Starting from {@link #KOTLIN_2_0} */
 	@Test
 	public void bytecodeSnapshots() throws Exception {
 		assertSnapshot(KotlinCoroutineInlineValueClassTarget.class,
-				"suspendingFunction", "suspending_function.txt");
+				"suspendingFunction", "suspending_function.txt", //
+				KOTLIN_2_2, KOTLIN_2_0);
 		assertSnapshot(
 				Class.forName(
 						KotlinCoroutineInlineValueClassTarget.class.getName()
 								+ "$suspendingLambda$1"),
-				"invokeSuspend", "suspending_lambda.txt");
+				"invokeSuspend", "suspending_lambda.txt", //
+				KOTLIN_2_2, KOTLIN_2_1, KOTLIN_2_0);
 	}
 
 }
