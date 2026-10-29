@@ -1,0 +1,92 @@
+  @Lorg/jetbrains/annotations/Nullable;() // invisible
+    INVOKESTATIC kotlin/coroutines/intrinsics/IntrinsicsKt.getCOROUTINE_SUSPENDED ()Ljava/lang/Object;
+   L0
+    ASTORE 3
+    ALOAD 0
+    GETFIELD org/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineTarget$main$1.label : I
+    TABLESWITCH
+      0: L1
+      1: L2
+      2: L3
+      default: L4
+   L1
+    ALOAD 1
+    INVOKESTATIC kotlin/ResultKt.throwOnFailure (Ljava/lang/Object;)V
+   L5
+    BIPUSH 42
+    ISTORE 2
+   L6
+    ILOAD 2
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (I)V
+   L7
+    GETSTATIC org/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineTarget.INSTANCE : Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineTarget;
+    ALOAD 0
+    CHECKCAST kotlin/coroutines/Continuation
+    ALOAD 0
+    ILOAD 2
+    PUTFIELD org/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineTarget$main$1.I$0 : I
+    ALOAD 0
+    ICONST_1
+    PUTFIELD org/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineTarget$main$1.label : I
+    INVOKESTATIC org/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineTarget.access$suspendingFunction (Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineTarget;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+    DUP
+    ALOAD 3
+    IF_ACMPNE L8
+   L9
+    ALOAD 3
+    ARETURN
+   L2
+    ALOAD 0
+    GETFIELD org/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineTarget$main$1.I$0 : I
+    ISTORE 2
+   L10
+    ALOAD 1
+    INVOKESTATIC kotlin/ResultKt.throwOnFailure (Ljava/lang/Object;)V
+    ALOAD 1
+   L8
+    POP
+    ILOAD 2
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (I)V
+   L11
+    GETSTATIC org/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineTarget.INSTANCE : Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineTarget;
+    ALOAD 0
+    CHECKCAST kotlin/coroutines/Continuation
+    ALOAD 0
+    ICONST_2
+    PUTFIELD org/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineTarget$main$1.label : I
+    INVOKESTATIC org/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineTarget.access$suspendingFunctionWithTailCallOptimization (Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineTarget;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+    DUP
+    ALOAD 3
+    IF_ACMPNE L12
+   L13
+    ALOAD 3
+    ARETURN
+   L3
+    ALOAD 1
+    INVOKESTATIC kotlin/ResultKt.throwOnFailure (Ljava/lang/Object;)V
+    ALOAD 1
+   L12
+    POP
+    GETSTATIC kotlin/Unit.INSTANCE : Lkotlin/Unit;
+    ARETURN
+   L4
+    NEW java/lang/IllegalStateException
+    DUP
+    LDC "call to 'resume' before 'invoke' with coroutine"
+    INVOKESPECIAL java/lang/IllegalStateException.<init> (Ljava/lang/String;)V
+    ATHROW
+    LOCALVARIABLE x I L6 L9 2
+    LOCALVARIABLE x I L10 L11 2
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineTarget$main$1; L5 L4 0
+    LOCALVARIABLE $result Ljava/lang/Object; L5 L4 1
+    LINENUMBER 5 L0
+    LINENUMBER 6 L5
+    LINENUMBER 7 L6
+    LINENUMBER 8 L7
+    LINENUMBER 5 L9
+    LINENUMBER 9 L8
+    LINENUMBER 10 L11
+    LINENUMBER 5 L13
+    LINENUMBER 11 L12
+    MAXSTACK = 4
+    MAXLOCALS = 4
