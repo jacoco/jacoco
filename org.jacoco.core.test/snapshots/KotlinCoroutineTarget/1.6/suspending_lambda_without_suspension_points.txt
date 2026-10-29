@@ -1,30 +1,30 @@
   @Lorg/jetbrains/annotations/Nullable;() // invisible
     INVOKESTATIC kotlin/coroutines/intrinsics/IntrinsicsKt.getCOROUTINE_SUSPENDED ()Ljava/lang/Object;
-   L0
+   L_switch
     POP
     ALOAD 0
     GETFIELD org/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineTarget$suspendingLambdaWithoutSuspensionPoints$1.label : I
     TABLESWITCH
-      0: L1
-      default: L2
-   L1
+      0: L_state_0
+      default: L_default
+   L_state_0
     ALOAD 1
     INVOKESTATIC kotlin/ResultKt.throwOnFailure (Ljava/lang/Object;)V
-   L3
+   L_body
     INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
-   L4
+   L_return
     GETSTATIC kotlin/Unit.INSTANCE : Lkotlin/Unit;
     ARETURN
-   L2
+   L_default
     NEW java/lang/IllegalStateException
     DUP
     LDC "call to 'resume' before 'invoke' with coroutine"
     INVOKESPECIAL java/lang/IllegalStateException.<init> (Ljava/lang/String;)V
     ATHROW
-    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineTarget$suspendingLambdaWithoutSuspensionPoints$1; L3 L2 0
-    LOCALVARIABLE $result Ljava/lang/Object; L3 L2 1
-    LINENUMBER 5 L0
-    LINENUMBER 6 L3
-    LINENUMBER 7 L4
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineTarget$suspendingLambdaWithoutSuspensionPoints$1; L_body L_default 0
+    LOCALVARIABLE $result Ljava/lang/Object; L_body L_default 1
+    LINENUMBER 5 L_switch
+    LINENUMBER 6 L_body
+    LINENUMBER 7 L_return
     MAXSTACK = 3
     MAXLOCALS = 2

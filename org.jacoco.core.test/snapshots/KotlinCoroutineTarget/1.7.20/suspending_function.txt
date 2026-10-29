@@ -29,18 +29,18 @@
     ASTORE 2
    L2
     INVOKESTATIC kotlin/coroutines/intrinsics/IntrinsicsKt.getCOROUTINE_SUSPENDED ()Ljava/lang/Object;
-   L3
+   L_switch
     ASTORE 4
     ALOAD 3
     GETFIELD org/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineTarget$suspendingFunction$1.label : I
     TABLESWITCH
-      0: L4
-      1: L5
-      default: L6
-   L4
+      0: L_state_0
+      1: L_state_1
+      default: L_default
+   L_state_0
     ALOAD 2
     INVOKESTATIC kotlin/ResultKt.throwOnFailure (Ljava/lang/Object;)V
-   L7
+   L_before_suspension_point
     ALOAD 0
     ALOAD 3
     ALOAD 3
@@ -50,34 +50,34 @@
    L8
     DUP
     ALOAD 4
-    IF_ACMPNE L9
-   L10
+    IF_ACMPNE L_after_suspension_point
+   L_suspension_point
     ALOAD 4
     ARETURN
-   L5
+   L_state_1
     ALOAD 2
     INVOKESTATIC kotlin/ResultKt.throwOnFailure (Ljava/lang/Object;)V
     ALOAD 2
-   L9
+   L_after_suspension_point
     POP
     INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
-   L11
+   L_return
     GETSTATIC kotlin/Unit.INSTANCE : Lkotlin/Unit;
     ARETURN
-   L6
+   L_default
     NEW java/lang/IllegalStateException
     DUP
     LDC "call to 'resume' before 'invoke' with coroutine"
     INVOKESPECIAL java/lang/IllegalStateException.<init> (Ljava/lang/String;)V
     ATHROW
-    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineTarget; L7 L8 0
-    LOCALVARIABLE $continuation Lkotlin/coroutines/Continuation; L1 L6 3
-    LOCALVARIABLE $result Ljava/lang/Object; L2 L6 2
-    LINENUMBER 5 L3
-    LINENUMBER 6 L7
-    LINENUMBER 5 L10
-    LINENUMBER 7 L9
-    LINENUMBER 8 L11
-    LINENUMBER 5 L6
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineTarget; L_before_suspension_point L8 0
+    LOCALVARIABLE $continuation Lkotlin/coroutines/Continuation; L1 L_default 3
+    LOCALVARIABLE $result Ljava/lang/Object; L2 L_default 2
+    LINENUMBER 5 L_switch
+    LINENUMBER 6 L_before_suspension_point
+    LINENUMBER 5 L_suspension_point
+    LINENUMBER 7 L_after_suspension_point
+    LINENUMBER 8 L_return
+    LINENUMBER 5 L_default
     MAXSTACK = 4
     MAXLOCALS = 5
