@@ -1,4 +1,5 @@
    L_method_start
+// previous instruction starts ignore range 1
     ALOAD 1
     INSTANCEOF org/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineInlineValueClassTarget$suspendingFunction$1
     IFEQ L1
@@ -41,6 +42,7 @@
    L_state_0
     ALOAD 2
     INVOKESTATIC kotlin/ResultKt.throwOnFailure (Ljava/lang/Object;)V
+// previous instruction ends ignore range 1
    L_before_suspension_point
     ALOAD 0
     ALOAD 3
@@ -49,6 +51,7 @@
     PUTFIELD org/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineInlineValueClassTarget$suspendingFunction$1.label : I
     INVOKESPECIAL org/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineInlineValueClassTarget.suspensionPointReturningInlineValueClass--KaAbg4 (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
     DUP
+// previous instruction starts ignore range 2
     ALOAD 4
     IF_ACMPNE L_after_suspension_point
    L_suspension_point
@@ -60,6 +63,7 @@
     ALOAD 2
     CHECKCAST org/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineInlineValueClassTarget$InlineValueClass
     INVOKEVIRTUAL org/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineInlineValueClassTarget$InlineValueClass.unbox-impl ()Ljava/lang/String;
+// previous instruction ends ignore range 2
    L_after_suspension_point
     CHECKCAST java/lang/String
     INVOKESTATIC org/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineInlineValueClassTarget$InlineValueClass.box-impl (Ljava/lang/String;)Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineInlineValueClassTarget$InlineValueClass;
@@ -68,11 +72,13 @@
     GETSTATIC kotlin/Unit.INSTANCE : Lkotlin/Unit;
     ARETURN
    L_default
+// previous instruction starts ignore range 0
     NEW java/lang/IllegalStateException
     DUP
     LDC "call to 'resume' before 'invoke' with coroutine"
     INVOKESPECIAL java/lang/IllegalStateException.<init> (Ljava/lang/String;)V
     ATHROW
+// previous instruction ends ignore range 0
    L_method_end
     LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineInlineValueClassTarget; L_method_start L_method_end 0
     LOCALVARIABLE $completion Lkotlin/coroutines/Continuation; L_method_start L_method_end 1
