@@ -5,11 +5,13 @@
     ALOAD 1
     INVOKESPECIAL org/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineTarget.anotherSuspendingFunction (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
     DUP
+// previous instruction starts ignore range 0
     INVOKESTATIC kotlin/coroutines/intrinsics/IntrinsicsKt.getCOROUTINE_SUSPENDED ()Ljava/lang/Object;
     IF_ACMPNE L_after_suspension_point
     ARETURN
    L_after_suspension_point
     POP
+// previous instruction ends ignore range 0
     GETSTATIC kotlin/Unit.INSTANCE : Lkotlin/Unit;
    L_return
     ARETURN
