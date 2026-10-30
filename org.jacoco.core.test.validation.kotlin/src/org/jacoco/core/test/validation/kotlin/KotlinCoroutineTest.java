@@ -24,27 +24,32 @@ public class KotlinCoroutineTest extends KotlinValidationTestBase {
 		super(KotlinCoroutineTarget.class);
 	}
 
-	/** Starting from {@link #KOTLIN_2_1} */
+	/** Starting from {@link #KOTLIN_1_3} */
 	@Test
 	public void bytecodeSnapshots() throws Exception {
 		assertSnapshot(KotlinCoroutineTarget.class, "suspendingFunction",
 				"suspending_function.txt", //
-				KOTLIN_2_2, KOTLIN_2_1);
+				KOTLIN_2_2, KOTLIN_2_0, KOTLIN_1_7_20, KOTLIN_1_5,
+				KOTLIN_1_3_40, KOTLIN_1_3_30, KOTLIN_1_3);
 		assertSnapshot(
 				Class.forName(
 						KotlinCoroutineTarget.class.getName() + "$main$1"),
 				"invokeSuspend", "suspending_lambda.txt", //
-				KOTLIN_2_2, KOTLIN_2_1);
+				KOTLIN_2_2, KOTLIN_2_1, KOTLIN_2_0, KOTLIN_1_7_20, KOTLIN_1_6,
+				KOTLIN_1_5_30, KOTLIN_1_5, KOTLIN_1_3_40, KOTLIN_1_3_30,
+				KOTLIN_1_3);
 		assertSnapshot(
 				Class.forName(KotlinCoroutineTarget.class.getName()
 						+ "$suspendingLambdaWithoutSuspensionPoints$1"),
 				"invokeSuspend",
 				"suspending_lambda_without_suspension_points.txt", //
-				KOTLIN_2_2, KOTLIN_2_1);
+				KOTLIN_2_2, KOTLIN_2_1, KOTLIN_2_0, KOTLIN_1_7_20, KOTLIN_1_6,
+				KOTLIN_1_5, KOTLIN_1_3_40, KOTLIN_1_3_30, KOTLIN_1_3);
 		assertSnapshot(KotlinCoroutineTarget.class,
 				"suspendingFunctionWithTailCallOptimization",
 				"suspending_function_with_tail_call_optimization.txt",
-				KOTLIN_2_4_20, KOTLIN_2_4, KOTLIN_2_1);
+				KOTLIN_2_4_20, KOTLIN_2_4, KOTLIN_1_5, KOTLIN_1_3_60,
+				KOTLIN_1_3_30, KOTLIN_1_3);
 	}
 
 }
