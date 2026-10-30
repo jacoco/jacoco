@@ -39,7 +39,7 @@ public class KotlinCoroutineTest extends KotlinValidationTestBase {
 				Class.forName(KotlinCoroutineTarget.class.getName()
 						+ "$suspendingLambdaWithoutSuspensionPoints$1"),
 				"invokeSuspend",
-				"suspending_lambda_withous_suspension_points.txt", //
+				"suspending_lambda_without_suspension_points.txt", //
 				KOTLIN_2_2, KOTLIN_2_1);
 		assertSnapshot(KotlinCoroutineTarget.class,
 				"suspendingFunctionWithTailCallOptimization",
