@@ -47,7 +47,7 @@ public abstract class KotlinValidationTestBase extends ValidationTestBase {
 			final KotlinVersion... kotlinVersions) throws Exception {
 		for (final KotlinVersion kotlinVersion : kotlinVersions) {
 			if (KotlinVersion.CURRENT.isAtLeast(kotlinVersion.getMajor(),
-					kotlinVersion.getMinor())) {
+					kotlinVersion.getMinor(), kotlinVersion.getPatch())) {
 				final String versionPrefix = kotlinVersion.getMajor() + "."
 						+ kotlinVersion.getMinor()
 						+ (kotlinVersion.getPatch() != 0
