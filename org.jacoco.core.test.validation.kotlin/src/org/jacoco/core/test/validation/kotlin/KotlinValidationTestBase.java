@@ -21,10 +21,20 @@ import kotlin.KotlinVersion;
 public abstract class KotlinValidationTestBase extends ValidationTestBase {
 
 	protected static final KotlinVersion KOTLIN_1_3 = new KotlinVersion(1, 3);
+	protected static final KotlinVersion KOTLIN_1_3_30 = new KotlinVersion(1, 3,
+			30);
+	protected static final KotlinVersion KOTLIN_1_3_40 = new KotlinVersion(1, 3,
+			40);
+	protected static final KotlinVersion KOTLIN_1_3_60 = new KotlinVersion(1, 3,
+			60);
 	protected static final KotlinVersion KOTLIN_1_4 = new KotlinVersion(1, 4);
 	protected static final KotlinVersion KOTLIN_1_5 = new KotlinVersion(1, 5);
+	protected static final KotlinVersion KOTLIN_1_5_30 = new KotlinVersion(1, 5,
+			30);
 	protected static final KotlinVersion KOTLIN_1_6 = new KotlinVersion(1, 6);
 	protected static final KotlinVersion KOTLIN_1_7 = new KotlinVersion(1, 7);
+	protected static final KotlinVersion KOTLIN_1_7_20 = new KotlinVersion(1, 7,
+			20);
 	protected static final KotlinVersion KOTLIN_2_0 = new KotlinVersion(2, 0);
 	protected static final KotlinVersion KOTLIN_2_1 = new KotlinVersion(2, 1);
 	protected static final KotlinVersion KOTLIN_2_2 = new KotlinVersion(2, 2);
