@@ -176,15 +176,19 @@ final class MethodSnapshotParser {
 			throw new UnsupportedOperationException(name);
 
 		} else if (name.startsWith("//")) {
-			if (commentsHandler != null) {
-				commentsHandler.onComment(name, visitor.instructions.getLast());
-			}
+			parseComment(name);
 
 		} else if (name.startsWith("@")) {
 			parseAnnotation(name);
 
 		} else {
 			throw new IllegalStateException(name);
+		}
+	}
+
+	private void parseComment(final String comment) {
+		if (commentsHandler != null) {
+			commentsHandler.onComment(comment, visitor.instructions.getLast());
 		}
 	}
 
@@ -453,6 +457,10 @@ final class MethodSnapshotParser {
 		int max = Integer.MIN_VALUE;
 		do {
 			final String key = input.nextToken();
+			if (key.startsWith("//")) {
+				parseComment(key);
+				continue;
+			}
 			final String labelName = input.nextToken();
 			if ("default:".equals(key)) {
 				dflt = getLabel(labelName);
@@ -477,6 +485,10 @@ final class MethodSnapshotParser {
 		final ArrayList<Label> labels = new ArrayList<Label>();
 		do {
 			final String key = input.nextToken();
+			if (key.startsWith("//")) {
+				parseComment(key);
+				continue;
+			}
 			final String labelName = input.nextToken();
 			if ("default:".equals(key)) {
 				dflt = getLabel(labelName);
