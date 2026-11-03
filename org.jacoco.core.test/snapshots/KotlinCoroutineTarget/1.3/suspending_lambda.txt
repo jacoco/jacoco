@@ -1,5 +1,6 @@
   @Lorg/jetbrains/annotations/Nullable;() // invisible
    L_method_start
+// previous instruction starts ignore range 1
     INVOKESTATIC kotlin/coroutines/intrinsics/IntrinsicsKt.getCOROUTINE_SUSPENDED ()Ljava/lang/Object;
    L1
     ASTORE 4
@@ -20,6 +21,7 @@
     ATHROW
    L6
     POP
+// previous instruction ends ignore range 1
     ALOAD 0
     GETFIELD org/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineTarget$main$1.p$ : Lkotlinx/coroutines/CoroutineScope;
     ASTORE 2
@@ -40,6 +42,7 @@
     PUTFIELD org/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineTarget$main$1.label : I
     INVOKEVIRTUAL org/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineTarget.suspendingFunction (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
     DUP
+// previous instruction starts ignore range 2
     ALOAD 4
     IF_ACMPNE L_after_suspension_point
    L_suspension_point
@@ -59,6 +62,7 @@
    L12
     POP
     ALOAD 1
+// previous instruction ends ignore range 2
    L_after_suspension_point
     POP
     ILOAD 3
@@ -74,6 +78,7 @@
     PUTFIELD org/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineTarget$main$1.label : I
     INVOKEVIRTUAL org/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineTarget.suspendingFunctionWithTailCallOptimization (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
     DUP
+// previous instruction starts ignore range 3
     ALOAD 4
     IF_ACMPNE L_after_suspension_point_2
    L_suspension_point_2
@@ -93,17 +98,20 @@
    L16
     POP
     ALOAD 1
+// previous instruction ends ignore range 3
    L_after_suspension_point_2
     POP
    L17
     GETSTATIC kotlin/Unit.INSTANCE : Lkotlin/Unit;
     ARETURN
    L_default
+// previous instruction starts ignore range 0
     NEW java/lang/IllegalStateException
     DUP
     LDC "call to 'resume' before 'invoke' with coroutine"
     INVOKESPECIAL java/lang/IllegalStateException.<init> (Ljava/lang/String;)V
     ATHROW
+// previous instruction ends ignore range 0
    L_method_end
     LOCALVARIABLE x I L8 L17 3
     LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineTarget$main$1; L_method_start L_method_end 0

@@ -1,4 +1,5 @@
    L_method_start
+// previous instruction starts ignore range 1
     INVOKESTATIC kotlin/coroutines/intrinsics/IntrinsicsKt.getCOROUTINE_SUSPENDED ()Ljava/lang/Object;
    L_switch
     ASTORE 3
@@ -11,6 +12,7 @@
    L_state_0
     ALOAD 1
     INVOKESTATIC kotlin/ResultKt.throwOnFailure (Ljava/lang/Object;)V
+// previous instruction ends ignore range 1
    L5
     ALOAD 0
     GETFIELD org/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineSuspendingLambdaTarget$withParameter$1.L$0 : Ljava/lang/Object;
@@ -26,6 +28,7 @@
     INVOKESTATIC org/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineSuspendingLambdaTarget.access$withParameter$suspensionPoint (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
    L7
     DUP
+// previous instruction starts ignore range 2
     ALOAD 3
     IF_ACMPNE L_after_suspension_point
    L_suspension_point
@@ -35,16 +38,19 @@
     ALOAD 1
     INVOKESTATIC kotlin/ResultKt.throwOnFailure (Ljava/lang/Object;)V
     ALOAD 1
+// previous instruction ends ignore range 2
    L_after_suspension_point
     POP
     GETSTATIC kotlin/Unit.INSTANCE : Lkotlin/Unit;
     ARETURN
    L_default
+// previous instruction starts ignore range 0
     NEW java/lang/IllegalStateException
     DUP
     LDC "call to 'resume' before 'invoke' with coroutine"
     INVOKESPECIAL java/lang/IllegalStateException.<init> (Ljava/lang/String;)V
     ATHROW
+// previous instruction ends ignore range 0
    L_method_end
     LOCALVARIABLE p Ljava/lang/String; L_before_suspension_point L7 2
     LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineSuspendingLambdaTarget$withParameter$1; L_method_start L_method_end 0
