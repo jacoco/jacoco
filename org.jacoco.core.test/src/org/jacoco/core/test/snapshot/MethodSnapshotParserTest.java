@@ -505,6 +505,25 @@ public class MethodSnapshotParserTest {
 	}
 
 	@Test
+	public void parseTableSwitchInsn_with_comments() {
+		m.visitInsn(Opcodes.NOP);
+		m.visitTableSwitchInsn(2, 3, new Label(), new Label(), new Label());
+		final MethodNode parsed = parse(TextBlock.lines( //
+				"    NOP", //
+				"    TABLESWITCH", //
+				"      2: L0", //
+				"      3: L1 // c1", //
+				"      default: L2 // c2" //
+		));
+		assertEquals(MethodSnapshot.snapshot(m),
+				MethodSnapshot.snapshot(parsed));
+		final HashMap<String, AbstractInsnNode> expected = new HashMap<String, AbstractInsnNode>();
+		expected.put("// c1", parsed.instructions.getFirst());
+		expected.put("// c2", parsed.instructions.getLast());
+		assertEquals(expected, comments);
+	}
+
+	@Test
 	public void parseLookupSwitchInsn() {
 		m.visitLookupSwitchInsn(new Label(), new int[] { 1, 3 },
 				new Label[] { new Label(), new Label() });
@@ -513,6 +532,25 @@ public class MethodSnapshotParserTest {
 				"      1: L0", //
 				"      3: L1", //
 				"      default: L2"));
+	}
+
+	@Test
+	public void parseLookupSwitchInsn_with_comments() {
+		m.visitInsn(Opcodes.NOP);
+		m.visitLookupSwitchInsn(new Label(), new int[] { 1, 3 },
+				new Label[] { new Label(), new Label() });
+		final MethodNode parsed = parse(TextBlock.lines( //
+				"    NOP", //
+				"    LOOKUPSWITCH", //
+				"      1: L0", //
+				"      3: L1 // c1", //
+				"      default: L2 // c2"));
+		assertEquals(MethodSnapshot.snapshot(m),
+				MethodSnapshot.snapshot(parsed));
+		final HashMap<String, AbstractInsnNode> expected = new HashMap<String, AbstractInsnNode>();
+		expected.put("// c1", parsed.instructions.getFirst());
+		expected.put("// c2", parsed.instructions.getLast());
+		assertEquals(expected, comments);
 	}
 
 	@Test
