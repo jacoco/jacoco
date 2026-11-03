@@ -1,0 +1,25 @@
+   L0
+    INVOKESTATIC java/util/Collections.emptyList ()Ljava/util/List;
+    INVOKEINTERFACE java/util/List.iterator ()Ljava/util/Iterator; (itf)
+    ASTORE 1
+    GOTO L1
+   L2
+    ALOAD 1
+    INVOKEINTERFACE java/util/Iterator.next ()Ljava/lang/Object; (itf)
+    ASTORE 0
+   L3
+    ALOAD 0
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
+   L1
+    ALOAD 1
+    INVOKEINTERFACE java/util/Iterator.hasNext ()Z (itf)
+    IFNE L2
+   L4
+    RETURN
+    LOCALVARIABLE o Ljava/lang/Object; L3 L1 0
+    LINENUMBER 5 L0
+    LINENUMBER 6 L3
+    LINENUMBER 5 L1
+    LINENUMBER 9 L4
+    MAXSTACK = 1
+    MAXLOCALS = 2
