@@ -5,9 +5,9 @@
     INVOKEVIRTUAL org/jacoco/core/test/validation/kotlin/targets/KotlinWhenEnumTarget$Enum.ordinal ()I
     IALOAD
     TABLESWITCH
-      1: L_case_a
-      2: L_case_b
-      default: L_default
+      1: L_case_a        // note: branch 1
+      2: L_case_b        // note: branch 2
+      default: L_default // note: branch 0
 // previous instruction replaced by R
 // previous instruction branch 1 creates branch 0 for R
 // previous instruction branch 2 creates branch 1 for R

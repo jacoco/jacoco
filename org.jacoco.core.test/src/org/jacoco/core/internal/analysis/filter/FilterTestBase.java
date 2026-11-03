@@ -101,6 +101,9 @@ public abstract class FilterTestBase {
 				if (precedingInstruction == null) {
 					return;
 				}
+				if (comment.startsWith("// note:")) {
+					return;
+				}
 				final Matcher matcher = pattern.matcher(comment);
 				if (!matcher.matches()) {
 					throw new IllegalStateException(

@@ -14,11 +14,11 @@
    L_switch
 // previous instruction ends ignore range 1
     TABLESWITCH
-      -1: L_case_null
-      0: L_default
-      1: L_case_a
-      2: L_case_b
-      default: L_default
+      -1: L_case_null    // note: branch 1
+      0: L_default       // note: branch 0
+      1: L_case_a        // note: branch 2
+      2: L_case_b        // note: branch 3
+      default: L_default // note: branch 0
 // previous instruction replaced by R
 // previous instruction branch 1 creates branch 0 for R
 // previous instruction branch 2 creates branch 1 for R
