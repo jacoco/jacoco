@@ -11,13 +11,17 @@
     ALOAD 2
     INSTANCEOF org/jacoco/core/test/validation/kotlin/targets/KotlinWhenSealedTarget$Sealed$Sealed2
     IFEQ L_else
+// previous instruction starts ignore range 1
+// previous instruction ends ignore range 1
     LDC "case 2"
     GOTO L_after
    L_else
+// previous instruction starts ignore range 2
     NEW kotlin/NoWhenBranchMatchedException
     DUP
     INVOKESPECIAL kotlin/NoWhenBranchMatchedException.<init> ()V
     ATHROW
+// previous instruction ends ignore range 2
    L_after
     ARETURN
    L_method_end
