@@ -1,4 +1,5 @@
     INVOKESTATIC kotlin/coroutines/intrinsics/IntrinsicsKt.getCOROUTINE_SUSPENDED ()Ljava/lang/Object;
+// previous instruction starts ignore range 1
    L_switch
     ASTORE 2
     ALOAD 0
@@ -10,6 +11,7 @@
    L_state_0
     ALOAD 1
     INVOKESTATIC kotlin/ResultKt.throwOnFailure (Ljava/lang/Object;)V
+// previous instruction ends ignore range 1
    L_before_suspension_point
     GETSTATIC org/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineInlineValueClassTarget.INSTANCE : Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineInlineValueClassTarget;
     ALOAD 0
@@ -19,6 +21,7 @@
     PUTFIELD org/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineInlineValueClassTarget$suspendingLambda$1.label : I
     INVOKESTATIC org/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineInlineValueClassTarget.access$suspensionPointReturningInlineValueClass--KaAbg4 (Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineInlineValueClassTarget;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
     DUP
+// previous instruction starts ignore range 2
     ALOAD 2
     IF_ACMPNE L_after_suspension_point
    L_suspension_point
@@ -30,6 +33,7 @@
     ALOAD 1
     CHECKCAST org/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineInlineValueClassTarget$InlineValueClass
     INVOKEVIRTUAL org/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineInlineValueClassTarget$InlineValueClass.unbox-impl ()Ljava/lang/String;
+// previous instruction ends ignore range 2
    L_after_suspension_point
     CHECKCAST java/lang/String
     INVOKESTATIC org/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineInlineValueClassTarget$InlineValueClass.box-impl (Ljava/lang/String;)Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineInlineValueClassTarget$InlineValueClass;
@@ -38,11 +42,13 @@
     GETSTATIC kotlin/Unit.INSTANCE : Lkotlin/Unit;
     ARETURN
    L_default
+// previous instruction starts ignore range 0
     NEW java/lang/IllegalStateException
     DUP
     LDC "call to 'resume' before 'invoke' with coroutine"
     INVOKESPECIAL java/lang/IllegalStateException.<init> (Ljava/lang/String;)V
     ATHROW
+// previous instruction ends ignore range 0
     LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineInlineValueClassTarget$suspendingLambda$1; L_before_suspension_point L_default 0
     LOCALVARIABLE $result Ljava/lang/Object; L_before_suspension_point L_default 1
     LINENUMBER 5 L_switch
