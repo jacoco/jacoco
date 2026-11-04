@@ -1,43 +1,56 @@
    L_method_start
     ALOAD 1
     ASTORE 2
+// previous instruction replaced by R
     ALOAD 2
+// previous instruction starts ignore range 1
     INVOKEVIRTUAL java/lang/String.hashCode ()I
     TABLESWITCH
       97: L_hash_a
       98: L_hash_b
       99: L_hash_c
-      default: L_else
+      default: L_else // note: branch 0
+// previous instruction branch 0 creates branch 0 for R
    L_hash_a
     ALOAD 2
     LDC "a"
     INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
     IFNE L_case_a
+// previous instruction branch 1 creates branch 1 for R
     ALOAD 2
     LDC "\u0000a"
     INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
     IFNE L_case_0a
+// previous instruction branch 1 creates branch 2 for R
     GOTO L_else
+// previous instruction branch 1 creates branch 0 for R
    L_hash_b
     ALOAD 2
     LDC "b"
     INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
     IFNE L_case_b
+// previous instruction branch 1 creates branch 3 for R
     ALOAD 2
     LDC "\u0000b"
     INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
     IFNE L_case_0b
+// previous instruction branch 1 creates branch 4 for R
     GOTO L_else
+// previous instruction branch 1 creates branch 0 for R
    L_hash_c
     ALOAD 2
     LDC "c"
     INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
     IFNE L_case_c
+// previous instruction branch 1 creates branch 5 for R
     ALOAD 2
     LDC "\u0000c"
     INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
     IFNE L_case_0c
+// previous instruction branch 1 creates branch 6 for R
     GOTO L_else
+// previous instruction branch 1 creates branch 0 for R
+// previous instruction ends ignore range 1
    L_case_a
     LDC "case a"
     GOTO L_after
