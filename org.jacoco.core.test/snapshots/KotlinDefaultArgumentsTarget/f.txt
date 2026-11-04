@@ -1,0 +1,23 @@
+   L0
+    ILOAD 3
+    ICONST_1
+    IAND
+    IFEQ L1
+    LDC "a"
+    ASTORE 1
+   L1
+    ILOAD 3
+    ICONST_2
+    IAND
+    IFEQ L2
+    LDC "b"
+    ASTORE 2
+   L2
+    ALOAD 0
+    ALOAD 1
+    ALOAD 2
+    INVOKESPECIAL org/jacoco/core/test/validation/kotlin/targets/KotlinDefaultArgumentsTarget.f (Ljava/lang/String;Ljava/lang/String;)V
+    RETURN
+    LINENUMBER 5 L0
+    MAXSTACK = 3
+    MAXLOCALS = 5
