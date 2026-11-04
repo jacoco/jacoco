@@ -29,19 +29,19 @@ public class KotlinWhenStringTest extends KotlinValidationTestBase {
 	public void bytecodeSnapshots() throws Exception {
 		assertSnapshot(KotlinWhenStringTarget.class, "whenString",
 				"example.txt", //
-				KOTLIN_1_5, KOTLIN_1_4, KOTLIN_1_3);
+				KOTLIN_1_5, KOTLIN_1_3_60, KOTLIN_1_3);
 		assertSnapshot(KotlinWhenStringTarget.class,
 				"whenStringNullableDefault", "nullable_else.txt", //
-				KOTLIN_1_5, KOTLIN_1_4, KOTLIN_1_3);
+				KOTLIN_1_5, KOTLIN_1_3_60, KOTLIN_1_3);
 		assertSnapshot(KotlinWhenStringTarget.class, "whenStringNullableCase",
 				"nullable_case.txt", //
-				KOTLIN_1_7, KOTLIN_1_5, KOTLIN_1_4, KOTLIN_1_3);
+				KOTLIN_1_6_20, KOTLIN_1_5, KOTLIN_1_3_60, KOTLIN_1_3);
 		assertSnapshot(KotlinWhenStringTarget.class, "implicitElseNotExecuted",
 				"implicit_else.txt", //
-				KOTLIN_1_5, KOTLIN_1_4, KOTLIN_1_3);
+				KOTLIN_1_5, KOTLIN_1_3_70, KOTLIN_1_3_60, KOTLIN_1_3);
 		assertSnapshot(KotlinWhenStringTarget.class,
 				"whenStringBiggestHashCodeFirst", "biggest_hashCode_first.txt",
-				KOTLIN_1_7, KOTLIN_1_5, KOTLIN_1_4, KOTLIN_1_3);
+				KOTLIN_1_6_20, KOTLIN_1_5, KOTLIN_1_3_60, KOTLIN_1_3);
 	}
 
 }
