@@ -98,7 +98,8 @@ public abstract class FilterTestBase {
 
 			public void onComment(final String comment,
 					final AbstractInsnNode precedingInstruction) {
-				if (precedingInstruction == null) {
+				if (precedingInstruction == null
+						|| comment.startsWith("// note:")) {
 					return;
 				}
 				final Matcher matcher = pattern.matcher(comment);
