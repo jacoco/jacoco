@@ -28,12 +28,15 @@ import java.security.cert.Certificate;
 
 import org.jacoco.core.JaCoCo;
 import org.jacoco.core.internal.InputStreams;
+import org.jacoco.core.internal.instr.InstrSupport;
 import org.jacoco.core.runtime.AbstractRuntime;
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.test.validation.JavaVersion;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 
 /**
@@ -63,6 +66,38 @@ public class CoverageTransformerTest {
 	@After
 	public void teardown() {
 		recorder.assertNoException();
+	}
+
+	@Test
+	public void testConditionalProbes() throws Exception {
+		for (String setting : new String[] { "", "conditionalprobes=false",
+				"conditionalprobes=true" }) {
+			options = new AgentOptions(setting);
+			byte[] bytes = createTransformer().transform(classLoader,
+					"org/jacoco/core/JaCoCo", null, protectionDomain,
+					getClassData(JaCoCo.class));
+			final int[] calls = new int[1];
+			new ClassReader(bytes)
+					.accept(new ClassVisitor(InstrSupport.ASM_API_VERSION) {
+						@Override
+						public MethodVisitor visitMethod(int access,
+								String name, String descriptor,
+								String signature, String[] exceptions) {
+							return new MethodVisitor(
+									InstrSupport.ASM_API_VERSION) {
+								@Override
+								public void visitMethodInsn(int opcode,
+										String owner, String name,
+										String descriptor, boolean itf) {
+									if ("$jacocoHit".equals(name)) {
+										calls[0]++;
+									}
+								}
+							};
+						}
+					}, 0);
+			assertEquals(options.getConditionalProbes(), calls[0] > 0);
+		}
 	}
 
 	@Test
@@ -247,6 +282,7 @@ public class CoverageTransformerTest {
 
 	@Test
 	public void testTransformFailure() {
+		options.setConditionalProbes(true);
 		CoverageTransformer t = createTransformer();
 		try {
 			t.transform(classLoader, "org.jacoco.Sample", null,
