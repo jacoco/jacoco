@@ -66,4 +66,11 @@ public class KotlinUnsafeCastOperatorFilterTest extends FilterTestBase {
 				"snapshots/KotlinUnsafeCastOperatorTarget/1.6/unsafe_cast_operator.txt");
 	}
 
+	/** Nothing to filter starting from Kotlin 1.7 */
+	@Test
+	public void should_not_filter_after_Kotlin_1_7() {
+		assertSnapshot(filter,
+				"snapshots/KotlinUnsafeCastOperatorTarget/1.7/unsafe_cast_operator.txt");
+	}
+
 }
