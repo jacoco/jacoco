@@ -27,4 +27,11 @@ public class KotlinNotNullOperatorFilterTest extends FilterTestBase {
 				"snapshots/KotlinNotNullOperatorTarget/1.3/not_null_assertion_operator.txt");
 	}
 
+	/** Nothing to filter starting from Kotlin 1.4 */
+	@Test
+	public void should_not_filter_after_Kotlin_1_4() {
+		assertSnapshot(filter,
+				"snapshots/KotlinNotNullOperatorTarget/1.4/not_null_assertion_operator.txt");
+	}
+
 }

@@ -17,8 +17,8 @@ import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 /**
- * Filters branch in bytecode that Kotlin compiler generates for not-null
- * assertion operator.
+ * Filters branch in bytecode that Kotlin compiler versions prior to 1.4
+ * generate for not-null assertion operator.
  */
 final class KotlinNotNullOperatorFilter implements IFilter {
 
