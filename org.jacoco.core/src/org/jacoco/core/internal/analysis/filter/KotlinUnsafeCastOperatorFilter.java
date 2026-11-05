@@ -19,8 +19,8 @@ import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 /**
- * Filters branch in bytecode that Kotlin compiler generates for "unsafe" cast
- * operator.
+ * Filters branch in bytecode that Kotlin compiler versions prior to 1.7
+ * generate for "unsafe" cast operator.
  */
 final class KotlinUnsafeCastOperatorFilter implements IFilter {
 
