@@ -172,20 +172,17 @@ public class ExecutionDataStoreTest implements IExecutionDataVisitor {
 	}
 
 	@Test
-	public void testMergeNegative() {
-		final boolean[] data1 = new boolean[] { false, false };
-		final ExecutionData executionData1 = new ExecutionData(1000, "Sample",
-				data1);
-		store.visitClassExecution(executionData1);
-		final boolean[] data2 = new boolean[] { false, false, false };
-		final ExecutionData executionData2 = new ExecutionData(1000, "Sample",
-				data2);
-		try {
-			store.visitClassExecution(executionData2);
-			fail("IllegalStateException expected");
-		} catch (final IllegalStateException e) {
-			// expected
-		}
+	public void testMergeDifferentProbeCount() {
+		final boolean[] data1 = new boolean[] { false, true };
+		store.visitClassExecution(new ExecutionData(1000, "Sample", data1));
+		final boolean[] data2 = new boolean[] { true, false, true };
+		store.visitClassExecution(new ExecutionData(1000, "Sample", data2));
+
+		final boolean[] result = store.get(1000).getProbes();
+		assertEquals(3, result.length);
+		assertTrue(result[0]);
+		assertTrue(result[1]);
+		assertTrue(result[2]);
 	}
 
 	@Test

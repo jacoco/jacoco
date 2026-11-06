@@ -14,6 +14,7 @@ package org.jacoco.core.internal.analysis;
 
 import org.jacoco.core.analysis.CoverageNodeImpl;
 import org.jacoco.core.analysis.ICounter;
+import org.jacoco.core.analysis.ICoverageNode.CounterEntity;
 import org.jacoco.core.analysis.ILine;
 import org.jacoco.core.analysis.ISourceNode;
 
@@ -125,6 +126,8 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 				.increment(child.getComplexityCounter());
 		methodCounter = methodCounter.increment(child.getMethodCounter());
 		classCounter = classCounter.increment(child.getClassCounter());
+		boundaryCounter = boundaryCounter
+				.increment(child.getCounter(CounterEntity.BOUNDARY));
 		final int firstLine = child.getFirstLine();
 		if (firstLine != UNKNOWN_LINE) {
 			final int lastLine = child.getLastLine();
