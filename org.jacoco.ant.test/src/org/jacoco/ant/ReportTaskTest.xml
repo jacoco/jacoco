@@ -16,6 +16,7 @@
 <project name="JaCoCo Report Task Tests" xmlns:au="antlib:org.apache.ant.antunit" xmlns:jacoco="antlib:org.jacoco.ant">
 
 	<target name="setUp">
+		<dirname property="org.jacoco.ant.test.basedir" file="${ant.file}"/>
 		<tempfile property="temp.dir" prefix="jacocoTest" destdir="${java.io.tmpdir}" />
 		<mkdir dir="${temp.dir}"/>
 	</target>
@@ -52,7 +53,7 @@
 	<target name="testReportWithExecutiondataFiles">
 		<jacoco:report>
 			<executiondata>
-				<fileset dir="${basedir}/data" includes="*.exec"/>
+				<fileset dir="${org.jacoco.ant.test.basedir}/data" includes="*.exec"/>
 			</executiondata>
 			<structure name="root"/>
 		</jacoco:report>
@@ -118,7 +119,7 @@
 	</target>
 
 	<target name="testReportWithNoMatch">
-		<property name="nomatch.file" location="${basedir}/data/nomatch.exec"/>
+		<property name="nomatch.file" location="${org.jacoco.ant.test.basedir}/data/nomatch.exec"/>
 		<jacoco:report>
 			<executiondata>
 				<file file="${nomatch.file}"/>

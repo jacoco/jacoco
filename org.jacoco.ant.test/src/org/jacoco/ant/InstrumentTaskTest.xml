@@ -15,6 +15,7 @@
 <project name="JaCoCo Instrument Task Tests" xmlns:au="antlib:org.apache.ant.antunit" xmlns:jacoco="antlib:org.jacoco.ant">
 
 	<target name="setUp">
+		<dirname property="org.jacoco.ant.test.basedir" file="${ant.file}"/>
 		<tempfile property="temp.dir" prefix="jacocoTest" destdir="${java.io.tmpdir}" />
 		<mkdir dir="${temp.dir}"/>
 		<property name="exec.file" location="${temp.dir}/exec.file" />
@@ -58,7 +59,7 @@
 		<jar destfile="${lib.dir}/test.jar">
 			<fileset dir="${org.jacoco.ant.instrumentTaskTest.classes.dir}" includes="**/*.class"/>
 		</jar>
-		<signjar jar="${lib.dir}/test.jar" keystore="${basedir}/data/keystore.jks" alias="test" storepass="password"/>
+		<signjar jar="${lib.dir}/test.jar" keystore="${org.jacoco.ant.test.basedir}/data/keystore.jks" alias="test" storepass="password"/>
 
 		<jacoco:instrument destdir="${instr.dir}">
 			<fileset dir="${lib.dir}" includes="*.jar"/>
@@ -79,7 +80,7 @@
 		<jar destfile="${lib.dir}/test.jar">
 			<fileset dir="${org.jacoco.ant.instrumentTaskTest.classes.dir}" includes="**/*.class"/>
 		</jar>
-		<signjar jar="${lib.dir}/test.jar" keystore="${basedir}/data/keystore.jks" alias="test" storepass="password"/>
+		<signjar jar="${lib.dir}/test.jar" keystore="${org.jacoco.ant.test.basedir}/data/keystore.jks" alias="test" storepass="password"/>
 
 		<jacoco:instrument destdir="${instr.dir}" removesignatures="false">
 			<fileset dir="${lib.dir}" includes="*.jar"/>
