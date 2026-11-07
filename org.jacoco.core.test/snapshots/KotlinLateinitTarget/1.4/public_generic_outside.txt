@@ -1,0 +1,17 @@
+   L0
+    ALOAD 1
+    LDC "e"
+    INVOKESTATIC kotlin/jvm/internal/Intrinsics.checkNotNullParameter (Ljava/lang/Object;Ljava/lang/String;)V
+   L1
+    ALOAD 1
+    INVOKEVIRTUAL org/jacoco/core/test/validation/kotlin/targets/KotlinLateinitTarget$Example.getPublicGenericMember ()Ljava/lang/Object;
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
+   L2
+    RETURN
+   L3
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinLateinitTarget; L0 L3 0
+    LOCALVARIABLE e Lorg/jacoco/core/test/validation/kotlin/targets/KotlinLateinitTarget$Example; L0 L3 1
+    LINENUMBER 5 L1
+    LINENUMBER 6 L2
+    MAXSTACK = 2
+    MAXLOCALS = 2

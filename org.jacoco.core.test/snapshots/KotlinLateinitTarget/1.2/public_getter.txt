@@ -1,0 +1,15 @@
+  @Lorg/jetbrains/annotations/NotNull;() // invisible
+   L0
+    ALOAD 0
+    GETFIELD org/jacoco/core/test/validation/kotlin/targets/KotlinLateinitTarget$Example.publicMember : Ljava/lang/String;
+    DUP
+    IFNONNULL L1
+    LDC "publicMember"
+    INVOKESTATIC kotlin/jvm/internal/Intrinsics.throwUninitializedPropertyAccessException (Ljava/lang/String;)V
+   L1
+    ARETURN
+   L2
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinLateinitTarget$Example; L0 L2 0
+    LINENUMBER 5 L0
+    MAXSTACK = 2
+    MAXLOCALS = 1

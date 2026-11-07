@@ -1,0 +1,12 @@
+   L0
+    ALOAD 0
+    INVOKEVIRTUAL org/jacoco/core/test/validation/kotlin/targets/KotlinLateinitTarget$Example.getPublicGenericMember ()Ljava/lang/Object;
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
+   L1
+    RETURN
+   L2
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinLateinitTarget$Example; L0 L2 0
+    LINENUMBER 5 L0
+    LINENUMBER 6 L1
+    MAXSTACK = 1
+    MAXLOCALS = 1

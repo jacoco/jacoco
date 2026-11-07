@@ -1,0 +1,19 @@
+   L0
+    ALOAD 0
+    GETFIELD org/jacoco/core/test/validation/kotlin/targets/KotlinLateinitTarget$Example.privateGenericMember : Ljava/lang/Object;
+    DUP
+    IFNONNULL L1
+    POP
+    LDC "privateGenericMember"
+    INVOKESTATIC kotlin/jvm/internal/Intrinsics.throwUninitializedPropertyAccessException (Ljava/lang/String;)V
+    GETSTATIC kotlin/Unit.INSTANCE : Lkotlin/Unit;
+   L1
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
+   L2
+    RETURN
+   L3
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinLateinitTarget$Example; L0 L3 0
+    LINENUMBER 5 L0
+    LINENUMBER 6 L2
+    MAXSTACK = 2
+    MAXLOCALS = 1
