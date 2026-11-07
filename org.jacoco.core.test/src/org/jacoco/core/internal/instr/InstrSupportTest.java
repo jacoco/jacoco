@@ -174,6 +174,18 @@ public class InstrSupportTest {
 	}
 
 	@Test
+	public void assertNotInstrumented_should_reject_hit_method() {
+		try {
+			InstrSupport.assertNotInstrumented("$jacocoHit", "Foo");
+			fail("exception expected");
+		} catch (IllegalStateException e) {
+			assertEquals(
+					"Cannot process instrumented class Foo. Please supply original non-instrumented classes.",
+					e.getMessage());
+		}
+	}
+
+	@Test
 	public void testPushIntM2147483648() {
 		InstrSupport.push(trace, -2147483648);
 		assertInstruction("LDC -2147483648");

@@ -37,6 +37,29 @@ public class AgentOptionsTest {
 	}
 
 	@Test
+	public void testConditionalProbes() {
+		assertFalse(new AgentOptions().getConditionalProbes());
+		for (boolean enabled : new boolean[] { false, true }) {
+			String value = Boolean.toString(enabled);
+			AgentOptions options = new AgentOptions(
+					"conditionalprobes=" + value);
+			assertEquals(enabled, options.getConditionalProbes());
+			Properties properties = new Properties();
+			properties.setProperty("conditionalprobes", value);
+			assertEquals(enabled,
+					new AgentOptions(properties).getConditionalProbes());
+			options = new AgentOptions();
+			options.setConditionalProbes(enabled);
+			assertEquals("conditionalprobes=" + value, options.toString());
+			assertEquals(enabled, new AgentOptions(options.toString())
+					.getConditionalProbes());
+			assertEquals(
+					"-javaagent:jacocoagent.jar=conditionalprobes=" + value,
+					options.getVMArgument(defaultAgentJarFile));
+		}
+	}
+
+	@Test
 	public void testDefaults() {
 		AgentOptions options = new AgentOptions();
 		assertEquals(AgentOptions.DEFAULT_DESTFILE, options.getDestfile());

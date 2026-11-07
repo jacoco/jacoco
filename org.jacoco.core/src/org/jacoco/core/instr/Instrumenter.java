@@ -48,6 +48,8 @@ public class Instrumenter {
 
 	private final SignatureRemover signatureRemover;
 
+	private boolean conditionalProbes;
+
 	/**
 	 * Creates a new instance based on the given runtime.
 	 *
@@ -72,6 +74,19 @@ public class Instrumenter {
 		signatureRemover.setActive(flag);
 	}
 
+	/**
+	 * Enables probes that check for an existing hit before writing. Default is
+	 * <code>false</code>. This can reduce contention on shared probe arrays,
+	 * but adds a method call at each probe site. Interfaces older than Java 8
+	 * retain unconditional probes.
+	 *
+	 * @param flag
+	 *            <code>true</code> to enable conditional probes
+	 */
+	public void setConditionalProbes(final boolean flag) {
+		conditionalProbes = flag;
+	}
+
 	private byte[] instrument(final byte[] source) {
 		final long classId = CRC64.classId(source);
 		final ClassReader reader = InstrSupport.classReaderFor(source);
@@ -86,7 +101,7 @@ public class Instrumenter {
 				.createFor(classId, reader, accessorGenerator);
 		final int version = InstrSupport.getMajorVersion(reader);
 		final ClassVisitor visitor = new ClassProbesAdapter(
-				new ClassInstrumenter(strategy, writer),
+				new ClassInstrumenter(strategy, writer, conditionalProbes),
 				InstrSupport.needsFrames(version));
 		reader.accept(visitor, ClassReader.EXPAND_FRAMES);
 		return writer.toByteArray();

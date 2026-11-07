@@ -322,9 +322,9 @@ public static example()V
 
 <p>
   JaCoCo implements probes with a <code>boolean[]</code> array instance per
-  class. Each probe corresponds to a entry in this array. Whenever the probe is
-  executed the entry is set to <code>true</code> with the following four
-  bytecode instructions:
+  class. Each probe corresponds to a entry in this array. In the default mode,
+  whenever the probe is executed the entry is set to <code>true</code> with the
+  following four bytecode instructions:
 </p>
 
 <pre class="source">
@@ -335,8 +335,8 @@ BASTORE
 </pre>
 
 <p>
-  Note that this probe code is thread safe and does not modify the operand stack
-  or modify local variables. It does also not leave the
+  Note that this default probe code is thread safe and does not modify the
+  operand stack or modify local variables. It does also not leave the
   method through an external call. The only prerequisite is that the probe array
   is available as a local variable. For this at the beginning of each method
   additional instrumentation code needs to be added to obtain the array instance
@@ -404,12 +404,23 @@ BASTORE
 <h2>Performance</h2>
 
 <p>
+  The optional <a href="agent.html"><code>conditionalprobes</code></a> agent
+  option replaces the direct store with a call to a synthetic static helper that
+  checks the array element before writing. It passes the method's local probe-array
+  reference, including during initialization cycles. Interfaces older than Java 8
+  keep direct stores. The helper can reduce repeated writes under contention,
+  but the calls and checks can cost more on other workloads. It does not change
+  probe identities, array initialization, reset semantics, or plain-array
+  visibility guarantees.
+</p>
+
+<p>
   The control flow analysis and probe insertion strategy described in this
   document allows to efficiently record instruction and branch coverage. In
   total classes instrumented with JaCoCo increase their size by about 30%. Due
-  to the fact that probe execution does not require any method calls, only local
-  instructions, the observed execution time overhead for instrumented
-  applications typically is less than 10%.
+  to the fact that default-mode probe execution does not require any method
+  calls, only local instructions, the observed execution time overhead for
+  instrumented applications typically is less than 10%.
 </p>
 
 <h2>References</h2>

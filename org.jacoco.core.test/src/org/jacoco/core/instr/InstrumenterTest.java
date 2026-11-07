@@ -14,7 +14,9 @@ package org.jacoco.core.instr;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
@@ -24,7 +26,11 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.io.Serializable;
+import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.zip.CRC32;
 import java.util.zip.GZIPInputStream;
@@ -35,17 +41,26 @@ import java.util.zip.ZipOutputStream;
 
 import org.jacoco.core.JaCoCo;
 import org.jacoco.core.analysis.AnalyzerTest;
+import org.jacoco.core.data.ExecutionData;
+import org.jacoco.core.data.ExecutionDataStore;
+import org.jacoco.core.data.SessionInfoStore;
 import org.jacoco.core.internal.Pack200Streams;
 import org.jacoco.core.internal.data.CRC64;
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.jacoco.core.runtime.IExecutionDataAccessorGenerator;
+import org.jacoco.core.runtime.RuntimeData;
+import org.jacoco.core.runtime.SystemPropertiesRuntime;
 import org.jacoco.core.test.TargetLoader;
+import org.jacoco.core.test.validation.JavaVersion;
 import org.junit.AssumptionViolatedException;
 import org.junit.Before;
 import org.junit.Test;
+import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.util.CheckClassAdapter;
 
 /**
  * Unit tests for {@link Instrumenter}.
@@ -95,6 +110,257 @@ public class InstrumenterTest {
 	public void setup() throws Exception {
 		accessorGenerator = new AccessorGenerator();
 		instrumenter = new Instrumenter(accessorGenerator);
+	}
+
+	@Test
+	public void conditional_probes_should_preserve_coverage_and_reset()
+			throws Exception {
+		for (int version : new int[] { Opcodes.V1_5, Opcodes.V1_8,
+				Opcodes.V11 }) {
+			if (version == Opcodes.V1_8
+					&& JavaVersion.current().isBefore("8")) {
+				continue;
+			}
+			if (version == Opcodes.V11
+					&& JavaVersion.current().isBefore("11")) {
+				continue;
+			}
+			boolean[] expected = null;
+			for (boolean conditional : new boolean[] { false, true }) {
+				SystemPropertiesRuntime runtime = new SystemPropertiesRuntime();
+				RuntimeData data = new RuntimeData();
+				runtime.startup(data);
+				try {
+					Instrumenter instr = new Instrumenter(runtime);
+					instr.setConditionalProbes(conditional);
+					byte[] bytes = instr.instrument(createProbeTarget(version),
+							"Foo");
+					StringWriter errors = new StringWriter();
+					CheckClassAdapter.verify(new ClassReader(bytes), false,
+							new PrintWriter(errors));
+					assertEquals("", errors.toString());
+					Class<?> target = new TargetLoader().add("Foo", bytes);
+					target.getConstructor(Integer.TYPE)
+							.newInstance(Integer.valueOf(0));
+					target.getConstructor(Integer.TYPE)
+							.newInstance(Integer.valueOf(1));
+					final Method run = target.getMethod("run", Integer.TYPE);
+					assertEquals(Integer.valueOf(0),
+							run.invoke(null, Integer.valueOf(0)));
+					ExecutionDataStore store = new ExecutionDataStore();
+					data.collect(store, new SessionInfoStore(), false);
+					boolean[] probes = store.getContents().iterator().next()
+							.getProbes();
+					boolean[] firstHit = probes.clone();
+					run.invoke(null, Integer.valueOf(0));
+					assertArrayEquals(firstHit, probes);
+					assertEquals(Integer.valueOf(1),
+							run.invoke(null, Integer.valueOf(1)));
+					try {
+						run.invoke(null, Integer.valueOf(-1));
+						fail("exception expected");
+					} catch (InvocationTargetException e) {
+						assertTrue(e
+								.getCause() instanceof IllegalArgumentException);
+					}
+					for (boolean probe : probes) {
+						assertTrue(probe);
+					}
+					assertFalse(Arrays.equals(firstHit, probes));
+					if (expected == null) {
+						expected = probes.clone();
+					} else {
+						assertArrayEquals(expected, probes);
+					}
+					data.reset();
+					assertArrayEquals(new boolean[probes.length], probes);
+					Thread[] workers = new Thread[4];
+					final Throwable[] failures = new Throwable[workers.length];
+					for (int i = 0; i < workers.length; i++) {
+						final int index = i;
+						workers[i] = new Thread(new Runnable() {
+							public void run() {
+								try {
+									for (int j = 0; j < 1000; j++) {
+										run.invoke(null, Integer.valueOf(0));
+									}
+								} catch (Throwable e) {
+									failures[index] = e;
+								}
+							}
+						});
+						workers[i].start();
+					}
+					for (Thread worker : workers) {
+						worker.join();
+					}
+					for (Throwable failure : failures) {
+						assertNull(failure);
+					}
+					boolean[] threaded = probes.clone();
+					// Only run(0) was executed after reset, not the
+					// constructors.
+					data.reset();
+					run.invoke(null, Integer.valueOf(0));
+					boolean[] afterReset = probes.clone();
+					assertArrayEquals(afterReset, threaded);
+					assertFalse(Arrays.equals(new boolean[probes.length],
+							afterReset));
+				} finally {
+					runtime.shutdown();
+				}
+			}
+		}
+	}
+
+	private static byte[] createProbeTarget(final int version) {
+		ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+		cw.visit(version, Opcodes.ACC_PUBLIC, "Foo", null, "java/lang/Object",
+				null);
+		MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC, "<init>", "(I)V",
+				null, null);
+		mv.visitCode();
+		// Keep an uninitialized receiver on the stack across a branch.
+		mv.visitVarInsn(Opcodes.ALOAD, 0);
+		mv.visitVarInsn(Opcodes.ILOAD, 1);
+		Label init = new Label();
+		mv.visitJumpInsn(Opcodes.IFEQ, init);
+		mv.visitInsn(Opcodes.NOP);
+		mv.visitLabel(init);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/lang/Object", "<init>",
+				"()V", false);
+		mv.visitInsn(Opcodes.RETURN);
+		mv.visitMaxs(0, 0);
+		mv.visitEnd();
+		mv = cw.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "run",
+				"(I)I", null, null);
+		mv.visitCode();
+		mv.visitVarInsn(Opcodes.ILOAD, 0);
+		Label nonnegative = new Label();
+		mv.visitJumpInsn(Opcodes.IFGE, nonnegative);
+		mv.visitTypeInsn(Opcodes.NEW, "java/lang/IllegalArgumentException");
+		mv.visitInsn(Opcodes.DUP);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
+				"java/lang/IllegalArgumentException", "<init>", "()V", false);
+		mv.visitInsn(Opcodes.ATHROW);
+		mv.visitLabel(nonnegative);
+		// Preserve an application value beneath the inserted probe arguments.
+		mv.visitInsn(Opcodes.ICONST_0);
+		mv.visitVarInsn(Opcodes.ILOAD, 0);
+		Label end = new Label();
+		mv.visitJumpInsn(Opcodes.IFEQ, end);
+		mv.visitInsn(Opcodes.POP);
+		mv.visitInsn(Opcodes.ICONST_1);
+		mv.visitLabel(end);
+		mv.visitInsn(Opcodes.IRETURN);
+		mv.visitMaxs(0, 0);
+		mv.visitEnd();
+		cw.visitEnd();
+		return cw.toByteArray();
+	}
+
+	@Test
+	public void conditional_probes_should_keep_old_interface_stores()
+			throws Exception {
+		org.junit.Assume.assumeFalse(JavaVersion.current().isBefore("7"));
+		ClassWriter cw = new ClassWriter(0);
+		cw.visit(Opcodes.V1_7,
+				Opcodes.ACC_PUBLIC | Opcodes.ACC_INTERFACE
+						| Opcodes.ACC_ABSTRACT,
+				"OldInterface", null, "java/lang/Object", null);
+		MethodVisitor mv = cw.visitMethod(Opcodes.ACC_STATIC, "<clinit>", "()V",
+				null, null);
+		mv.visitCode();
+		mv.visitInsn(Opcodes.RETURN);
+		mv.visitMaxs(0, 0);
+		mv.visitEnd();
+		cw.visitEnd();
+		byte[] original = cw.toByteArray();
+		byte[] direct = instrumenter.instrument(original, "OldInterface");
+		instrumenter.setConditionalProbes(true);
+		byte[] conditional = instrumenter.instrument(original, "OldInterface");
+		assertArrayEquals(direct, conditional);
+		Class<?> target = new TargetLoader().add("OldInterface", conditional);
+		Class.forName(target.getName(), true, target.getClassLoader());
+		assertEquals(0, target.getDeclaredMethods().length);
+	}
+
+	@Test
+	public void conditional_probes_should_reject_reinstrumentation()
+			throws Exception {
+		instrumenter.setConditionalProbes(true);
+		byte[] bytes = instrumenter.instrument(createProbeTarget(Opcodes.V1_5),
+				"Foo");
+		try {
+			instrumenter.instrument(bytes, "Foo");
+			fail("exception expected");
+		} catch (IOException e) {
+			assertExceptionMessage("Foo", e);
+			assertTrue(e.getCause() instanceof IllegalStateException);
+		}
+	}
+
+	@Test
+	public void conditional_probes_should_preserve_serialization()
+			throws Exception {
+		instrumenter.setConditionalProbes(true);
+		testSerialization();
+	}
+
+	@Test
+	public void conditional_probes_should_support_initialization_cycles()
+			throws Exception {
+		org.junit.Assume.assumeFalse(JavaVersion.current().isBefore("8"));
+		for (boolean itf : new boolean[] { false, true }) {
+			SystemPropertiesRuntime runtime = new SystemPropertiesRuntime();
+			RuntimeData data = new RuntimeData();
+			runtime.startup(data);
+			try {
+				Instrumenter instr = new Instrumenter(runtime);
+				instr.setConditionalProbes(true);
+				TargetLoader loader = new TargetLoader();
+				Class<?> a = loader.add("A", instr
+						.instrument(createCycleTarget("A", "B", itf), "A"));
+				loader.add("B", instr
+						.instrument(createCycleTarget("B", "A", itf), "B"));
+				assertEquals(Integer.valueOf(7),
+						a.getMethod("ping").invoke(null));
+				ExecutionDataStore store = new ExecutionDataStore();
+				data.collect(store, new SessionInfoStore(), false);
+				assertEquals(2, store.getContents().size());
+				for (ExecutionData entry : store.getContents()) {
+					assertArrayEquals(new boolean[] { true, true },
+							entry.getProbes());
+				}
+			} finally {
+				runtime.shutdown();
+			}
+		}
+	}
+
+	private static byte[] createCycleTarget(final String name,
+			final String other, final boolean itf) {
+		ClassWriter cw = new ClassWriter(0);
+		cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC
+				| (itf ? Opcodes.ACC_INTERFACE | Opcodes.ACC_ABSTRACT : 0),
+				name, null, "java/lang/Object", null);
+		MethodVisitor mv = cw.visitMethod(Opcodes.ACC_STATIC, "<clinit>", "()V",
+				null, null);
+		mv.visitCode();
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC, other, "ping", "()I", itf);
+		mv.visitInsn(Opcodes.POP);
+		mv.visitInsn(Opcodes.RETURN);
+		mv.visitMaxs(1, 0);
+		mv.visitEnd();
+		mv = cw.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "ping",
+				"()I", null, null);
+		mv.visitCode();
+		mv.visitIntInsn(Opcodes.BIPUSH, 7);
+		mv.visitInsn(Opcodes.IRETURN);
+		mv.visitMaxs(1, 0);
+		mv.visitEnd();
+		cw.visitEnd();
+		return cw.toByteArray();
 	}
 
 	@Test
