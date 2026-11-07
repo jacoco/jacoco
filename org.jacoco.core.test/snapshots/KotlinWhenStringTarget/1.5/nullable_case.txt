@@ -1,0 +1,69 @@
+   L_method_start
+    ALOAD 1
+    ASTORE 2
+// previous instruction replaced by R
+    ALOAD 2
+// previous instruction starts ignore range 1
+    IFNULL L_case_null
+// previous instruction branch 1 creates branch 4 for R
+    ALOAD 2
+    INVOKEVIRTUAL java/lang/String.hashCode ()I
+    TABLESWITCH
+      97: L_hash_a
+      98: L_hash_b
+      99: L_hash_c
+      default: L_else // note: branch 0
+// previous instruction branch 0 creates branch 0 for R
+   L_hash_a
+    ALOAD 2
+    LDC "a"
+    INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
+    IFNE L_case_a
+// previous instruction branch 1 creates branch 1 for R
+    GOTO L_else
+// previous instruction branch 1 creates branch 0 for R
+   L_hash_b
+    ALOAD 2
+    LDC "b"
+    INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
+    IFNE L_case_b
+// previous instruction branch 1 creates branch 2 for R
+    GOTO L_else
+// previous instruction branch 1 creates branch 0 for R
+   L_hash_c
+    ALOAD 2
+    LDC "c"
+    INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
+    IFNE L_case_c
+// previous instruction branch 1 creates branch 3 for R
+    GOTO L_else
+// previous instruction branch 1 creates branch 0 for R
+// previous instruction ends ignore range 1
+   L_case_a
+    LDC "case a"
+    GOTO L_after
+   L_case_b
+    LDC "case b"
+    GOTO L_after
+   L_case_c
+    LDC "case c"
+    GOTO L_after
+   L_case_null
+    LDC "null"
+    GOTO L_after
+   L_else
+    LDC "else"
+   L_after
+    ARETURN
+   L_method_end
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWhenStringTarget; L_method_start L_method_end 0
+    LOCALVARIABLE p Ljava/lang/String; L_method_start L_method_end 1
+    LINENUMBER 5 L_method_start
+    LINENUMBER 6 L_case_a
+    LINENUMBER 7 L_case_b
+    LINENUMBER 8 L_case_c
+    LINENUMBER 9 L_case_null
+    LINENUMBER 10 L_else
+    LINENUMBER 11 L_after
+    MAXSTACK = 2
+    MAXLOCALS = 3

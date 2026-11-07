@@ -2,7 +2,9 @@
     ALOAD 1
     DUP
     IFNONNULL L_nonnull
+// previous instruction starts ignore range 0
     INVOKESTATIC kotlin/jvm/internal/Intrinsics.throwNpe ()V
+// previous instruction ends ignore range 0
    L_nonnull
     INVOKEVIRTUAL java/lang/String.length ()I
     IRETURN

@@ -12,27 +12,30 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.kotlin;
 
-import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.kotlin.targets.KotlinInlineClassExposeTarget;
 import org.junit.Test;
 
 /**
  * Test of code coverage in {@link KotlinInlineClassExposeTarget}.
  */
-public class KotlinInlineClassExposeTest extends ValidationTestBase {
+public class KotlinInlineClassExposeTest extends KotlinValidationTestBase {
 
 	public KotlinInlineClassExposeTest() {
 		super(KotlinInlineClassExposeTarget.class);
 	}
 
+	/** Starting from {@link #KOTLIN_2_2} */
 	@Test
 	public void bytecodeSnapshots() throws Exception {
 		assertSnapshot(KotlinInlineClassExposeTarget.class, "exposeReturnType",
-				"expose_return_type.txt");
+				"expose_return_type.txt", //
+				KOTLIN_2_3, KOTLIN_2_2);
 		assertSnapshot(KotlinInlineClassExposeTarget.class, "exposeParameter",
-				"expose_parameter.txt");
+				"expose_parameter.txt", //
+				KOTLIN_2_3, KOTLIN_2_2);
 		assertSnapshot(KotlinInlineClassExposeTarget.class, "exposeUseless",
-				"expose_useless.txt");
+				"expose_useless.txt", //
+				KOTLIN_2_2);
 	}
 
 }

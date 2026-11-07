@@ -1,0 +1,14 @@
+  @Lorg/jetbrains/annotations/Nullable;() // invisible
+   L_method_start
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+   L_before_suspension_point
+    ALOAD 0
+    ALOAD 1
+    INVOKEVIRTUAL org/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineTarget.anotherSuspendingFunction (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+    ARETURN
+   L_method_end
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinCoroutineTarget; L_method_start L_method_end 0
+    LINENUMBER 5 L_method_start
+    LINENUMBER 6 L_before_suspension_point
+    MAXSTACK = 2
+    MAXLOCALS = 2
