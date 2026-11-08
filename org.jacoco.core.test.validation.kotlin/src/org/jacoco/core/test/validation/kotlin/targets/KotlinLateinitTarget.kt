@@ -32,21 +32,41 @@ object KotlinLateinitTarget {
             privateGenericMember = value
         }
 
-        fun read() {
+        fun readPublic() {
             nop(publicMember) // assertFullyCovered()
+        }
+
+        fun readPublicGeneric() {
             nop(publicGenericMember) // assertFullyCovered()
+        }
+
+        fun readPrivate() {
             nop(privateMember) // assertFullyCovered()
+        }
+
+        fun readPrivateGeneric() {
             nop(privateGenericMember) // assertFullyCovered()
         }
+    }
+
+    fun readPublicOutside(e: Example<String>) {
+        nop(e.publicMember) // assertFullyCovered()
+    }
+
+    fun readPublicGenericOutside(e: Example<String>) {
+        nop(e.publicGenericMember) // assertFullyCovered()
     }
 
     @JvmStatic
     fun main(args: Array<String>) {
         val e = Example<String>()
         e.init("")
-        e.read()
-        e.publicMember // assertFullyCovered()
-        e.publicGenericMember // assertFullyCovered()
+        e.readPublic()
+        e.readPublicGeneric()
+        e.readPrivate()
+        e.readPrivateGeneric()
+        readPublicOutside(e)
+        readPublicGenericOutside(e)
     }
 
 }
