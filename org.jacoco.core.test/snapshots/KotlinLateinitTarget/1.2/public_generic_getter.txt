@@ -4,8 +4,10 @@
     GETFIELD org/jacoco/core/test/validation/kotlin/targets/KotlinLateinitTarget$Example.publicGenericMember : Ljava/lang/Object;
     DUP
     IFNONNULL L_non_null
+// previous instruction starts ignore range 0
     LDC "publicGenericMember"
     INVOKESTATIC kotlin/jvm/internal/Intrinsics.throwUninitializedPropertyAccessException (Ljava/lang/String;)V
+// previous instruction ends ignore range 0
    L_non_null
     ARETURN
    L_method_end
