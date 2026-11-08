@@ -4,10 +4,12 @@
     ASTORE 1
     ALOAD 1
     IFNONNULL L_non_null
+// previous instruction starts ignore range 0
     LDC "privateGenericMember"
     INVOKESTATIC kotlin/jvm/internal/Intrinsics.throwUninitializedPropertyAccessException (Ljava/lang/String;)V
     GETSTATIC kotlin/Unit.INSTANCE : Lkotlin/Unit;
     GOTO L_after
+// previous instruction ends ignore range 0
    L_non_null
     ALOAD 1
    L_after
