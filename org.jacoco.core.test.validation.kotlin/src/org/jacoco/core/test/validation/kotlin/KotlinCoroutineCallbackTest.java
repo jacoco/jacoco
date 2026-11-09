@@ -29,11 +29,11 @@ public class KotlinCoroutineCallbackTest extends KotlinValidationTestBase {
 	public void bytecodeSnapshots() throws Exception {
 		assertSnapshot(KotlinCoroutineCallbackTarget.class, "example",
 				"example.txt", //
-				KOTLIN_2_0);
+				KOTLIN_2_5, KOTLIN_2_0);
 		assertSnapshot(KotlinCoroutineCallbackTarget.class,
 				"withoutTailCallOptimization",
 				"without_tail_call_optimization.txt", //
-				KOTLIN_2_2, KOTLIN_2_0);
+				KOTLIN_2_5, KOTLIN_2_2, KOTLIN_2_0);
 	}
 
 }
