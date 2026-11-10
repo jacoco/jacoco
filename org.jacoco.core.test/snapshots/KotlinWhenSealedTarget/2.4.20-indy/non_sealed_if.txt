@@ -1,4 +1,4 @@
-   L0
+   L_method_start
     ALOAD 1
     ICONST_0
     INVOKEDYNAMIC typeSwitch(Ljava/lang/Object;I)I [
@@ -10,23 +10,23 @@
     ]
    L1
     TABLESWITCH
-      0: L2
-      1: L3
-      default: L4
-   L2
+      0: L_case_1
+      1: L_case_2
+      default: L_after
+   L_case_1
     LDC "case 1"
     INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
-    GOTO L4
-   L3
+    GOTO L_after
+   L_case_2
     LDC "case 2"
     INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
-   L4
+   L_after
     RETURN
-   L5
-    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWhenSealedTarget; L0 L5 0
-    LOCALVARIABLE nonSealed Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWhenSealedTarget$NonSealed; L0 L5 1
+   L_method_end
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWhenSealedTarget; L_method_start L_method_end 0
+    LOCALVARIABLE nonSealed Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWhenSealedTarget$NonSealed; L_method_start L_method_end 1
     LINENUMBER 5 L1
-    LINENUMBER 6 L3
-    LINENUMBER 8 L4
+    LINENUMBER 6 L_case_2
+    LINENUMBER 8 L_after
     MAXSTACK = 2
     MAXLOCALS = 2
