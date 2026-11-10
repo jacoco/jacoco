@@ -1,0 +1,44 @@
+   L0
+    ALOAD 1
+    ASTORE 2
+   L1
+    ALOAD 2
+    ICONST_0
+    INVOKEDYNAMIC typeSwitch(Ljava/lang/Object;I)I [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/runtime/SwitchBootstraps.typeSwitch(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;[Ljava/lang/Object;)Ljava/lang/invoke/CallSite;
+      // arguments:
+      org.jacoco.core.test.validation.kotlin.targets.KotlinWhenSealedTarget$Sealed$Sealed1.class,
+      org.jacoco.core.test.validation.kotlin.targets.KotlinWhenSealedTarget$Sealed$Sealed2.class
+    ]
+   L2
+    TABLESWITCH
+      0: L3
+      1: L4
+      default: L5
+   L3
+    LDC "case 1"
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
+    GOTO L6
+   L4
+    LDC "case 2"
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
+    GOTO L6
+   L5
+    NEW kotlin/NoWhenBranchMatchedException
+    DUP
+    INVOKESPECIAL kotlin/NoWhenBranchMatchedException.<init> ()V
+    ATHROW
+   L6
+    RETURN
+   L7
+    LOCALVARIABLE tmp Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWhenSealedTarget$Sealed; L1 L7 2
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWhenSealedTarget; L0 L7 0
+    LOCALVARIABLE sealed Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWhenSealedTarget$Sealed; L0 L7 1
+    LINENUMBER 5 L0
+    LINENUMBER 6 L2
+    LINENUMBER 7 L4
+    LINENUMBER 8 L5
+    LINENUMBER 9 L6
+    MAXSTACK = 2
+    MAXLOCALS = 3

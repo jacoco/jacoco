@@ -16,9 +16,32 @@ import static org.junit.Assert.fail;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
 
-import kotlin.KotlinVersion;
-
 public abstract class KotlinValidationTestBase extends ValidationTestBase {
+
+	public static class KotlinVersion {
+		private final int major;
+		private final int minor;
+		private final int patch;
+
+		public KotlinVersion(final int major, final int minor) {
+			this(major, minor, 0);
+		}
+
+		public KotlinVersion(final int major, final int minor,
+				final int patch) {
+			this.major = major;
+			this.minor = minor;
+			this.patch = patch;
+		}
+
+		public boolean match() {
+			return kotlin.KotlinVersion.CURRENT.isAtLeast(major, minor, patch);
+		}
+
+		public String name() {
+			return major + "." + minor + (patch != 0 ? "." + patch : "");
+		}
+	}
 
 	protected static final KotlinVersion KOTLIN_1_2 = new KotlinVersion(1, 2);
 	protected static final KotlinVersion KOTLIN_1_3 = new KotlinVersion(1, 3);
@@ -61,16 +84,9 @@ public abstract class KotlinValidationTestBase extends ValidationTestBase {
 			final String targetMethod, final String baseName,
 			final KotlinVersion... kotlinVersions) throws Exception {
 		for (final KotlinVersion kotlinVersion : kotlinVersions) {
-			if (KotlinVersion.CURRENT.isAtLeast(kotlinVersion.getMajor(),
-					kotlinVersion.getMinor(), kotlinVersion.getPatch())) {
-				final String versionPrefix = kotlinVersion.getMajor() + "."
-						+ kotlinVersion.getMinor()
-						+ (kotlinVersion.getPatch() != 0
-								? "." + kotlinVersion.getPatch()
-								: "")
-						+ "/";
+			if (kotlinVersion.match()) {
 				assertSnapshot(targetClass, targetMethod,
-						versionPrefix + baseName);
+						kotlinVersion.name() + "/" + baseName);
 				return;
 			}
 		}
