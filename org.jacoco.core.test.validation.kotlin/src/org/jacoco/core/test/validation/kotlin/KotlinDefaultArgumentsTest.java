@@ -12,16 +12,33 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.kotlin;
 
-import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.kotlin.targets.KotlinDefaultArgumentsTarget;
+import org.junit.Test;
 
 /**
  * Test of functions with default arguments.
  */
-public class KotlinDefaultArgumentsTest extends ValidationTestBase {
+public class KotlinDefaultArgumentsTest extends KotlinValidationTestBase {
 
 	public KotlinDefaultArgumentsTest() {
 		super(KotlinDefaultArgumentsTarget.class);
+	}
+
+	@Test
+	public void bytecodeSnapshots() throws Exception {
+		assertSnapshot(KotlinDefaultArgumentsTarget.class, "f\\$default",
+				"f.txt");
+		assertSnapshot(KotlinDefaultArgumentsTarget.class,
+				"longParameter\\$default", "long_parameter.txt");
+		assertSnapshot(KotlinDefaultArgumentsTarget.class, "branch\\$default",
+				"branch.txt");
+		assertSnapshot(KotlinDefaultArgumentsTarget.Open.class, "f\\$default",
+				"open_function.txt");
+		// TODO multiple methods
+		// assertSnapshot(KotlinDefaultArgumentsTarget.Constructor.class,
+		// "<init>", "constructor.txt");
+		// assertSnapshot(KotlinDefaultArgumentsTarget.MoreThan32Parameters.class,
+		// "<init>", "more_than_32_parameters.txt");
 	}
 
 }
