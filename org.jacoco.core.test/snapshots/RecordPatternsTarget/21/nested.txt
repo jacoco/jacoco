@@ -138,6 +138,8 @@
    L_after
     ARETURN
    L_exception
+// previous instruction starts ignore range 0
+// previous instruction starts ignore range 1
     ASTORE 1
     NEW java/lang/MatchException
     DUP
@@ -146,6 +148,8 @@
     ALOAD 1
     INVOKESPECIAL java/lang/MatchException.<init> (Ljava/lang/String;Ljava/lang/Throwable;)V
     ATHROW
+// previous instruction ends ignore range 0
+// previous instruction ends ignore range 1
    L_method_end
     LOCALVARIABLE c Ljava/lang/String; L_case_R_String L_pattern_R_Integer 4
     LOCALVARIABLE c Ljava/lang/Integer; L_case_R_Integer L_pattern_R_R 5
