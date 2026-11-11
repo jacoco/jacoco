@@ -16,6 +16,7 @@ import org.jacoco.core.test.validation.JavaVersion;
 import org.jacoco.core.test.validation.Source.Line;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java21.targets.RecordPatternsTarget;
+import org.junit.Test;
 
 /**
  * Test of code coverage in {@link RecordPatternsTarget}.
@@ -75,6 +76,24 @@ public class RecordPatternsTest extends ValidationTestBase {
 		if (!isJDKCompiler) {
 			assertPartlyCovered(line, missedBranches, coveredBranches);
 		}
+	}
+
+	@Test
+	public void bytecodeSnapshots() throws Exception {
+		assertSnapshot(RecordPatternsTarget.class, "instanceofOperator",
+				(!isJDKCompiler ? "ecj"
+						: (JavaVersion.current().isBefore("23") ? "21"
+								: (JavaVersion.current().isBefore("26") ? "23"
+										: "26")))
+						+ "/instanceof.txt");
+		assertSnapshot(RecordPatternsTarget.class, "switchStatement",
+				(!isJDKCompiler ? "ecj"
+						: (JavaVersion.current().isBefore("23") ? "21"
+								: (JavaVersion.current().isBefore("26") ? "23"
+										: "26")))
+						+ "/switch.txt");
+		assertSnapshot(RecordPatternsTarget.class, "nestedRecordPattern",
+				(!isJDKCompiler ? "ecj" : "21") + "/nested.txt");
 	}
 
 }
