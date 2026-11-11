@@ -1,6 +1,6 @@
-    TRYCATCHBLOCK L0 L1 L2 java/lang/Throwable
-    TRYCATCHBLOCK L3 L4 L2 java/lang/Throwable
-   L5
+    TRYCATCHBLOCK L_case_pattern_1_component_start L_case_pattern_1_component_end L_exception java/lang/Throwable
+    TRYCATCHBLOCK L_case_pattern_2_component_start L_case_pattern_2_component_end L_exception java/lang/Throwable
+   L_method_start
     ALOAD 0
     DUP
     INVOKESTATIC java/util/Objects.requireNonNull (Ljava/lang/Object;)Ljava/lang/Object;
@@ -8,7 +8,7 @@
     ASTORE 2
     ALOAD 2
     ICONST_0
-   L6
+   L_switch
     INVOKEDYNAMIC typeSwitch(Ljava/lang/Object;I)I [
       // handle kind 0x6 : INVOKESTATIC
       java/lang/runtime/SwitchBootstraps.typeSwitch(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;[Ljava/lang/Object;)Ljava/lang/invoke/CallSite;
@@ -17,59 +17,59 @@
       org.jacoco.core.test.validation.java22.targets.UnnamedPatternTarget$R.class
     ]
     TABLESWITCH
-      0: L7
-      1: L7
-      default: L8
-   L7
+      0: L_case_pattern_1
+      1: L_case_pattern_1
+      default: L_default
+   L_case_pattern_1
     ALOAD 2
     DUP
     INSTANCEOF org/jacoco/core/test/validation/java22/targets/UnnamedPatternTarget$R
-    IFEQ L9
+    IFEQ L_case_pattern_2
     DUP
     CHECKCAST org/jacoco/core/test/validation/java22/targets/UnnamedPatternTarget$R
-   L0
+   L_case_pattern_1_component_start
     INVOKEVIRTUAL org/jacoco/core/test/validation/java22/targets/UnnamedPatternTarget$R.c ()Ljava/lang/Object;
-   L1
+   L_case_pattern_1_component_end
     INSTANCEOF java/lang/Float
     IFNE L10
-    GOTO L9
+    GOTO L_case_pattern_2
    L10
     POP
-    GOTO L11
-   L9
+    GOTO L_guard
+   L_case_pattern_2
     DUP
     INSTANCEOF org/jacoco/core/test/validation/java22/targets/UnnamedPatternTarget$R
-    IFEQ L12
+    IFEQ L_switch_restart
     DUP
     CHECKCAST org/jacoco/core/test/validation/java22/targets/UnnamedPatternTarget$R
-   L3
+   L_case_pattern_2_component_start
     INVOKEVIRTUAL org/jacoco/core/test/validation/java22/targets/UnnamedPatternTarget$R.c ()Ljava/lang/Object;
-   L4
+   L_case_pattern_2_component_end
     INSTANCEOF java/lang/Double
     IFNE L13
-    GOTO L12
+    GOTO L_switch_restart
    L13
     POP
-    GOTO L11
-   L12
+    GOTO L_guard
+   L_switch_restart
     POP
     GOTO L14
-   L11
+   L_guard
     ILOAD 1
     IFLE L14
-    GOTO L15
+    GOTO L_case
    L14
     ALOAD 2
     ICONST_2
-    GOTO L6
-   L15
+    GOTO L_switch
+   L_case
     LDC "case"
-    GOTO L16
-   L8
+    GOTO L_after
+   L_default
     LDC "default"
-   L16
+   L_after
     ARETURN
-   L2
+   L_exception
     NEW java/lang/MatchException
     DUP_X1
     SWAP
@@ -78,14 +78,14 @@
     SWAP
     INVOKESPECIAL java/lang/MatchException.<init> (Ljava/lang/String;Ljava/lang/Throwable;)V
     ATHROW
-   L17
-    LOCALVARIABLE o Ljava/lang/Object; L5 L17 0
-    LOCALVARIABLE x I L5 L17 1
-    LINENUMBER 5 L5
-    LINENUMBER 6 L7
-    LINENUMBER 7 L15
-    LINENUMBER 9 L8
-    LINENUMBER 5 L16
-    LINENUMBER 11 L2
+   L_method_end
+    LOCALVARIABLE o Ljava/lang/Object; L_method_start L_method_end 0
+    LOCALVARIABLE x I L_method_start L_method_end 1
+    LINENUMBER 5 L_method_start
+    LINENUMBER 6 L_case_pattern_1
+    LINENUMBER 7 L_case
+    LINENUMBER 9 L_default
+    LINENUMBER 5 L_after
+    LINENUMBER 11 L_exception
     MAXSTACK = 4
     MAXLOCALS = 3
