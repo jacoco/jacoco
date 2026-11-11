@@ -1,6 +1,6 @@
-    TRYCATCHBLOCK L0 L1 L2 java/lang/Throwable
-    TRYCATCHBLOCK L3 L4 L2 java/lang/Throwable
-   L5
+    TRYCATCHBLOCK L_case_pattern_component_1_start L_case_pattern_component_1_end L_exception java/lang/Throwable
+    TRYCATCHBLOCK L_case_pattern_component_2_start L_case_pattern_component_2_end L_exception java/lang/Throwable
+   L_method_start
     ALOAD 0
     DUP
     INVOKESTATIC java/util/Objects.requireNonNull (Ljava/lang/Object;)Ljava/lang/Object;
@@ -8,7 +8,7 @@
     ASTORE 1
     ALOAD 1
     ICONST_0
-   L6
+   L_switch
     INVOKEDYNAMIC typeSwitch(Ljava/lang/Object;I)I [
       // handle kind 0x6 : INVOKESTATIC
       java/lang/runtime/SwitchBootstraps.typeSwitch(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;[Ljava/lang/Object;)Ljava/lang/invoke/CallSite;
@@ -16,37 +16,37 @@
       org.jacoco.core.test.validation.java21.targets.RecordPatternsTarget$Point.class
     ]
     TABLESWITCH
-      0: L7
-      default: L8
-   L7
+      0: L_case_pattern
+      default: L_default
+   L_case_pattern
     ALOAD 1
     CHECKCAST org/jacoco/core/test/validation/java21/targets/RecordPatternsTarget$Point
     DUP
-   L0
+   L_case_pattern_component_1_start
     INVOKEVIRTUAL org/jacoco/core/test/validation/java21/targets/RecordPatternsTarget$Point.x ()I
-   L1
+   L_case_pattern_component_1_end
     ISTORE 2
-   L3
+   L_case_pattern_component_2_start
     INVOKEVIRTUAL org/jacoco/core/test/validation/java21/targets/RecordPatternsTarget$Point.y ()I
-   L4
+   L_case_pattern_component_2_end
     ISTORE 3
    L9
-    GOTO L10
-   L11
+    GOTO L_case
+   L_switch_restart
     ALOAD 1
     ICONST_1
-    GOTO L6
-   L10
+    GOTO L_switch
+   L_case
     ILOAD 2
     ILOAD 3
     IADD
     INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (I)V
-    GOTO L12
-   L8
+    GOTO L_after
+   L_default
     INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
-   L12
+   L_after
     RETURN
-   L2
+   L_exception
     NEW java/lang/MatchException
     DUP_X1
     SWAP
@@ -55,15 +55,15 @@
     SWAP
     INVOKESPECIAL java/lang/MatchException.<init> (Ljava/lang/String;Ljava/lang/Throwable;)V
     ATHROW
-   L13
-    LOCALVARIABLE p Ljava/lang/Object; L5 L13 0
-    LOCALVARIABLE x I L3 L11 2
-    LOCALVARIABLE x I L10 L8 2
-    LOCALVARIABLE y I L9 L11 3
-    LOCALVARIABLE y I L10 L8 3
-    LINENUMBER 5 L5
-    LINENUMBER 6 L7
-    LINENUMBER 7 L8
-    LINENUMBER 9 L12
+   L_method_end
+    LOCALVARIABLE p Ljava/lang/Object; L_method_start L_method_end 0
+    LOCALVARIABLE x I L_case_pattern_component_2_start L_switch_restart 2
+    LOCALVARIABLE x I L_case L_default 2
+    LOCALVARIABLE y I L9 L_switch_restart 3
+    LOCALVARIABLE y I L_case L_default 3
+    LINENUMBER 5 L_method_start
+    LINENUMBER 6 L_case_pattern
+    LINENUMBER 7 L_default
+    LINENUMBER 9 L_after
     MAXSTACK = 4
     MAXLOCALS = 4

@@ -4,7 +4,7 @@
     TRYCATCHBLOCK L7 L8 L2 java/lang/Throwable
     TRYCATCHBLOCK L9 L10 L2 java/lang/Throwable
     TRYCATCHBLOCK L11 L12 L2 java/lang/Throwable
-   L13
+   L_method_start
     ALOAD 0
     DUP
     INVOKESTATIC java/util/Objects.requireNonNull (Ljava/lang/Object;)Ljava/lang/Object;
@@ -171,8 +171,8 @@
     SWAP
     INVOKESPECIAL java/lang/MatchException.<init> (Ljava/lang/String;Ljava/lang/Throwable;)V
     ATHROW
-   L43
-    LOCALVARIABLE o Ljava/lang/Object; L13 L43 0
+   L_method_end
+    LOCALVARIABLE o Ljava/lang/Object; L_method_start L_method_end 0
     LOCALVARIABLE c Ljava/lang/String; L24 L23 2
     LOCALVARIABLE c Ljava/lang/String; L25 L16 2
     LOCALVARIABLE c Ljava/lang/Integer; L29 L28 3
@@ -183,7 +183,7 @@
     LOCALVARIABLE c Ljava/lang/Integer; L40 L19 5
     LOCALVARIABLE c Ljava/lang/String; L41 L20 6
     LOCALVARIABLE i Ljava/lang/Integer; L42 L21 7
-    LINENUMBER 5 L13
+    LINENUMBER 5 L_method_start
     LINENUMBER 6 L15
     LINENUMBER 7 L25
     LINENUMBER 8 L16
