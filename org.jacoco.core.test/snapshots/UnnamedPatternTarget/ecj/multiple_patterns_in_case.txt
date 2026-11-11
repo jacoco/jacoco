@@ -1,0 +1,87 @@
+    TRYCATCHBLOCK L_case_pattern_1_component_start L_case_pattern_1_component_end L_exception java/lang/Throwable
+    TRYCATCHBLOCK L_case_pattern_2_component_start L_case_pattern_2_component_end L_exception java/lang/Throwable
+   L_method_start
+    ALOAD 0
+    DUP
+    INVOKESTATIC java/util/Objects.requireNonNull (Ljava/lang/Object;)Ljava/lang/Object;
+    POP
+    ASTORE 1
+    ALOAD 1
+    ICONST_0
+   L_switch
+    INVOKEDYNAMIC typeSwitch(Ljava/lang/Object;I)I [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/runtime/SwitchBootstraps.typeSwitch(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;[Ljava/lang/Object;)Ljava/lang/invoke/CallSite;
+      // arguments:
+      org.jacoco.core.test.validation.java22.targets.UnnamedPatternTarget$R.class, 
+      org.jacoco.core.test.validation.java22.targets.UnnamedPatternTarget$R.class
+    ]
+    TABLESWITCH
+      0: L_case_pattern_1
+      1: L_case_pattern_1
+      default: L_default
+   L_case_pattern_1
+    ALOAD 1
+    DUP
+    INSTANCEOF org/jacoco/core/test/validation/java22/targets/UnnamedPatternTarget$R
+    IFEQ L_case_pattern_2
+    DUP
+    CHECKCAST org/jacoco/core/test/validation/java22/targets/UnnamedPatternTarget$R
+   L_case_pattern_1_component_start
+    INVOKEVIRTUAL org/jacoco/core/test/validation/java22/targets/UnnamedPatternTarget$R.c ()Ljava/lang/Object;
+   L_case_pattern_1_component_end
+    INSTANCEOF java/lang/Float
+    IFNE L10
+    GOTO L_case_pattern_2
+   L10
+    POP
+    GOTO L_case
+   L_case_pattern_2
+    DUP
+    INSTANCEOF org/jacoco/core/test/validation/java22/targets/UnnamedPatternTarget$R
+    IFEQ L_switch_restart
+    DUP
+    CHECKCAST org/jacoco/core/test/validation/java22/targets/UnnamedPatternTarget$R
+   L_case_pattern_2_component_start
+    INVOKEVIRTUAL org/jacoco/core/test/validation/java22/targets/UnnamedPatternTarget$R.c ()Ljava/lang/Object;
+   L_case_pattern_2_component_end
+    INSTANCEOF java/lang/Double
+    IFNE L13
+    GOTO L_switch_restart
+   L13
+    POP
+    GOTO L_case
+   L_switch_restart
+    POP
+    GOTO L14
+    GOTO L_case
+   L14
+    ALOAD 1
+    ICONST_2
+    GOTO L_switch
+   L_case
+    LDC "case"
+    GOTO L_after
+   L_default
+    LDC "default"
+   L_after
+    ARETURN
+   L_exception
+    NEW java/lang/MatchException
+    DUP_X1
+    SWAP
+    DUP
+    INVOKEVIRTUAL java/lang/Throwable.toString ()Ljava/lang/String;
+    SWAP
+    INVOKESPECIAL java/lang/MatchException.<init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+    ATHROW
+   L_method_end
+    LOCALVARIABLE o Ljava/lang/Object; L_method_start L_method_end 0
+    LINENUMBER 5 L_method_start
+    LINENUMBER 6 L_case_pattern_1
+    LINENUMBER 7 L_case
+    LINENUMBER 9 L_default
+    LINENUMBER 5 L_after
+    LINENUMBER 11 L_exception
+    MAXSTACK = 4
+    MAXLOCALS = 2
