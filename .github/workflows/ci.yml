@@ -13,8 +13,6 @@ jobs:
           # According to https://github.com/actions/setup-java/blob/v5.4.0/docs/advanced-usage.md#hosted-tool-cache
           # LTS versions of Eclipse Temurin (temurin) are cached on the GitHub Hosted Runners.
           # The tools cache gets updated on a weekly basis.
-          - { jdk:  6, distribution: 'zulu' }
-          - { jdk:  7, distribution: 'zulu' }
           - { jdk:  8, distribution: 'temurin' }
           - { jdk:  8, distribution: 'temurin', ecj: true }
           - { jdk:  9, distribution: 'zulu' }
@@ -103,15 +101,15 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
         with:
-          distribution: 'zulu'
+          distribution: 'temurin'
           java-version: |
-            6
+            8
             21
       - *cache
       - name: 'Generate toolchains.xml'
         env:
-          JDK_VERSION: 6
-          JDK_HOME_VARIABLE_NAME: JAVA_HOME_6_X64
+          JDK_VERSION: 8
+          JDK_HOME_VARIABLE_NAME: JAVA_HOME_8_X64
         shell: bash
         run: |
           echo "
@@ -132,7 +130,7 @@ jobs:
         shell: bash
         run: |
           ./mvnw -V -B -e \
-            verify -Djdk.version=6 -Dbytecode.version=5 \
+            verify -Djdk.version=8 -Dbytecode.version=5 \
             -f org.jacoco.build \
             ${{ secrets.SONARQUBE_TOKEN && 'sonar:sonar' || '' }} \
             -Dsonar.scanner.skipJreProvisioning \
