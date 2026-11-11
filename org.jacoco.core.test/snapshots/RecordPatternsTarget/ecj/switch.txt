@@ -1,0 +1,69 @@
+    TRYCATCHBLOCK L0 L1 L2 java/lang/Throwable
+    TRYCATCHBLOCK L3 L4 L2 java/lang/Throwable
+   L5
+    ALOAD 0
+    DUP
+    INVOKESTATIC java/util/Objects.requireNonNull (Ljava/lang/Object;)Ljava/lang/Object;
+    POP
+    ASTORE 1
+    ALOAD 1
+    ICONST_0
+   L6
+    INVOKEDYNAMIC typeSwitch(Ljava/lang/Object;I)I [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/runtime/SwitchBootstraps.typeSwitch(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;[Ljava/lang/Object;)Ljava/lang/invoke/CallSite;
+      // arguments:
+      org.jacoco.core.test.validation.java21.targets.RecordPatternsTarget$Point.class
+    ]
+    TABLESWITCH
+      0: L7
+      default: L8
+   L7
+    ALOAD 1
+    CHECKCAST org/jacoco/core/test/validation/java21/targets/RecordPatternsTarget$Point
+    DUP
+   L0
+    INVOKEVIRTUAL org/jacoco/core/test/validation/java21/targets/RecordPatternsTarget$Point.x ()I
+   L1
+    ISTORE 2
+   L3
+    INVOKEVIRTUAL org/jacoco/core/test/validation/java21/targets/RecordPatternsTarget$Point.y ()I
+   L4
+    ISTORE 3
+   L9
+    GOTO L10
+   L11
+    ALOAD 1
+    ICONST_1
+    GOTO L6
+   L10
+    ILOAD 2
+    ILOAD 3
+    IADD
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (I)V
+    GOTO L12
+   L8
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+   L12
+    RETURN
+   L2
+    NEW java/lang/MatchException
+    DUP_X1
+    SWAP
+    DUP
+    INVOKEVIRTUAL java/lang/Throwable.toString ()Ljava/lang/String;
+    SWAP
+    INVOKESPECIAL java/lang/MatchException.<init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+    ATHROW
+   L13
+    LOCALVARIABLE p Ljava/lang/Object; L5 L13 0
+    LOCALVARIABLE x I L3 L11 2
+    LOCALVARIABLE x I L10 L8 2
+    LOCALVARIABLE y I L9 L11 3
+    LOCALVARIABLE y I L10 L8 3
+    LINENUMBER 5 L5
+    LINENUMBER 6 L7
+    LINENUMBER 7 L8
+    LINENUMBER 9 L12
+    MAXSTACK = 4
+    MAXLOCALS = 4

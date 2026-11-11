@@ -1,0 +1,185 @@
+    TRYCATCHBLOCK L0 L1 L2 java/lang/Throwable
+    TRYCATCHBLOCK L3 L4 L2 java/lang/Throwable
+   L5
+    ALOAD 0
+    DUP
+    INVOKESTATIC java/util/Objects.requireNonNull (Ljava/lang/Object;)Ljava/lang/Object;
+    POP
+    ASTORE 1
+    ICONST_0
+    ISTORE 2
+   L6
+    ALOAD 1
+    ILOAD 2
+    INVOKEDYNAMIC typeSwitch(Ljava/lang/Object;I)I [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/runtime/SwitchBootstraps.typeSwitch(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;[Ljava/lang/Object;)Ljava/lang/invoke/CallSite;
+      // arguments:
+      org.jacoco.core.test.validation.java21.targets.RecordPatternsTarget$R.class,
+      java.lang.String.class,
+      java.lang.Integer.class
+    ]
+    TABLESWITCH
+      0: L7
+      1: L8
+      2: L9
+      default: L10
+   L7
+    ALOAD 1
+    CHECKCAST org/jacoco/core/test/validation/java21/targets/RecordPatternsTarget$R
+    ASTORE 3
+   L11
+    ALOAD 3
+   L0
+    INVOKEVIRTUAL org/jacoco/core/test/validation/java21/targets/RecordPatternsTarget$R.component ()Ljava/lang/Object;
+   L1
+    ASTORE 9
+   L12
+    ICONST_0
+    ISTORE 10
+   L13
+    ALOAD 9
+    ILOAD 10
+    INVOKEDYNAMIC typeSwitch(Ljava/lang/Object;I)I [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/runtime/SwitchBootstraps.typeSwitch(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;[Ljava/lang/Object;)Ljava/lang/invoke/CallSite;
+      // arguments:
+      java.lang.String.class,
+      java.lang.Integer.class,
+      org.jacoco.core.test.validation.java21.targets.RecordPatternsTarget$R.class
+    ]
+    TABLESWITCH
+      -1: L14
+      0: L15
+      1: L16
+      2: L17
+      default: L14
+   L15
+    ALOAD 9
+    CHECKCAST java/lang/String
+    ASTORE 4
+   L18
+    LDC "R(String)"
+    GOTO L19
+   L16
+    ALOAD 9
+    CHECKCAST java/lang/Integer
+    ASTORE 5
+   L20
+    LDC "R(Integer)"
+    GOTO L19
+   L17
+    ALOAD 9
+    CHECKCAST org/jacoco/core/test/validation/java21/targets/RecordPatternsTarget$R
+    ASTORE 6
+   L21
+    ALOAD 6
+   L3
+    INVOKEVIRTUAL org/jacoco/core/test/validation/java21/targets/RecordPatternsTarget$R.component ()Ljava/lang/Object;
+   L4
+    ASTORE 11
+   L22
+    ICONST_0
+    ISTORE 12
+    ALOAD 11
+    ILOAD 12
+    INVOKEDYNAMIC typeSwitch(Ljava/lang/Object;I)I [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/runtime/SwitchBootstraps.typeSwitch(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;[Ljava/lang/Object;)Ljava/lang/invoke/CallSite;
+      // arguments:
+      java.lang.String.class,
+      java.lang.Integer.class
+    ]
+    TABLESWITCH
+      -1: L23
+      0: L24
+      1: L25
+      default: L23
+   L24
+    ALOAD 11
+    CHECKCAST java/lang/String
+    ASTORE 7
+   L26
+    LDC "R(R(String))"
+    GOTO L19
+   L25
+    ALOAD 11
+    CHECKCAST java/lang/Integer
+    ASTORE 8
+   L27
+    LDC "R(R(Integer))"
+    GOTO L19
+   L23
+    ICONST_3
+    ISTORE 10
+   L28
+    GOTO L13
+   L14
+    ICONST_1
+    ISTORE 2
+    GOTO L6
+   L8
+    ALOAD 1
+    CHECKCAST java/lang/String
+    ASTORE 9
+   L29
+    LDC "String"
+    GOTO L19
+   L9
+    ALOAD 1
+    CHECKCAST java/lang/Integer
+    ASTORE 10
+   L30
+    LDC "Integer"
+    GOTO L19
+   L10
+    LDC "default"
+    GOTO L19
+   L19
+    ARETURN
+   L2
+    ASTORE 1
+    NEW java/lang/MatchException
+    DUP
+    ALOAD 1
+    INVOKEVIRTUAL java/lang/Throwable.toString ()Ljava/lang/String;
+    ALOAD 1
+    INVOKESPECIAL java/lang/MatchException.<init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+    ATHROW
+   L31
+    LOCALVARIABLE c Ljava/lang/String; L18 L16 4
+    LOCALVARIABLE c Ljava/lang/Integer; L20 L17 5
+    LOCALVARIABLE c Ljava/lang/String; L26 L25 7
+    LOCALVARIABLE c Ljava/lang/Integer; L27 L23 8
+    LOCALVARIABLE c Ljava/lang/String; L29 L9 9
+    LOCALVARIABLE i Ljava/lang/Integer; L30 L10 10
+    LOCALVARIABLE o Ljava/lang/Object; L5 L31 0
+    LINENUMBER 5 L5
+    LINENUMBER 6 L7
+    LINENUMBER 19 L11
+    LINENUMBER 6 L0
+    LINENUMBER 19 L12
+    LINENUMBER 6 L15
+    LINENUMBER 7 L18
+    LINENUMBER 8 L16
+    LINENUMBER 9 L20
+    LINENUMBER 10 L17
+    LINENUMBER 6 L21
+    LINENUMBER 10 L3
+    LINENUMBER 6 L22
+    LINENUMBER 10 L24
+    LINENUMBER 11 L26
+    LINENUMBER 12 L25
+    LINENUMBER 13 L27
+    LINENUMBER 19 L23
+    LINENUMBER 6 L28
+    LINENUMBER 19 L14
+    LINENUMBER 14 L8
+    LINENUMBER 15 L29
+    LINENUMBER 16 L9
+    LINENUMBER 17 L30
+    LINENUMBER 19 L10
+    LINENUMBER 5 L19
+    LINENUMBER 16 L2
+    MAXSTACK = 4
+    MAXLOCALS = 13
