@@ -8,7 +8,6 @@
     ASTORE 1
     ALOAD 1
     ICONST_0
-   L_switch
     INVOKEDYNAMIC typeSwitch(Ljava/lang/Object;I)I [
       // handle kind 0x6 : INVOKESTATIC
       java/lang/runtime/SwitchBootstraps.typeSwitch(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;[Ljava/lang/Object;)Ljava/lang/invoke/CallSite;
@@ -30,12 +29,6 @@
     INVOKEVIRTUAL org/jacoco/core/test/validation/java21/targets/RecordPatternsTarget$Point.y ()I
    L_case_pattern_component_2_end
     ISTORE 3
-   L9
-    GOTO L_case
-   L_switch_restart
-    ALOAD 1
-    ICONST_1
-    GOTO L_switch
    L_case
     ILOAD 2
     ILOAD 3
@@ -57,9 +50,7 @@
     ATHROW
    L_method_end
     LOCALVARIABLE p Ljava/lang/Object; L_method_start L_method_end 0
-    LOCALVARIABLE x I L_case_pattern_component_2_start L_switch_restart 2
-    LOCALVARIABLE x I L_case L_default 2
-    LOCALVARIABLE y I L9 L_switch_restart 3
+    LOCALVARIABLE x I L_case_pattern_component_2_start L_default 2
     LOCALVARIABLE y I L_case L_default 3
     LINENUMBER 5 L_method_start
     LINENUMBER 6 L_case_pattern
