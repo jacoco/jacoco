@@ -34,8 +34,8 @@ jobs:
           - { jdk: 22, distribution: 'zulu' }
           - { jdk: 23, distribution: 'zulu' }
           - { jdk: 24, distribution: 'zulu' }
-          - { jdk: 24, distribution: 'zulu', ecj: true }
-          - { jdk: 25, distribution: 'temurin' }
+          - { jdk: 24, distribution: 'zulu' }
+          - { jdk: 25, distribution: 'temurin', ecj: true }
           - { jdk: 26, distribution: 'zulu' }
           - { jdk: 27, distribution: 'zulu' }
     name: JDK ${{ matrix.jdk }}${{ matrix.ecj && ' with ECJ' || ''}}
