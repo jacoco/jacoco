@@ -1038,7 +1038,7 @@
                 <groupId>org.eclipse.jdt</groupId>
                 <artifactId>ecj</artifactId>
                 <!-- When upgrading ECJ do not forget to update .github/workflows/ci.yml -->
-                <version>3.43.0</version>
+                <version>3.46.100</version>
               </dependency>
               <dependency>
                 <!--
