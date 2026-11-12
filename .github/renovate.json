@@ -90,6 +90,13 @@
       "addLabels": ["component: core"]
     },
     {
+      "description": "Enable updates of ECJ",
+      "matchPackageNames": ["org.eclipse.jdt:ecj"],
+      "enabled": true,
+      "commitMessageTopic": "ECJ",
+      "addLabels": ["component: test"]
+    },
+    {
       "description": "Enable updates of Kotlin",
       "matchPackageNames": ["org.jetbrains.kotlin:*"],
       "enabled": true,
