@@ -61,6 +61,8 @@
    L13
     GOTO L_after
    L_exception
+// previous instruction starts ignore range 0
+// previous instruction starts ignore range 1
     ASTORE 1
     NEW java/lang/MatchException
     DUP
@@ -69,6 +71,8 @@
     ALOAD 1
     INVOKESPECIAL java/lang/MatchException.<init> (Ljava/lang/String;Ljava/lang/Throwable;)V
     ATHROW
+// previous instruction ends ignore range 0
+// previous instruction ends ignore range 1
    L_after
     RETURN
    L_method_end
