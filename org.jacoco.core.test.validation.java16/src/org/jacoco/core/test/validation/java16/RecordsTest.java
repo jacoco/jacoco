@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.java16;
 
+import org.jacoco.core.test.validation.Source;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java16.targets.RecordsTarget;
 
@@ -22,6 +23,26 @@ public class RecordsTest extends ValidationTestBase {
 
 	public RecordsTest() {
 		super(RecordsTarget.class);
+	}
+
+	public void assertJavacFully(final Source.Line line) {
+		if (isJDKCompiler) {
+			assertFullyCovered(line);
+		}
+	}
+
+	public void assertEcjEmpty(final Source.Line line) {
+		if (!isJDKCompiler) {
+			assertEmpty(line);
+		}
+	}
+
+	@Override
+	public void first_line_in_coverage_data_should_be_greater_than_one() {
+		// ECJ generates zero line number in record constructor
+		if (isJDKCompiler) {
+			super.first_line_in_coverage_data_should_be_greater_than_one();
+		}
 	}
 
 }

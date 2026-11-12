@@ -58,4 +58,12 @@ public class UnnamedPatternTest extends ValidationTestBase {
 		}
 	}
 
+	@Override
+	public void first_line_in_coverage_data_should_be_greater_than_one() {
+		// ECJ generates zero line number in record constructor
+		if (isJDKCompiler) {
+			super.first_line_in_coverage_data_should_be_greater_than_one();
+		}
+	}
+
 }

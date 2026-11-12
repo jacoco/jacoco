@@ -37,12 +37,7 @@ public class RecordPatternsTest extends ValidationTestBase {
 	}
 
 	public void assertSwitchStatementLastCase(final Line line) {
-		if (!isJDKCompiler) {
-			// TODO unfortunately
-			// https://github.com/eclipse-jdt/eclipse.jdt.core/issues/773
-			// did not fixed this issue
-			assertPartlyCovered(line);
-		} else if (JavaVersion.current().isBefore("23")) {
+		if (JavaVersion.current().isBefore("23") || !isJDKCompiler) {
 			assertFullyCovered(line);
 		} else {
 			// TODO https://bugs.openjdk.org/browse/JDK-8303374
@@ -75,6 +70,14 @@ public class RecordPatternsTest extends ValidationTestBase {
 			final int coveredBranches) {
 		if (!isJDKCompiler) {
 			assertPartlyCovered(line, missedBranches, coveredBranches);
+		}
+	}
+
+	@Override
+	public void first_line_in_coverage_data_should_be_greater_than_one() {
+		// ECJ generates zero line number in record constructor
+		if (isJDKCompiler) {
+			super.first_line_in_coverage_data_should_be_greater_than_one();
 		}
 	}
 
