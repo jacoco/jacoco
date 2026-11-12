@@ -20,6 +20,7 @@ import kotlin.KotlinVersion;
 
 public abstract class KotlinValidationTestBase extends ValidationTestBase {
 
+	protected static final KotlinVersion KOTLIN_1_2 = new KotlinVersion(1, 2);
 	protected static final KotlinVersion KOTLIN_1_3 = new KotlinVersion(1, 3);
 	protected static final KotlinVersion KOTLIN_1_3_30 = new KotlinVersion(1, 3,
 			30);

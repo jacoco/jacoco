@@ -1,0 +1,189 @@
+    TRYCATCHBLOCK L_pattern_R_component_start L_pattern_R_component_end L_exception java/lang/Throwable
+    TRYCATCHBLOCK L_pattern_R_R_component_start L_pattern_R_R_component_end L_exception java/lang/Throwable
+   L_method_start
+    ALOAD 0
+    DUP
+    INVOKESTATIC java/util/Objects.requireNonNull (Ljava/lang/Object;)Ljava/lang/Object;
+    POP
+    ASTORE 1
+    ICONST_0
+    ISTORE 2
+   L_switch_1
+    ALOAD 1
+    ILOAD 2
+    INVOKEDYNAMIC typeSwitch(Ljava/lang/Object;I)I [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/runtime/SwitchBootstraps.typeSwitch(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;[Ljava/lang/Object;)Ljava/lang/invoke/CallSite;
+      // arguments:
+      org.jacoco.core.test.validation.java21.targets.RecordPatternsTarget$R.class,
+      java.lang.String.class,
+      java.lang.Integer.class
+    ]
+    TABLESWITCH
+      0: L_pattern_R
+      1: L_pattern_String
+      2: L_pattern_Integer
+      default: L_default
+   L_pattern_R
+    ALOAD 1
+    CHECKCAST org/jacoco/core/test/validation/java21/targets/RecordPatternsTarget$R
+    ASTORE 3
+   L11
+    ALOAD 3
+   L_pattern_R_component_start
+    INVOKEVIRTUAL org/jacoco/core/test/validation/java21/targets/RecordPatternsTarget$R.component ()Ljava/lang/Object;
+   L_pattern_R_component_end
+    ASTORE 9
+   L12
+    ICONST_0
+    ISTORE 10
+   L_switch_2
+    ALOAD 9
+    ILOAD 10
+    INVOKEDYNAMIC typeSwitch(Ljava/lang/Object;I)I [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/runtime/SwitchBootstraps.typeSwitch(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;[Ljava/lang/Object;)Ljava/lang/invoke/CallSite;
+      // arguments:
+      java.lang.String.class,
+      java.lang.Integer.class,
+      org.jacoco.core.test.validation.java21.targets.RecordPatternsTarget$R.class
+    ]
+    TABLESWITCH
+      -1: L_switch_1_restart
+      0: L_pattern_R_String
+      1: L_pattern_R_Integer
+      2: L_pattern_R_R
+      default: L_switch_1_restart
+   L_pattern_R_String
+    ALOAD 9
+    CHECKCAST java/lang/String
+    ASTORE 4
+   L_case_R_String
+    LDC "R(String)"
+    GOTO L_after
+   L_pattern_R_Integer
+    ALOAD 9
+    CHECKCAST java/lang/Integer
+    ASTORE 5
+   L_case_R_Integer
+    LDC "R(Integer)"
+    GOTO L_after
+   L_pattern_R_R
+    ALOAD 9
+    CHECKCAST org/jacoco/core/test/validation/java21/targets/RecordPatternsTarget$R
+    ASTORE 6
+   L21
+    ALOAD 6
+   L_pattern_R_R_component_start
+    INVOKEVIRTUAL org/jacoco/core/test/validation/java21/targets/RecordPatternsTarget$R.component ()Ljava/lang/Object;
+   L_pattern_R_R_component_end
+    ASTORE 11
+   L_switch_3
+    ICONST_0
+    ISTORE 12
+    ALOAD 11
+    ILOAD 12
+    INVOKEDYNAMIC typeSwitch(Ljava/lang/Object;I)I [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/runtime/SwitchBootstraps.typeSwitch(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;[Ljava/lang/Object;)Ljava/lang/invoke/CallSite;
+      // arguments:
+      java.lang.String.class,
+      java.lang.Integer.class
+    ]
+    TABLESWITCH
+      -1: L_switch_2_restart
+      0: L_pattern_R_R_String
+      1: L_pattern_R_R_Integer
+      default: L_switch_2_restart
+   L_pattern_R_R_String
+    ALOAD 11
+    CHECKCAST java/lang/String
+    ASTORE 7
+   L_case_R_R_String
+    LDC "R(R(String))"
+    GOTO L_after
+   L_pattern_R_R_Integer
+    ALOAD 11
+    CHECKCAST java/lang/Integer
+    ASTORE 8
+   L_case_R_R_Integer
+    LDC "R(R(Integer))"
+    GOTO L_after
+   L_switch_2_restart
+    ICONST_3
+    ISTORE 10
+   L28
+    GOTO L_switch_2
+   L_switch_1_restart
+    ICONST_1
+    ISTORE 2
+    GOTO L_switch_1
+   L_pattern_String
+    ALOAD 1
+    CHECKCAST java/lang/String
+    ASTORE 9
+   L_case_String
+    LDC "String"
+    GOTO L_after
+   L_pattern_Integer
+    ALOAD 1
+    CHECKCAST java/lang/Integer
+    ASTORE 10
+   L_case_Integer
+    LDC "Integer"
+    GOTO L_after
+   L_default
+    LDC "default"
+    GOTO L_after
+   L_after
+    ARETURN
+   L_exception
+// previous instruction starts ignore range 0
+// previous instruction starts ignore range 1
+    ASTORE 1
+    NEW java/lang/MatchException
+    DUP
+    ALOAD 1
+    INVOKEVIRTUAL java/lang/Throwable.toString ()Ljava/lang/String;
+    ALOAD 1
+    INVOKESPECIAL java/lang/MatchException.<init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+    ATHROW
+// previous instruction ends ignore range 0
+// previous instruction ends ignore range 1
+   L_method_end
+    LOCALVARIABLE c Ljava/lang/String; L_case_R_String L_pattern_R_Integer 4
+    LOCALVARIABLE c Ljava/lang/Integer; L_case_R_Integer L_pattern_R_R 5
+    LOCALVARIABLE c Ljava/lang/String; L_case_R_R_String L_pattern_R_R_Integer 7
+    LOCALVARIABLE c Ljava/lang/Integer; L_case_R_R_Integer L_switch_2_restart 8
+    LOCALVARIABLE c Ljava/lang/String; L_case_String L_pattern_Integer 9
+    LOCALVARIABLE i Ljava/lang/Integer; L_case_Integer L_default 10
+    LOCALVARIABLE o Ljava/lang/Object; L_method_start L_method_end 0
+    LINENUMBER 5 L_method_start
+    LINENUMBER 6 L_pattern_R
+    LINENUMBER 19 L11
+    LINENUMBER 6 L_pattern_R_component_start
+    LINENUMBER 19 L12
+    LINENUMBER 6 L_pattern_R_String
+    LINENUMBER 7 L_case_R_String
+    LINENUMBER 8 L_pattern_R_Integer
+    LINENUMBER 9 L_case_R_Integer
+    LINENUMBER 10 L_pattern_R_R
+    LINENUMBER 6 L21
+    LINENUMBER 10 L_pattern_R_R_component_start
+    LINENUMBER 6 L_switch_3
+    LINENUMBER 10 L_pattern_R_R_String
+    LINENUMBER 11 L_case_R_R_String
+    LINENUMBER 12 L_pattern_R_R_Integer
+    LINENUMBER 13 L_case_R_R_Integer
+    LINENUMBER 19 L_switch_2_restart
+    LINENUMBER 6 L28
+    LINENUMBER 19 L_switch_1_restart
+    LINENUMBER 14 L_pattern_String
+    LINENUMBER 15 L_case_String
+    LINENUMBER 16 L_pattern_Integer
+    LINENUMBER 17 L_case_Integer
+    LINENUMBER 19 L_default
+    LINENUMBER 5 L_after
+    LINENUMBER 16 L_exception
+    MAXSTACK = 4
+    MAXLOCALS = 13

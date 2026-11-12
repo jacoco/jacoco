@@ -16,6 +16,7 @@ import org.jacoco.core.test.validation.JavaVersion;
 import org.jacoco.core.test.validation.Source.Line;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java21.targets.RecordPatternsTarget;
+import org.junit.Test;
 
 /**
  * Test of code coverage in {@link RecordPatternsTarget}.
@@ -36,12 +37,7 @@ public class RecordPatternsTest extends ValidationTestBase {
 	}
 
 	public void assertSwitchStatementLastCase(final Line line) {
-		if (!isJDKCompiler) {
-			// TODO unfortunately
-			// https://github.com/eclipse-jdt/eclipse.jdt.core/issues/773
-			// did not fixed this issue
-			assertPartlyCovered(line);
-		} else if (JavaVersion.current().isBefore("23")) {
+		if (JavaVersion.current().isBefore("23") || !isJDKCompiler) {
 			assertFullyCovered(line);
 		} else {
 			// TODO https://bugs.openjdk.org/browse/JDK-8303374
@@ -75,6 +71,32 @@ public class RecordPatternsTest extends ValidationTestBase {
 		if (!isJDKCompiler) {
 			assertPartlyCovered(line, missedBranches, coveredBranches);
 		}
+	}
+
+	@Override
+	public void first_line_in_coverage_data_should_be_greater_than_one() {
+		// ECJ generates zero line number in record constructor
+		if (isJDKCompiler) {
+			super.first_line_in_coverage_data_should_be_greater_than_one();
+		}
+	}
+
+	@Test
+	public void bytecodeSnapshots() throws Exception {
+		assertSnapshot(RecordPatternsTarget.class, "instanceofOperator",
+				(!isJDKCompiler ? "ecj"
+						: (JavaVersion.current().isBefore("23") ? "21"
+								: (JavaVersion.current().isBefore("26") ? "23"
+										: "26")))
+						+ "/instanceof.txt");
+		assertSnapshot(RecordPatternsTarget.class, "switchStatement",
+				(!isJDKCompiler ? "ecj"
+						: (JavaVersion.current().isBefore("23") ? "21"
+								: (JavaVersion.current().isBefore("26") ? "23"
+										: "26")))
+						+ "/switch.txt");
+		assertSnapshot(RecordPatternsTarget.class, "nestedRecordPattern",
+				(!isJDKCompiler ? "ecj" : "21") + "/nested.txt");
 	}
 
 }

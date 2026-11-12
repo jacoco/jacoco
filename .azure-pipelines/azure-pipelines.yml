@@ -4,6 +4,10 @@ jobs:
     matrix:
       JDK 5:
         JDK_VERSION: 5
+      JDK 6:
+        JDK_VERSION: 6
+      JDK 7:
+        JDK_VERSION: 7
       JDK_28:
         JDK_VERSION: 28
   pool:

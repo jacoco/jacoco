@@ -18,15 +18,15 @@ package org.jacoco.core.test.validation.java16.targets;
  */
 public class RecordsTarget {
 
-	record WithoutFields() { // assertFullyCovered()
+	record WithoutFields() { // assertJavacFully() assertEcjEmpty()
 	}
 
-	record WithFields( // assertFullyCovered()
+	record WithFields( // assertJavacFully() assertEcjEmpty()
 			int x // assertEmpty()
 	) {
 	}
 
-	record WithCustomMethods(int x) { // assertFullyCovered()
+	record WithCustomMethods(int x) { // assertJavacFully() assertEcjEmpty()
 		public int x() {
 			return x; // assertEmpty()
 		}
