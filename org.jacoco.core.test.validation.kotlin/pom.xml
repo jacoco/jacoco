@@ -70,10 +70,6 @@
           <compilerPlugins>
             <plugin>kotlinx-serialization</plugin>
           </compilerPlugins>
-          <args>
-            <!-- TODO https://github.com/jacoco/jacoco/issues/1923 -->
-            <arg>-Xwhen-expressions=inline</arg>
-          </args>
         </configuration>
         <dependencies>
           <dependency>
