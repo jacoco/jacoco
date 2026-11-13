@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
+import java.util.BitSet;
+
 import org.jacoco.core.analysis.CoverageNodeImpl;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ILine;
@@ -67,7 +69,7 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 			} else if (l.instructions.missed > 0) {
 				lineCounter = lineCounter.increment(-1, 0);
 			}
-			incrementLine(counter, CounterImpl.COUNTER_0_0, line);
+			incrementLine(counter, CounterImpl.COUNTER_0_0, line, null);
 			instructionCounter = instructionCounter.increment(
 					counter.missed - l.instructions.missed,
 					counter.covered - l.instructions.covered);
@@ -132,9 +134,19 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 			for (int i = firstLine; i <= lastLine; i++) {
 				final ILine line = child.getLine(i);
 				incrementLine(line.getInstructionCounter(),
-						line.getBranchCounter(), i);
+						line.getBranchCounter(), i, null);
 			}
 		}
+	}
+
+	/**
+	 * @deprecated used only in tests, use
+	 *             {@link #increment(ICounter, ICounter, int, BitSet)} instead
+	 */
+	@Deprecated
+	public final void increment(final ICounter instructions,
+			final ICounter branches, final int line) {
+		increment(instructions, branches, line, null);
 	}
 
 	/**
@@ -148,23 +160,29 @@ public class SourceNodeImpl extends CoverageNodeImpl implements ISourceNode {
 	 *            branches to add
 	 * @param line
 	 *            optional line number or {@link ISourceNode#UNKNOWN_LINE}
+	 * @param coveredBranches
+	 *            covered branches to add to the given line or {@code null}
 	 */
 	public void increment(final ICounter instructions, final ICounter branches,
-			final int line) {
+			final int line, final BitSet coveredBranches) {
 		if (line != UNKNOWN_LINE) {
-			incrementLine(instructions, branches, line);
+			assert coveredBranches == null
+					|| MethodCoverageImpl.class.equals(this.getClass());
+			incrementLine(instructions, branches, line, coveredBranches);
 		}
 		instructionCounter = instructionCounter.increment(instructions);
 		branchCounter = branchCounter.increment(branches);
 	}
 
 	private void incrementLine(final ICounter instructions,
-			final ICounter branches, final int line) {
+			final ICounter branches, final int line,
+			final BitSet coveredBranches) {
 		ensureCapacity(line, line);
 		final LineImpl l = getLine(line);
 		final int oldTotal = l.getInstructionCounter().getTotalCount();
 		final int oldCovered = l.getInstructionCounter().getCoveredCount();
-		lines[line - offset] = l.increment(instructions, branches);
+		lines[line - offset] = l.increment(instructions, branches,
+				coveredBranches);
 
 		// Increment line counter:
 		if (instructions.getTotalCount() > 0) {
