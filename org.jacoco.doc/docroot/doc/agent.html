@@ -207,8 +207,34 @@
       </td>
       <td><code>false</code></td>
     </tr>
+    <tr>
+      <td><code>conditionalprobes</code></td>
+      <td>If set to <code>true</code>, probes check whether they have already
+          been hit before writing to the shared probe array. See the performance
+          and compatibility considerations below.
+      </td>
+      <td><code>false</code></td>
+    </tr>
   </tbody>
 </table>
+
+<p>
+  To reduce contention when many threads repeatedly execute the same probes, use
+  <code>-javaagent:jacocoagent.jar=conditionalprobes=true</code>. This opt-in mode
+  calls a synthetic static helper in each instrumented class, passing the local
+  probe array and index. The helper checks the array element and writes
+  <code>true</code> only if it is still <code>false</code>. Java 8 and newer
+  interfaces use a public synthetic static helper; older interfaces retain
+  direct stores. Ordinary classes use a private helper.
+</p>
+<p>
+  The extra calls and checks can increase overhead on low-contention workloads
+  and affect inlining, code size, method and constant-pool limits, and stack
+  traces. Measure both single-thread and contended performance for your workload;
+  this option does not guarantee a speedup. Probe arrays remain plain boolean
+  arrays: this mode adds no stronger visibility or concurrent-reset guarantees.
+  Reset between completed execution phases is supported as before.
+</p>
 
 <h2>Security Consideration for Remote Agent Control</h2>
 
