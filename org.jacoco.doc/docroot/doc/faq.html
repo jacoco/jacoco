@@ -58,6 +58,11 @@
   names. You get this error during report generation if JaCoCo is supplied with
   multiple different class files with the same name. To fix this remove those
   duplicate classes or create separate reports or report groups for each version.
+  Alternatively the <code>report</code> command of the command line interface
+  reports one copy of each such class with the option
+  <code>--resolveduplicates</code>: the copy execution data was recorded for,
+  otherwise the copy with the lowest class id. The coverage of the other copies
+  is not reported, and the location of every ignored copy is listed.
 </p>
 
 <h3>Source code lines with exceptions show no coverage. Why?</h3>
