@@ -1,0 +1,9 @@
+   L0
+    ALOAD 0
+    INVOKESPECIAL java/lang/Record.<init> ()V
+    RETURN
+   L1
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/java16/targets/RecordsTarget$WithoutFields; L0 L1 0
+    LINENUMBER 5 L0
+    MAXSTACK = 1
+    MAXLOCALS = 1

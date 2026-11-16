@@ -1,0 +1,9 @@
+   L0
+    ICONST_0
+    IRETURN
+   L1
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/java16/targets/RecordsTarget$WithCustomMethods; L0 L1 0
+    LOCALVARIABLE object Ljava/lang/Object; L0 L1 1
+    LINENUMBER 5 L0
+    MAXSTACK = 1
+    MAXLOCALS = 2

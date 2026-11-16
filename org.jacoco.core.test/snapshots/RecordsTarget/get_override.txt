@@ -1,0 +1,9 @@
+   L0
+    ALOAD 0
+    GETFIELD org/jacoco/core/test/validation/java16/targets/RecordsTarget$WithCustomMethods.x : I
+    IRETURN
+   L1
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/java16/targets/RecordsTarget$WithCustomMethods; L0 L1 0
+    LINENUMBER 5 L0
+    MAXSTACK = 1
+    MAXLOCALS = 1
