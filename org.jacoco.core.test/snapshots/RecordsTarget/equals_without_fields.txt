@@ -1,0 +1,17 @@
+   L0
+    ALOAD 0
+    ALOAD 1
+    INVOKEDYNAMIC equals(Lorg/jacoco/core/test/validation/java16/targets/RecordsTarget$WithoutFields;Ljava/lang/Object;)Z [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/runtime/ObjectMethods.bootstrap(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/TypeDescriptor;Ljava/lang/Class;Ljava/lang/String;[Ljava/lang/invoke/MethodHandle;)Ljava/lang/Object;
+      // arguments:
+      org.jacoco.core.test.validation.java16.targets.RecordsTarget$WithoutFields.class, 
+      ""
+    ]
+    IRETURN
+   L1
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/java16/targets/RecordsTarget$WithoutFields; L0 L1 0
+    LOCALVARIABLE o Ljava/lang/Object; L0 L1 1
+    LINENUMBER 5 L0
+    MAXSTACK = 2
+    MAXLOCALS = 2
