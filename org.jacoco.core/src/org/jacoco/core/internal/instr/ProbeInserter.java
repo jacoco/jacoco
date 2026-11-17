@@ -35,6 +35,10 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 
 	private final IProbeArrayStrategy arrayStrategy;
 
+	private final String hitMethodOwner;
+
+	private final boolean interfaceOwner;
+
 	/**
 	 * <code>true</code> if method is a class or interface initialization
 	 * method.
@@ -67,7 +71,15 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 	 */
 	ProbeInserter(final int access, final String name, final String desc,
 			final MethodVisitor mv, final IProbeArrayStrategy arrayStrategy) {
+		this(access, name, desc, mv, arrayStrategy, null, false);
+	}
+
+	ProbeInserter(final int access, final String name, final String desc,
+			final MethodVisitor mv, final IProbeArrayStrategy arrayStrategy,
+			final String hitMethodOwner, final boolean interfaceOwner) {
 		super(InstrSupport.ASM_API_VERSION, mv);
+		this.hitMethodOwner = hitMethodOwner;
+		this.interfaceOwner = interfaceOwner;
 		this.clinit = InstrSupport.CLINIT_NAME.equals(name);
 		this.arrayStrategy = arrayStrategy;
 		int pos = (Opcodes.ACC_STATIC & access) == 0 ? 1 : 0;
@@ -88,6 +100,13 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 		// Stack[0]: [Z
 
 		InstrSupport.push(mv, id);
+
+		if (hitMethodOwner != null) {
+			mv.visitMethodInsn(Opcodes.INVOKESTATIC, hitMethodOwner,
+					InstrSupport.HITMETHOD_NAME, InstrSupport.HITMETHOD_DESC,
+					interfaceOwner);
+			return;
+		}
 
 		// Stack[1]: I
 		// Stack[0]: [Z
@@ -146,11 +165,12 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 
 	@Override
 	public void visitMaxs(final int maxStack, final int maxLocals) {
-		// Max stack size of the probe code is 3 which can add to the
+		// Max stack size of the probe code is 2 or 3 which can add to the
 		// original stack size depending on the probe locations. The accessor
 		// stack size is an absolute maximum, as the accessor code is inserted
 		// at the very beginning of each method when the stack size is empty.
-		final int increasedStack = Math.max(maxStack + 3, accessorStackSize);
+		final int increasedStack = Math.max(
+				maxStack + (hitMethodOwner == null ? 3 : 2), accessorStackSize);
 		mv.visitMaxs(increasedStack, maxLocals + 2);
 	}
 

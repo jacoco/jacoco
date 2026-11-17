@@ -60,6 +60,21 @@ public class ProbeInserterTest {
 	}
 
 	@Test
+	public void conditional_probe_should_call_helper_with_local_array() {
+		for (boolean itf : new boolean[] { false, true }) {
+			ProbeInserter pi = new ProbeInserter(0, "m", "(J)V", actualVisitor,
+					arrayStrategy, "Foo", itf);
+			pi.insertProbe(42);
+			expectedVisitor.visitVarInsn(Opcodes.ALOAD, 4);
+			expectedVisitor.visitIntInsn(Opcodes.BIPUSH, 42);
+			expectedVisitor.visitMethodInsn(Opcodes.INVOKESTATIC, "Foo",
+					"$jacocoHit", "([ZI)V", itf);
+			pi.visitMaxs(4, 5);
+			expectedVisitor.visitMaxs(6, 7);
+		}
+	}
+
+	@Test
 	public void probevar_should_be_at_position_1_for_static_method_without_parameters() {
 		ProbeInserter pi = new ProbeInserter(Opcodes.ACC_STATIC, "m", "()V",
 				actualVisitor, arrayStrategy);
