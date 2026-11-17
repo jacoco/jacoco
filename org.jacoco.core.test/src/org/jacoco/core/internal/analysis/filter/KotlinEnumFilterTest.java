@@ -23,24 +23,13 @@ public class KotlinEnumFilterTest extends FilterTestBase {
 
 	private final KotlinEnumFilter filter = new KotlinEnumFilter();
 
-	/**
-	 * <pre>
-	 *   enum class Example {}
-	 * </pre>
-	 */
 	@Test
 	public void should_filter() {
 		context.superClassName = "java/lang/Enum";
-		final MethodNode m = new MethodNode(
-				Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "getEntries",
-				"()Lkotlin/enums/EnumEntries;", null, null);
-		m.visitFieldInsn(Opcodes.GETSTATIC, "Example", "$ENTRIES",
-				"Lkotlin/enums/EnumEntries;");
-		m.visitInsn(Opcodes.ARETURN);
-
-		filter.filter(m, context, output);
-
-		assertMethodIgnored(m);
+		assertSnapshot(filter, "getEntries", "()Lkotlin/enums/EnumEntries;",
+				"snapshots/KotlinEnumTarget/2.0/entries.txt");
+		assertSnapshot(filter, "getEntries", "()Lkotlin/enums/EnumEntries;",
+				"snapshots/KotlinEnumTarget/2.2/entries.txt");
 	}
 
 	@Test
