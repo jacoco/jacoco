@@ -79,7 +79,7 @@ public final class MethodSnapshot {
 		final PrintWriter printWriter = new PrintWriter(stringWriter);
 		textifier.print(printWriter);
 		printWriter.flush();
-		return stringWriter.toString();
+		return stringWriter.toString().replaceAll(" ++\n", "\n");
 	}
 
 	/**
