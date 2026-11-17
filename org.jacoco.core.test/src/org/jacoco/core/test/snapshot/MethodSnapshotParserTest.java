@@ -47,6 +47,23 @@ public class MethodSnapshotParserTest {
 	private final HashMap<String, AbstractInsnNode> comments = new HashMap<String, AbstractInsnNode>();
 
 	@Test
+	public void parseParameter() {
+		m.visitParameter("p", 0);
+		m.visitParameter("p", Opcodes.ACC_FINAL | Opcodes.ACC_MANDATED);
+		final String text = TextBlock.lines( //
+				"    // parameter  p", //
+				"    // parameter final mandated  p");
+		assertEquals("text before parsing", text, MethodSnapshot.text(m));
+		assertEquals("snapshot", "", MethodSnapshot.snapshot(m));
+		try {
+			parse(text);
+			fail("UnsupportedOperationException expected");
+		} catch (final UnsupportedOperationException e) {
+			assertEquals("// parameter  p", e.getMessage());
+		}
+	}
+
+	@Test
 	public void parseAnnotation() {
 		m.visitAnnotation("Lkotlin/jvm/JvmOverloads;", false);
 		m.visitAnnotation("Ljava/lang/Deprecated;", true);

@@ -33,6 +33,13 @@ final class MethodSnapshotVisitor extends MethodVisitor {
 	 * Ignores visit, because can not be parsed by {@link MethodSnapshotParser}.
 	 */
 	@Override
+	public void visitParameter(final String name, final int access) {
+	}
+
+	/**
+	 * Ignores visit, because can not be parsed by {@link MethodSnapshotParser}.
+	 */
+	@Override
 	public AnnotationVisitor visitTypeAnnotation(final int typeRef,
 			final TypePath typePath, final String descriptor,
 			final boolean visible) {
