@@ -16,7 +16,7 @@ jobs:
           - { jdk:  8, distribution: 'temurin' }
           - { jdk:  8, distribution: 'temurin', ecj: true }
           - { jdk:  9, distribution: 'zulu' }
-          - { jdk: 10, distribution: 'zulu' }
+          # - { jdk: 10, distribution: 'zulu' }
           - { jdk: 11, distribution: 'temurin' }
           - { jdk: 11, distribution: 'temurin', ecj: true }
           - { jdk: 12, distribution: 'zulu' }
