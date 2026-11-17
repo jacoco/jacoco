@@ -1,5 +1,7 @@
   @Lorg/jetbrains/annotations/NotNull;() // invisible
     GETSTATIC org/jacoco/core/test/validation/kotlin/targets/KotlinEnumTarget$EnumClass.$ENTRIES : Lkotlin/enums/EnumEntries;
+// previous instruction starts ignore range 0
     ARETURN
+// previous instruction ends ignore range 0
     MAXSTACK = 1
     MAXLOCALS = 0
