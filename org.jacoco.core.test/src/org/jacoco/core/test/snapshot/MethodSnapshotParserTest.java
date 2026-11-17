@@ -411,7 +411,7 @@ public class MethodSnapshotParserTest {
 				"      // handle kind 0x6 : INVOKESTATIC", //
 				"      HandleOwner.HandleName(HandleDescriptor)V", //
 				"      // arguments:", //
-				"      java.lang.String.class, ", //
+				"      java.lang.String.class,", //
 				"      // handle kind 0x5 : INVOKEVIRTUAL", // CONSTANT_MethodHandle
 				"      Owner.Name(Descriptor)V itf", //
 				"    ]"));
@@ -620,16 +620,16 @@ public class MethodSnapshotParserTest {
 				"      // handle kind 0x6 : INVOKESTATIC", // CONSTANT_MethodHandle
 				"      HandleOwner.HandleName(HandleDescriptor)V", //
 				"      // arguments:", //
-				"      ()V, ", // CONSTANT_MethodType
-				"      java.lang.String.class, ", // CONSTANT_Class
-				"      java.lang.String[].class, ", //
-				"      boolean[].class, ", //
-				"      char[].class, ", //
-				"      byte[].class, ", //
-				"      short[].class, ", //
-				"      int[].class, ", //
-				"      float[].class, ", //
-				"      long[].class, ", //
+				"      ()V,", // CONSTANT_MethodType
+				"      java.lang.String.class,", // CONSTANT_Class
+				"      java.lang.String[].class,", //
+				"      boolean[].class,", //
+				"      char[].class,", //
+				"      byte[].class,", //
+				"      short[].class,", //
+				"      int[].class,", //
+				"      float[].class,", //
+				"      long[].class,", //
 				"      double[].class", //
 				"    ]"));
 	}
@@ -649,8 +649,8 @@ public class MethodSnapshotParserTest {
 				"      // handle kind 0x6 : INVOKESTATIC", //
 				"      java/lang/runtime/ObjectMethods.bootstrap()Ljava/lang/Object;", //
 				"      // arguments:", //
-				"      Target.class, ", //
-				"      \"field\", ", //
+				"      Target.class,", //
+				"      \"field\",", //
 				"      // handle kind 0x1 : GETFIELD", //
 				"      Target.field(I)", //
 				"    ]"));
