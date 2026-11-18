@@ -145,6 +145,9 @@ public class HTMLFormatter implements IHTMLReportContext {
 		addMissedTotalColumns(t, "Lines", CounterEntity.LINE);
 		addMissedTotalColumns(t, "Methods", CounterEntity.METHOD);
 		addMissedTotalColumns(t, "Classes", CounterEntity.CLASS);
+		// Appended rather than placed next to the branch columns, so that the
+		// generated column ids of the existing columns do not shift.
+		addMissedTotalColumns(t, "Boundaries", CounterEntity.BOUNDARY);
 		return t;
 	}
 

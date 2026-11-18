@@ -43,6 +43,9 @@ public class CoverageNodeImpl implements ICoverageNode {
 	/** Counter for classes. */
 	protected CounterImpl classCounter;
 
+	/** Counter for boundary values of ordered numeric comparisons. */
+	protected CounterImpl boundaryCounter;
+
 	/**
 	 * Creates a new coverage data node.
 	 *
@@ -60,6 +63,7 @@ public class CoverageNodeImpl implements ICoverageNode {
 		this.methodCounter = CounterImpl.COUNTER_0_0;
 		this.classCounter = CounterImpl.COUNTER_0_0;
 		this.lineCounter = CounterImpl.COUNTER_0_0;
+		this.boundaryCounter = CounterImpl.COUNTER_0_0;
 	}
 
 	/**
@@ -77,6 +81,20 @@ public class CoverageNodeImpl implements ICoverageNode {
 				.increment(child.getComplexityCounter());
 		methodCounter = methodCounter.increment(child.getMethodCounter());
 		classCounter = classCounter.increment(child.getClassCounter());
+		boundaryCounter = boundaryCounter
+				.increment(child.getCounter(CounterEntity.BOUNDARY));
+	}
+
+	/**
+	 * Increments the boundary counter. Unlike the other counters this one is
+	 * not part of {@link ICoverageNode}, so that adding it does not break
+	 * implementations of that interface outside of JaCoCo.
+	 *
+	 * @param counter
+	 *            counter to add
+	 */
+	public void incrementBoundaryCounter(final ICounter counter) {
+		boundaryCounter = boundaryCounter.increment(counter);
 	}
 
 	/**
@@ -126,6 +144,15 @@ public class CoverageNodeImpl implements ICoverageNode {
 		return classCounter;
 	}
 
+	/**
+	 * Returns the boundary coverage counter.
+	 *
+	 * @return boundary coverage counter
+	 */
+	public ICounter getBoundaryCounter() {
+		return boundaryCounter;
+	}
+
 	public ICounter getCounter(final CounterEntity entity) {
 		switch (entity) {
 		case INSTRUCTION:
@@ -140,6 +167,8 @@ public class CoverageNodeImpl implements ICoverageNode {
 			return getMethodCounter();
 		case CLASS:
 			return getClassCounter();
+		case BOUNDARY:
+			return getBoundaryCounter();
 		}
 		throw new AssertionError(entity);
 	}
@@ -156,6 +185,7 @@ public class CoverageNodeImpl implements ICoverageNode {
 		copy.complexityCounter = CounterImpl.getInstance(complexityCounter);
 		copy.methodCounter = CounterImpl.getInstance(methodCounter);
 		copy.classCounter = CounterImpl.getInstance(classCounter);
+		copy.boundaryCounter = CounterImpl.getInstance(boundaryCounter);
 		return copy;
 	}
 
