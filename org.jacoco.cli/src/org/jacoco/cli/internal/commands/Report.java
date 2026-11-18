@@ -9,6 +9,7 @@
  * Contributors:
  *    John Keeping - initial implementation
  *    Marc R. Hoffmann - rework
+ *    r3bb1t - option to resolve duplicate classes
  *
  *******************************************************************************/
 package org.jacoco.cli.internal.commands;
@@ -22,6 +23,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.jacoco.cli.internal.Command;
+import org.jacoco.cli.internal.commands.DuplicateClassFilter.Duplicate;
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.IBundleCoverage;
@@ -50,6 +52,9 @@ public class Report extends Command {
 
 	@Option(name = "--classfiles", usage = "location of Java class files", metaVar = "<path>", required = true)
 	List<File> classfiles = new ArrayList<File>();
+
+	@Option(name = "--resolveduplicates", usage = "report one of several different class files with the same name instead of failing: the one execution data was recorded for, otherwise the one with the lowest class id")
+	boolean resolveDuplicates = false;
 
 	@Option(name = "--sourcefiles", usage = "location of the source files", metaVar = "<path>")
 	List<File> sourcefiles = new ArrayList<File>();
@@ -105,12 +110,44 @@ public class Report extends Command {
 	private IBundleCoverage analyze(final ExecutionDataStore data,
 			final PrintWriter out) throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
-		final Analyzer analyzer = new Analyzer(data, builder);
-		for (final File f : classfiles) {
-			analyzer.analyzeAll(f);
+		if (resolveDuplicates) {
+			final DuplicateClassFilter filter = new DuplicateClassFilter(data);
+			analyzeAll(filter.createAnalyzer());
+			filter.accept(builder);
+			printDuplicatesWarning(filter.getDuplicates(), out);
+		} else {
+			analyzeAll(new Analyzer(data, builder));
 		}
 		printNoMatchWarning(builder.getNoMatchClasses(), out);
 		return builder.getBundle(name);
+	}
+
+	private void analyzeAll(final Analyzer analyzer) throws IOException {
+		for (final File f : classfiles) {
+			analyzer.analyzeAll(f);
+		}
+	}
+
+	private void printDuplicatesWarning(final List<Duplicate> duplicates,
+			final PrintWriter out) {
+		if (!duplicates.isEmpty()) {
+			out.println(
+					"[WARN] Some classes were found more than once with different content.");
+			out.println(
+					"[WARN] Only one copy of each is reported: the one execution data was recorded for, otherwise the one with the lowest class id.");
+			for (final Duplicate d : duplicates) {
+				for (final String ignored : d.getIgnored()) {
+					out.printf("[WARN] Class %s: reporting %s, ignoring %s.%n",
+							d.getName(), d.getKept(), ignored);
+				}
+				if (d.getExecutedCopies() > 1) {
+					out.printf(
+							"[WARN] Class %s: execution data was recorded for %s copies, the coverage of the ignored ones is not reported.%n",
+							d.getName(),
+							Integer.valueOf(d.getExecutedCopies()));
+				}
+			}
+		}
 	}
 
 	private void printNoMatchWarning(final Collection<IClassCoverage> nomatch,
