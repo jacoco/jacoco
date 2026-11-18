@@ -1,0 +1,34 @@
+   L_method_start
+    ALOAD 1
+    ICONST_0
+    INVOKEDYNAMIC typeSwitch(Ljava/lang/Object;I)I [
+      // handle kind 0x6 : INVOKESTATIC
+      java/lang/runtime/SwitchBootstraps.typeSwitch(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;[Ljava/lang/Object;)Ljava/lang/invoke/CallSite;
+      // arguments:
+      org.jacoco.core.test.validation.kotlin.targets.KotlinWhenSealedTarget$Sealed$Sealed1.class,
+      org.jacoco.core.test.validation.kotlin.targets.KotlinWhenSealedTarget$Sealed$Sealed2.class
+    ]
+    TABLESWITCH
+      0: L_case_1
+      1: L_case_2
+      default: L_else
+   L_case_1
+    LDC "case 1"
+    GOTO L_after
+   L_case_2
+    LDC "case 2"
+    GOTO L_after
+   L_else
+    LDC "else"
+   L_after
+    ARETURN
+   L_method_end
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWhenSealedTarget; L_method_start L_method_end 0
+    LOCALVARIABLE sealed Lorg/jacoco/core/test/validation/kotlin/targets/KotlinWhenSealedTarget$Sealed; L_method_start L_method_end 1
+    LINENUMBER 5 L_method_start
+    LINENUMBER 6 L_case_1
+    LINENUMBER 7 L_case_2
+    LINENUMBER 8 L_else
+    LINENUMBER 9 L_after
+    MAXSTACK = 2
+    MAXLOCALS = 2

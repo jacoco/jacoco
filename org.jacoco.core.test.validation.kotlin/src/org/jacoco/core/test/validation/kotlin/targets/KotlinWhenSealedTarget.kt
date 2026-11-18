@@ -25,16 +25,16 @@ object KotlinWhenSealedTarget {
     }
 
     private fun expression(sealed: Sealed): String =
-        when (sealed) { // assertFullyCovered()
-            is Sealed.Sealed1 -> "case 1" // assertFullyCovered(0, 2)
+        when (sealed) { // assertIndyFullyCovered(0,2) assertNonIndyFullyCovered(0,0)
+            is Sealed.Sealed1 -> "case 1" // assertIndyFullyCovered(0,0) assertNonIndyFullyCovered(0,2)
             is Sealed.Sealed2 -> "case 2" // assertFullyCovered()
         } // assertFullyCovered()
 
     @Suppress("REDUNDANT_ELSE_IN_WHEN")
     private fun expressionWithRedundantElse(sealed: Sealed): String =
-        when (sealed) { // assertFullyCovered()
-            is Sealed.Sealed1 -> "case 1" // assertFullyCovered(0, 2)
-            is Sealed.Sealed2 -> "case 2" // assertFullyCovered(1, 1)
+        when (sealed) { // assertIndyFullyCovered(1,2) assertNonIndyFullyCovered(0,0)
+            is Sealed.Sealed1 -> "case 1" // assertIndyFullyCovered(0,0) assertNonIndyFullyCovered(0, 2)
+            is Sealed.Sealed2 -> "case 2" // assertIndyFullyCovered(0,0) assertNonIndyFullyCovered(1, 1)
             else -> "else" // assertNotCovered()
         } // assertFullyCovered()
 
@@ -42,8 +42,8 @@ object KotlinWhenSealedTarget {
      * Unfortunately indistinguishable from [expression] starting from Kotlin 1.5
      */
     private fun expressionWithNonRedundantElse(sealed: Sealed3): String =
-        when (sealed) { // assertFullyCovered()
-            is Sealed3.A -> "case 1" // assertFullyCovered(0, 2)
+        when (sealed) { // assertIndyFullyCovered(0,2) assertNonIndyFullyCovered(0,0)
+            is Sealed3.A -> "case 1" // assertIndyFullyCovered(0,0) assertNonIndyFullyCovered(0,2)
             is Sealed3.B -> "case 2" // assertFullyCovered()
             else -> throw NoWhenBranchMatchedException() // assertEmpty()
         } // assertFullyCovered()
@@ -56,8 +56,8 @@ object KotlinWhenSealedTarget {
      * that do not have coverage for the case of [NonSealed.NonSealed3].
      */
     private fun statement(sealed: Sealed) { // assertEmpty()
-        when (sealed) { // assertFullyCovered()
-            is Sealed.Sealed1 -> nop("case 1") // assertFullyCovered(0, 2)
+        when (sealed) { // assertIndyFullyCovered(0,2) assertNonIndyFullyCovered(0,0)
+            is Sealed.Sealed1 -> nop("case 1") // assertIndyFullyCovered(0,0) assertNonIndyFullyCovered(0, 2)
             is Sealed.Sealed2 -> nop("case 2") // assertFullyCovered()
         } // assertEmpty()
     } // assertFullyCovered()
@@ -69,16 +69,16 @@ object KotlinWhenSealedTarget {
     }
 
     private fun nonSealedWhen(nonSealed: NonSealed) { // assertEmpty()
-        when (nonSealed) { // assertFullyCovered()
-            is NonSealed.NonSealed1 -> nop("case 1") // assertFullyCovered(0, 2)
-            is NonSealed.NonSealed2 -> nop("case 2") // assertFullyCovered(1, 1)
+        when (nonSealed) { // assertIndyFullyCovered(1,2) assertNonIndyFullyCovered(0,0)
+            is NonSealed.NonSealed1 -> nop("case 1") // assertIndyFullyCovered(0,0) assertNonIndyFullyCovered(0,2)
+            is NonSealed.NonSealed2 -> nop("case 2") // assertIndyFullyCovered(0,0) assertNonIndyFullyCovered(1,1)
             /* missing is NonSealed.NonSealed3 */
         } // assertEmpty()
     } // assertFullyCovered()
 
     private fun nonSealedIf(nonSealed: NonSealed) { // assertEmpty()
-        if (nonSealed is NonSealed.NonSealed1) nop("case 1") // assertFullyCovered(0, 2)
-        else if (nonSealed is NonSealed.NonSealed2) nop("case 2") // assertFullyCovered(1, 1)
+        if (nonSealed is NonSealed.NonSealed1) nop("case 1") // assertIndyFullyCovered(1,2) assertNonIndyFullyCovered(0,2)
+        else if (nonSealed is NonSealed.NonSealed2) nop("case 2") // assertIndyFullyCovered(0,0) assertNonIndyFullyCovered(1,1)
         /* missing is NonSealed.NonSealed3 */
     } // assertFullyCovered()
 
