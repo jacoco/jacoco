@@ -68,13 +68,18 @@ public abstract class FilterTestBase {
 	};
 
 	final void assertSnapshot(final IFilter filter, final String snapshotPath) {
+		assertSnapshot(filter, null, null, snapshotPath);
+	}
+
+	final void assertSnapshot(final IFilter filter, final String name,
+			final String desc, final String snapshotPath) {
 		final FileReader reader;
 		try {
 			reader = new FileReader(snapshotPath);
 		} catch (final IOException e) {
 			throw new RuntimeException(e);
 		}
-		assertSnapshot(filter, context, reader);
+		assertSnapshot(filter, context, name, desc, reader);
 		try {
 			reader.close();
 		} catch (final IOException e) {
@@ -83,7 +88,8 @@ public abstract class FilterTestBase {
 	}
 
 	static void assertSnapshot(final IFilter filter,
-			final IFilterContext context, final Reader snapshot) {
+			final IFilterContext context, final String name, final String desc,
+			final Reader snapshot) {
 		final TreeMap<String, Range> rangesByName = new TreeMap<String, Range>();
 		final HashMap<String, ArrayList<Replacement>> replacementsByName = new HashMap<String, ArrayList<Replacement>>();
 		final HashMap<String, AbstractInsnNode> replacedInstructionsByName = new HashMap<String, AbstractInsnNode>();
@@ -152,6 +158,8 @@ public abstract class FilterTestBase {
 		} catch (final IOException e) {
 			throw new RuntimeException(e);
 		}
+		methodNode.name = name;
+		methodNode.desc = desc;
 		for (final Map.Entry<String, Range> e : rangesByName.entrySet()) {
 			if (e.getValue().toInclusive == null) {
 				throw new IllegalStateException(
