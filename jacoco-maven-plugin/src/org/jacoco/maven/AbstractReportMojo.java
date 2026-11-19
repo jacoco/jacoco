@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.maven.doxia.sink.Sink;
 import org.apache.maven.doxia.sink.SinkFactory;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -153,15 +154,15 @@ public abstract class AbstractReportMojo extends AbstractMojo
 
 	abstract File getOutputDirectory();
 
-	public void generate(
-			@SuppressWarnings("deprecation") final org.codehaus.doxia.sink.Sink sink,
-			final Locale locale) throws MavenReportException {
+	@Override
+	public void generate(final Sink sink, final Locale locale)
+			throws MavenReportException {
 		generate(sink, null, locale);
 	}
 
-	public void generate(final org.apache.maven.doxia.sink.Sink sink,
-			final SinkFactory sinkFactory, final Locale locale)
-			throws MavenReportException {
+	@Override
+	public void generate(final Sink sink, final SinkFactory sinkFactory,
+			final Locale locale) throws MavenReportException {
 		if (!canGenerateReport()) {
 			return;
 		}
