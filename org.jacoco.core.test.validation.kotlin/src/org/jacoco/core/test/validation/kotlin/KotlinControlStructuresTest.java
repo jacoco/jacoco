@@ -12,16 +12,24 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.kotlin;
 
-import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.kotlin.targets.KotlinControlStructuresTarget;
+import org.junit.Test;
 
 /**
  * Tests of Kotlin control structures.
  */
-public class KotlinControlStructuresTest extends ValidationTestBase {
+public class KotlinControlStructuresTest extends KotlinValidationTestBase {
 
 	public KotlinControlStructuresTest() {
 		super(KotlinControlStructuresTarget.class);
+	}
+
+	/** Starting from {@link #KOTLIN_1_3} */
+	@Test
+	public void bytecodeSnapshots() throws Exception {
+		assertSnapshot(KotlinControlStructuresTarget.class, "executedForBlock",
+				"for.txt", //
+				KOTLIN_1_6_20, KOTLIN_1_5, KOTLIN_1_4, KOTLIN_1_3);
 	}
 
 }

@@ -1,0 +1,31 @@
+   L_method_start
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.i1 ()I
+    ISTORE 1
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.i2 ()I
+    ISTORE 2
+    ILOAD 1
+    ILOAD 2
+    IF_ICMPGT L_after
+   L2
+    ILOAD 1
+    ISTORE 3
+   L3
+    IINC 1 1
+   L_body
+    ILOAD 3
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (I)V
+   L_step
+    ILOAD 3
+    ILOAD 2
+    IF_ICMPNE L2
+   L_after
+    RETURN
+   L_method_end
+    LOCALVARIABLE j I L3 L_after 3
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinControlStructuresTarget; L_method_start L_method_end 0
+    LINENUMBER 5 L_method_start
+    LINENUMBER 6 L_body
+    LINENUMBER 5 L_step
+    LINENUMBER 9 L_after
+    MAXSTACK = 2
+    MAXLOCALS = 4
