@@ -77,8 +77,8 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
-        <!-- version 3.3 is needed as 3.2 is not able to produce multiple reports. -->
-        <version>3.3</version>
+        <!-- Doxia 2 based site plugin; the legacy Sink is no longer supplied to reports. -->
+        <version>3.22.0</version>
       </plugin>
     </plugins>
   </build>
