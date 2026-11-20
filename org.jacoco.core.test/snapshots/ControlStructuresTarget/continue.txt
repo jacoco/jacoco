@@ -1,0 +1,28 @@
+   L0
+    ICONST_0
+    ISTORE 0
+   L1
+    ILOAD 0
+    ICONST_1
+    IF_ICMPGE L2
+   L3
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.t ()Z
+    IFEQ L4
+   L5
+    GOTO L6
+   L4
+    INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop ()V
+   L6
+    IINC 0 1
+    GOTO L1
+   L2
+    RETURN
+    LOCALVARIABLE j I L1 L2 0
+    LINENUMBER 5 L0
+    LINENUMBER 6 L3
+    LINENUMBER 7 L5
+    LINENUMBER 9 L4
+    LINENUMBER 5 L6
+    LINENUMBER 12 L2
+    MAXSTACK = 2
+    MAXLOCALS = 1
