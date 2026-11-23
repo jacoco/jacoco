@@ -16,6 +16,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -79,6 +80,24 @@ public class AnalyzerTest {
 		classes = new HashMap<String, IClassCoverage>();
 		executionData = new ExecutionDataStore();
 		analyzer = new Analyzer(executionData, new EmptyStructureVisitor());
+	}
+
+	@Test
+	public void should_use_StringPool_for_class_names() throws Exception {
+		ClassWriter cw = new ClassWriter(0);
+		cw.visit(Opcodes.V1_5, 0, "org/example/Foo", null, "java/lang/Object",
+				null);
+		cw.visitEnd();
+		analyzer.analyzeClass(cw.toByteArray(), null);
+
+		cw = new ClassWriter(0);
+		cw.visit(Opcodes.V1_5, 0, "org/example/Bar", null, "org/example/Foo",
+				null);
+		cw.visitEnd();
+		analyzer.analyzeClass(cw.toByteArray(), null);
+
+		assertSame(classes.get("org/example/Foo").getName(),
+				classes.get("org/example/Bar").getSuperName());
 	}
 
 	@Test
