@@ -12,16 +12,26 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.kotlin;
 
-import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.kotlin.targets.KotlinSynchronizedTarget;
+import org.junit.Test;
 
 /**
  * Test of code coverage in {@link KotlinSynchronizedTarget}
  */
-public class KotlinSynchronizedTest extends ValidationTestBase {
+public class KotlinSynchronizedTest extends KotlinValidationTestBase {
 
 	public KotlinSynchronizedTest() {
 		super(KotlinSynchronizedTarget.class);
+	}
+
+	/** Starting from {@link #KOTLIN_1_3} */
+	@Test
+	public void bytecodeSnapshot() throws Exception {
+		assertSnapshot(KotlinSynchronizedTarget.class, "normal", "normal.txt",
+				KOTLIN_2_1, KOTLIN_1_6, KOTLIN_1_5, KOTLIN_1_4, KOTLIN_1_3);
+		assertSnapshot(KotlinSynchronizedTarget.class, "explicitException",
+				"only_exception.txt", //
+				KOTLIN_2_1, KOTLIN_1_6, KOTLIN_1_5, KOTLIN_1_4, KOTLIN_1_3);
 	}
 
 }
