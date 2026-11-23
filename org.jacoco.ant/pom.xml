@@ -21,6 +21,7 @@
   </parent>
 
   <artifactId>org.jacoco.ant</artifactId>
+  <url>https://www.jacoco.org/jacoco/trunk/doc/ant.html</url>
 
   <name>JaCoCo :: Ant</name>
   <description>JaCoCo Ant Tasks</description>

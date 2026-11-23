@@ -21,6 +21,7 @@
   </parent>
 
   <artifactId>org.jacoco.agent</artifactId>
+  <url>https://www.jacoco.org/jacoco/trunk/doc/agent.html</url>
 
   <name>JaCoCo :: Agent</name>
   <description>JaCoCo Agent</description>
