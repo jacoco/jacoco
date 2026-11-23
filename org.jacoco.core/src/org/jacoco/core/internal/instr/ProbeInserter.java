@@ -171,30 +171,45 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 					"ClassReader.accept() should be called with EXPAND_FRAMES flag");
 		}
 
-		final Object[] newLocal = new Object[Math.max(nLocal + 2,
-				variable + 1)];
-		int idx = 0; // Arrays index for existing locals
-		int newIdx = 0; // Array index for new locals
-		int pos = 0; // Current variable position
-		while (idx < nLocal && pos < variable - 1) {
-			final Object t = local[idx++];
-			newLocal[newIdx++] = t;
-			pos += t == Opcodes.LONG || t == Opcodes.DOUBLE ? 2 : 1;
-		}
-		final boolean safetySlotOccupied = pos == variable;
-		while (pos < variable) {
-			newLocal[newIdx++] = Opcodes.TOP;
-			pos++;
-		}
-		newLocal[newIdx++] = InstrSupport.DATAFIELD_DESC;
-		if (idx < nLocal && safetySlotOccupied) {
-			newLocal[newIdx++] = Opcodes.TOP;
-		}
-		while (idx < nLocal) {
-			newLocal[newIdx++] = local[idx++];
+		newLocals.reset();
+
+		for (int l = 0; l < nLocal || newLocals.varPos <= variable;) {
+			if (newLocals.varPos == variable - 1) {
+				// safety slot is not used
+				newLocals.add(Opcodes.TOP);
+				newLocals.add(InstrSupport.DATAFIELD_DESC);
+				continue;
+			}
+			if (newLocals.varPos == variable) {
+				// safety slot is used by double or long
+				newLocals.add(InstrSupport.DATAFIELD_DESC);
+				if (l < nLocal) {
+					newLocals.add(Opcodes.TOP);
+				}
+				continue;
+			}
+			newLocals.add(l < nLocal ? local[l++] : Opcodes.TOP);
 		}
 
-		mv.visitFrame(type, newIdx, newLocal, nStack, stack);
+		mv.visitFrame(type, newLocals.typeCount, newLocals.types, nStack,
+				stack);
+	}
+
+	private final Locals newLocals = new Locals();
+
+	private static class Locals {
+		int typeCount, varPos;
+		final Object[] types = new Object[255]; // max number of allowed locals
+
+		void reset() {
+			typeCount = 0;
+			varPos = 0;
+		}
+
+		void add(final Object t) {
+			types[typeCount++] = t;
+			varPos += t == Opcodes.LONG || t == Opcodes.DOUBLE ? 2 : 1;
+		}
 	}
 
 }
