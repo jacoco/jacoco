@@ -105,7 +105,8 @@ public class Report extends Command {
 	private IBundleCoverage analyze(final ExecutionDataStore data,
 			final PrintWriter out) throws IOException {
 		final CoverageBuilder builder = new CoverageBuilder();
-		final Analyzer analyzer = new Analyzer(data, builder);
+		final Analyzer analyzer = new Analyzer(data, builder,
+				new LocatorSourceProvider(getSourceLocator()));
 		for (final File f : classfiles) {
 			analyzer.analyzeAll(f);
 		}
@@ -169,6 +170,22 @@ public class Report extends Command {
 			multi.add(new DirectorySourceFileLocator(f, encoding, tabwidth));
 		}
 		return multi;
+	}
+
+	private static class LocatorSourceProvider
+			implements org.jacoco.core.analysis.ISourceFileProvider {
+
+		private final ISourceFileLocator locator;
+
+		public LocatorSourceProvider(final ISourceFileLocator locator) {
+			this.locator = locator;
+		}
+
+		@Override
+		public java.io.Reader getSourceFile(final String packageName,
+				final String fileName) throws IOException {
+			return locator.getSourceFile(packageName, fileName);
+		}
 	}
 
 }
