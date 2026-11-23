@@ -34,6 +34,8 @@ public class MergeTask extends Task {
 
 	private File destfile;
 
+	private boolean append = false;
+
 	private final Union files = new Union();
 
 	/**
@@ -44,6 +46,18 @@ public class MergeTask extends Task {
 	 */
 	public void setDestfile(final File destfile) {
 		this.destfile = destfile;
+	}
+
+	/**
+	 * <code>true</code> if the destination file it to be appended to.
+	 * <code>false</code> if the file is to be overwritten
+	 *
+	 * @param append
+	 *            <code>true</code> if the destination file should be appended
+	 *            to
+	 */
+	public void setAppend(final boolean append) {
+		this.append = append;
 	}
 
 	/**
@@ -97,7 +111,7 @@ public class MergeTask extends Task {
 		log(format("Writing merged execution data to %s",
 				destfile.getAbsolutePath()));
 		try {
-			loader.save(destfile, false);
+			loader.save(destfile, append);
 		} catch (final IOException e) {
 			throw new BuildException(format("Unable to write merged file %s",
 					destfile.getAbsolutePath()), e, getLocation());
