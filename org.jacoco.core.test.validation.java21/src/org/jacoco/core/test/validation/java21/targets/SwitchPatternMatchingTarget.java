@@ -14,6 +14,8 @@ package org.jacoco.core.test.validation.java21.targets;
 
 import static org.jacoco.core.test.validation.targets.Stubs.nop;
 
+import org.jacoco.core.test.validation.targets.Stubs;
+
 /**
  * This target exercises pattern matching for switch
  * (<a href="https://openjdk.org/jeps/441">JEP 441</a>).
@@ -31,9 +33,37 @@ public class SwitchPatternMatchingTarget {
 		}
 	}
 
+	/**
+	 * <blockquote>
+	 * <p>
+	 * To align with pattern {@code switch} semantics, {@code switch}
+	 * expressions over enum classes now throw {@code MatchException} rather
+	 * than {@code IncompatibleClassChangeError} when no switch label applies at
+	 * run time.
+	 * </p>
+	 * </blockquote>
+	 */
+	private static void handwrittenMatchException(Stubs.Enum e) {
+		switch (e) { // assertFullyCovered(0, 3)
+		case A -> // assertEmpty()
+			nop("case A"); // assertFullyCovered()
+		case B -> // assertEmpty()
+			nop("case B"); // assertFullyCovered()
+		default -> // assertEmpty()
+			throw new MatchException(null, null); // assertFullyCovered()
+		} // assertEmpty()
+	}
+
 	public static void main(String[] args) {
 		example("");
 		example("a");
+
+		handwrittenMatchException(Stubs.Enum.A);
+		handwrittenMatchException(Stubs.Enum.B);
+		try {
+			handwrittenMatchException(Stubs.Enum.C);
+		} catch (MatchException ignore) {
+		}
 	}
 
 }

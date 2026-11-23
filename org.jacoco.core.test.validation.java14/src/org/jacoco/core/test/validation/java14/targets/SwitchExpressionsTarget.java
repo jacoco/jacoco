@@ -34,6 +34,13 @@ public class SwitchExpressionsTarget {
 		exhaustiveSwitchExpression(Stubs.Enum.B);
 		exhaustiveSwitchExpression(Stubs.Enum.C);
 
+		handwrittenIncompatibleClassChangeError(Stubs.Enum.A);
+		handwrittenIncompatibleClassChangeError(Stubs.Enum.B);
+		try {
+			handwrittenIncompatibleClassChangeError(Stubs.Enum.C);
+		} catch (IncompatibleClassChangeError expected) {
+		}
+
 	}
 
 	private static void switchExpressionWithArrows() {
@@ -108,4 +115,26 @@ public class SwitchExpressionsTarget {
 		}); // assertEmpty()
 
 	}
+
+	/**
+	 * https://docs.oracle.com/javase/specs/jls/se14/html/jls-15.html#jls-15.6
+	 * <blockquote>
+	 * <p>
+	 * A switch expression (§15.28) throws an
+	 * {@code IncompatibleClassChangeError} if no switch label matches the value
+	 * of the selector expression.
+	 * </p>
+	 * </blockquote>
+	 */
+	private static void handwrittenIncompatibleClassChangeError(Stubs.Enum e) {
+		switch (e) { // assertFullyCovered(0, 3)
+		case A -> // assertFullyCoveredOrEmpty()
+			nop("case A"); // assertFullyCovered()
+		case B -> // assertFullyCoveredOrEmpty()
+			nop("case B"); // assertFullyCovered()
+		default -> // assertEmpty()
+			throw new IncompatibleClassChangeError(); // assertFullyCovered()
+		} // assertEmpty()
+	}
+
 }
