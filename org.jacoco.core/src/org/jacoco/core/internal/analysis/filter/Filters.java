@@ -83,6 +83,7 @@ public final class Filters {
 
 	private static IFilter allNonKotlinFilters() {
 		return new FilterSet( //
+				new EnumSwitchFilter(), //
 				new SyntheticFilter());
 	}
 
