@@ -1,4 +1,4 @@
-   L0
+   L_method_start
     ALOAD 0
     ALOAD 1
     INVOKEDYNAMIC equals(Lorg/jacoco/core/test/validation/java16/targets/RecordsTarget$WithFields;Ljava/lang/Object;)Z [
@@ -11,6 +11,6 @@
       org/jacoco/core/test/validation/java16/targets/RecordsTarget$WithFields.x(I)
     ]
     IRETURN
-    LINENUMBER 5 L0
+    LINENUMBER 5 L_method_start
     MAXSTACK = 2
     MAXLOCALS = 2

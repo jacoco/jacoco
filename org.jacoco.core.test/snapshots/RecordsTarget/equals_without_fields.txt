@@ -1,4 +1,4 @@
-   L0
+   L_method_start
     ALOAD 0
     ALOAD 1
     INVOKEDYNAMIC equals(Lorg/jacoco/core/test/validation/java16/targets/RecordsTarget$WithoutFields;Ljava/lang/Object;)Z [
@@ -9,9 +9,9 @@
       ""
     ]
     IRETURN
-   L1
-    LOCALVARIABLE this Lorg/jacoco/core/test/validation/java16/targets/RecordsTarget$WithoutFields; L0 L1 0
-    LOCALVARIABLE o Ljava/lang/Object; L0 L1 1
-    LINENUMBER 5 L0
+   L_method_end
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/java16/targets/RecordsTarget$WithoutFields; L_method_start L_method_end 0
+    LOCALVARIABLE o Ljava/lang/Object; L_method_start L_method_end 1
+    LINENUMBER 5 L_method_start
     MAXSTACK = 2
     MAXLOCALS = 2
