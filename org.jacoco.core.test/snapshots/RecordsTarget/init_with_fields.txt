@@ -1,0 +1,13 @@
+   L_method_start
+    ALOAD 0
+    INVOKESPECIAL java/lang/Record.<init> ()V
+    ALOAD 0
+    ILOAD 1
+    PUTFIELD org/jacoco/core/test/validation/java16/targets/RecordsTarget$WithFields.x : I
+    RETURN
+   L_method_end
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/java16/targets/RecordsTarget$WithFields; L_method_start L_method_end 0
+    LOCALVARIABLE x I L_method_start L_method_end 1
+    LINENUMBER 5 L_method_start
+    MAXSTACK = 2
+    MAXLOCALS = 2
