@@ -1,4 +1,5 @@
    L_method_start
+// previous instruction starts ignore range 0
     ALOAD 0
     INVOKEDYNAMIC toString(Lorg/jacoco/core/test/validation/java16/targets/RecordsTarget$WithFields;)Ljava/lang/String; [
       // handle kind 0x6 : INVOKESTATIC
@@ -11,5 +12,6 @@
     ]
     ARETURN
     LINENUMBER 5 L_method_start
+// previous instruction ends ignore range 0
     MAXSTACK = 2
     MAXLOCALS = 1

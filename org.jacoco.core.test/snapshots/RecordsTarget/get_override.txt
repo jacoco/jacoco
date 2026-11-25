@@ -1,9 +1,11 @@
    L_method_start
+// previous instruction starts ignore range 0
     ALOAD 0
     GETFIELD org/jacoco/core/test/validation/java16/targets/RecordsTarget$WithCustomMethods.x : I
     IRETURN
    L_method_end
     LOCALVARIABLE this Lorg/jacoco/core/test/validation/java16/targets/RecordsTarget$WithCustomMethods; L_method_start L_method_end 0
     LINENUMBER 5 L_method_start
+// previous instruction ends ignore range 0
     MAXSTACK = 1
     MAXLOCALS = 1

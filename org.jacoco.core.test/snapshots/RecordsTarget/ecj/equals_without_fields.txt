@@ -1,4 +1,5 @@
    L_method_start
+// previous instruction starts ignore range 0
     ALOAD 0
     ALOAD 1
     INVOKEDYNAMIC equals(Lorg/jacoco/core/test/validation/java16/targets/RecordsTarget$WithoutFields;Ljava/lang/Object;)Z [
@@ -10,5 +11,6 @@
     ]
     IRETURN
     LINENUMBER 5 L_method_start
+// previous instruction ends ignore range 0
     MAXSTACK = 2
     MAXLOCALS = 2
