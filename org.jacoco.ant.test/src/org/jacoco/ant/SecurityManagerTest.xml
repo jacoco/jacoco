@@ -15,6 +15,7 @@
 <project name="JaCoCo with Java SecurityManager Test" xmlns:au="antlib:org.apache.ant.antunit" xmlns:jacoco="antlib:org.jacoco.ant">
 
 	<target name="setUp">
+		<dirname property="org.jacoco.ant.test.basedir" file="${ant.file}"/>
 		<tempfile property="temp.dir" prefix="jacocoTest" destdir="${java.io.tmpdir}" />
 		<mkdir dir="${temp.dir}"/>
 		<property name="exec.file" location="${temp.dir}/jacoco.exec" />
@@ -32,7 +33,7 @@
 				<jvmarg value="-Djacoco.exec=${exec.file}"/>
 				<jvmarg value="-Djava.security.manager"/>
 				<!-- Note that the use of two equal signs (==) below is not a typo -->
-				<jvmarg value="-Djava.security.policy==${basedir}/data/policy.txt"/>
+				<jvmarg value="-Djava.security.policy==${org.jacoco.ant.test.basedir}/data/policy.txt"/>
 			</java>
 		</jacoco:coverage>
 
