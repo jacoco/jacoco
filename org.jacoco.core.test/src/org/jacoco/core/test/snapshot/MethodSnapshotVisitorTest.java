@@ -39,6 +39,18 @@ public class MethodSnapshotVisitorTest {
 	}
 
 	@Test
+	public void visitParameter() {
+		new MethodSnapshotVisitor(
+				new MethodVisitor(InstrSupport.ASM_API_VERSION) {
+					@Override
+					public void visitParameter(final String name,
+							final int access) {
+						throw new AssertionError();
+					}
+				}).visitParameter("p", 0);
+	}
+
+	@Test
 	public void visitTypeAnnotation() {
 		assertNull(new MethodSnapshotVisitor(
 				new MethodVisitor(InstrSupport.ASM_API_VERSION) {

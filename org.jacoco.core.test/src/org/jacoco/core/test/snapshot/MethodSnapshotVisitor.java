@@ -31,6 +31,15 @@ final class MethodSnapshotVisitor extends MethodVisitor {
 
 	/**
 	 * Ignores visit, because can not be parsed by {@link MethodSnapshotParser}.
+	 * For example in valueOf method of enum, constructor of nested non-static
+	 * member class, constructor of enum, constructor of record.
+	 */
+	@Override
+	public void visitParameter(final String name, final int access) {
+	}
+
+	/**
+	 * Ignores visit, because can not be parsed by {@link MethodSnapshotParser}.
 	 */
 	@Override
 	public AnnotationVisitor visitTypeAnnotation(final int typeRef,
