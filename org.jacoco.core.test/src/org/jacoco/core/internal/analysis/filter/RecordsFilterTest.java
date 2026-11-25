@@ -28,32 +28,21 @@ public class RecordsFilterTest extends FilterTestBase {
 	@Test
 	public void should_filter_generated_toString_method() {
 		context.superClassName = "java/lang/Record";
-		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
-				"toString", "()Ljava/lang/String;", null, null);
-		m.visitVarInsn(Opcodes.ALOAD, 0);
-		m.visitInvokeDynamicInsn("toString", "(LPoint;)Ljava/lang/String;",
-				new Handle(Opcodes.H_INVOKESTATIC,
-						"java/lang/runtime/ObjectMethods", "bootstrap",
-						"(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/TypeDescriptor;Ljava/lang/Class;Ljava/lang/String;[Ljava/lang/invoke/MethodHandle;)Ljava/lang/Object;",
-						false));
-		m.visitInsn(Opcodes.ARETURN);
-
-		filter.filter(m, context, output);
-
-		assertMethodIgnored(m);
+		assertSnapshot(filter, "toString", "()Ljava/lang/String;",
+				"snapshots/RecordsTarget/toString_without_fields.txt");
+		assertSnapshot(filter, "toString", "()Ljava/lang/String;",
+				"snapshots/RecordsTarget/toString_with_fields.txt");
+		assertSnapshot(filter, "toString", "()Ljava/lang/String;",
+				"snapshots/RecordsTarget/ecj/toString_without_fields.txt");
+		assertSnapshot(filter, "toString", "()Ljava/lang/String;",
+				"snapshots/RecordsTarget/ecj/toString_with_fields.txt");
 	}
 
 	@Test
 	public void should_not_filter_custom_toString_method() {
 		context.superClassName = "java/lang/Record";
-		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
-				"toString", "()Ljava/lang/String;", null, null);
-		m.visitLdcInsn("");
-		m.visitInsn(Opcodes.ARETURN);
-
-		filter.filter(m, context, output);
-
-		assertIgnored(m);
+		assertSnapshot(filter, "toString", "()Ljava/lang/String;",
+				"snapshots/RecordsTarget/toString_override.txt");
 	}
 
 	@Test
@@ -71,32 +60,21 @@ public class RecordsFilterTest extends FilterTestBase {
 	@Test
 	public void should_filter_generated_hashCode_method() {
 		context.superClassName = "java/lang/Record";
-		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
-				"hashCode", "()I", null, null);
-		m.visitVarInsn(Opcodes.ALOAD, 0);
-		m.visitInvokeDynamicInsn("hashCode", "(LPoint;)I", new Handle(
-				Opcodes.H_INVOKESTATIC, "java/lang/runtime/ObjectMethods",
-				"bootstrap",
-				"(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/TypeDescriptor;Ljava/lang/Class;Ljava/lang/String;[Ljava/lang/invoke/MethodHandle;)Ljava/lang/Object;",
-				false));
-		m.visitInsn(Opcodes.IRETURN);
-
-		filter.filter(m, context, output);
-
-		assertMethodIgnored(m);
+		assertSnapshot(filter, "hashCode", "()I",
+				"snapshots/RecordsTarget/hashCode_without_fields.txt");
+		assertSnapshot(filter, "hashCode", "()I",
+				"snapshots/RecordsTarget/hashCode_with_fields.txt");
+		assertSnapshot(filter, "hashCode", "()I",
+				"snapshots/RecordsTarget/ecj/hashCode_without_fields.txt");
+		assertSnapshot(filter, "hashCode", "()I",
+				"snapshots/RecordsTarget/ecj/hashCode_with_fields.txt");
 	}
 
 	@Test
 	public void should_not_filter_custom_hashCode_method() {
 		context.superClassName = "java/lang/Record";
-		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
-				"hashCode", "()I", null, null);
-		m.visitInsn(Opcodes.ICONST_0);
-		m.visitInsn(Opcodes.IRETURN);
-
-		filter.filter(m, context, output);
-
-		assertIgnored(m);
+		assertSnapshot(filter, "hashCode", "()I",
+				"snapshots/RecordsTarget/hashCode_override.txt");
 	}
 
 	@Test
@@ -114,33 +92,21 @@ public class RecordsFilterTest extends FilterTestBase {
 	@Test
 	public void should_filter_generated_equals_method() {
 		context.superClassName = "java/lang/Record";
-		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
-				"equals", "(Ljava/lang/Object;)Z", null, null);
-		m.visitVarInsn(Opcodes.ALOAD, 0);
-		m.visitVarInsn(Opcodes.ALOAD, 1);
-		m.visitInvokeDynamicInsn("equals", "(LPoint;Ljava/lang/Object;)Z",
-				new Handle(Opcodes.H_INVOKESTATIC,
-						"java/lang/runtime/ObjectMethods", "bootstrap",
-						"(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/TypeDescriptor;Ljava/lang/Class;Ljava/lang/String;[Ljava/lang/invoke/MethodHandle;)Ljava/lang/Object;",
-						false));
-		m.visitInsn(Opcodes.IRETURN);
-
-		filter.filter(m, context, output);
-
-		assertMethodIgnored(m);
+		assertSnapshot(filter, "equals", "(Ljava/lang/Object;)Z",
+				"snapshots/RecordsTarget/equals_without_fields.txt");
+		assertSnapshot(filter, "equals", "(Ljava/lang/Object;)Z",
+				"snapshots/RecordsTarget/equals_with_fields.txt");
+		assertSnapshot(filter, "equals", "(Ljava/lang/Object;)Z",
+				"snapshots/RecordsTarget/ecj/equals_without_fields.txt");
+		assertSnapshot(filter, "equals", "(Ljava/lang/Object;)Z",
+				"snapshots/RecordsTarget/ecj/equals_with_fields.txt");
 	}
 
 	@Test
 	public void should_not_filter_custom_equals_method() {
 		context.superClassName = "java/lang/Record";
-		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
-				"equals", "(Ljava/lang/Object;)Z", null, null);
-		m.visitInsn(Opcodes.ICONST_0);
-		m.visitInsn(Opcodes.IRETURN);
-
-		filter.filter(m, context, output);
-
-		assertIgnored(m);
+		assertSnapshot(filter, "equals", "(Ljava/lang/Object;)Z",
+				"snapshots/RecordsTarget/equals_override.txt");
 	}
 
 	@Test
@@ -175,15 +141,11 @@ public class RecordsFilterTest extends FilterTestBase {
 	@Test
 	public void should_filter_field_int() {
 		context.superClassName = "java/lang/Record";
-		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
-				"foo", "()Z", null, null);
-		m.visitVarInsn(Opcodes.ALOAD, 0);
-		m.visitFieldInsn(Opcodes.GETFIELD, "Dunno", "foo", "Z");
-		m.visitInsn(Opcodes.IRETURN);
-
-		filter.filter(m, context, output);
-
-		assertMethodIgnored(m);
+		assertSnapshot(filter, "x", "()I", "snapshots/RecordsTarget/get.txt");
+		assertSnapshot(filter, "x", "()I",
+				"snapshots/RecordsTarget/get_override.txt");
+		assertSnapshot(filter, "x", "()I",
+				"snapshots/RecordsTarget/ecj/get.txt");
 	}
 
 	@Test

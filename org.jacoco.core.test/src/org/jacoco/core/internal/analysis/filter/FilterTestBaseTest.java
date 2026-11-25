@@ -35,10 +35,12 @@ public class FilterTestBaseTest extends FilterTestBase {
 	public void assertSnapshot_should_throw_when_invalid_comment()
 			throws Exception {
 		try {
-			assertSnapshot(null, context, new StringReader(TextBlock.lines( //
-					"// first comment ignored", //
-					"RETURN", //
-					"// foo")));
+			assertSnapshot(/* filter */ null, context, /* method name */ null,
+					/* method descriptor */ null,
+					new StringReader(TextBlock.lines( //
+							"// first comment ignored", //
+							"RETURN", //
+							"// foo")));
 			fail("IllegalStateException expected");
 		} catch (final IllegalStateException e) {
 			assertEquals("Invalid syntax: // foo", e.getMessage());
@@ -49,9 +51,11 @@ public class FilterTestBaseTest extends FilterTestBase {
 	public void assertSnapshot_should_throw_when_no_range_start()
 			throws Exception {
 		try {
-			assertSnapshot(null, context, new StringReader(TextBlock.lines( //
-					"RETURN", //
-					"// previous instruction ends ignore range NAME")));
+			assertSnapshot(/* filter */ null, context, /* method name */ null,
+					/* method descriptor */ null,
+					new StringReader(TextBlock.lines( //
+							"RETURN", //
+							"// previous instruction ends ignore range NAME")));
 			fail("IllegalStateException expected");
 		} catch (final IllegalStateException e) {
 			assertEquals("Missing start for range NAME", e.getMessage());
@@ -62,9 +66,11 @@ public class FilterTestBaseTest extends FilterTestBase {
 	public void assertSnapshot_should_throw_when_no_range_end()
 			throws Exception {
 		try {
-			assertSnapshot(null, context, new StringReader(TextBlock.lines( //
-					"RETURN", //
-					"// previous instruction starts ignore range NAME")));
+			assertSnapshot(/* filter */ null, context, /* method name */ null,
+					/* method descriptor */ null,
+					new StringReader(TextBlock.lines( //
+							"RETURN", //
+							"// previous instruction starts ignore range NAME")));
 			fail("IllegalStateException expected");
 		} catch (final IllegalStateException e) {
 			assertEquals("Missing end for range NAME", e.getMessage());
@@ -75,10 +81,12 @@ public class FilterTestBaseTest extends FilterTestBase {
 	public void assertSnapshot_should_throw_when_duplicate_range_start()
 			throws Exception {
 		try {
-			assertSnapshot(null, context, new StringReader(TextBlock.lines( //
-					"RETURN", //
-					"// previous instruction starts ignore range NAME", //
-					"// previous instruction starts ignore range NAME")));
+			assertSnapshot(/* filter */ null, context, /* method name */ null,
+					/* method descriptor */ null,
+					new StringReader(TextBlock.lines( //
+							"RETURN", //
+							"// previous instruction starts ignore range NAME", //
+							"// previous instruction starts ignore range NAME")));
 			fail("IllegalStateException expected");
 		} catch (final IllegalStateException e) {
 			assertEquals("Duplicate start for range NAME", e.getMessage());
@@ -89,11 +97,13 @@ public class FilterTestBaseTest extends FilterTestBase {
 	public void assertSnapshot_should_throw_when_duplicate_range_end()
 			throws Exception {
 		try {
-			assertSnapshot(null, context, new StringReader(TextBlock.lines( //
-					"RETURN", //
-					"// previous instruction starts ignore range NAME", //
-					"// previous instruction ends ignore range NAME", //
-					"// previous instruction ends ignore range NAME")));
+			assertSnapshot(/* filter */ null, context, /* method name */ null,
+					/* method descriptor */ null,
+					new StringReader(TextBlock.lines( //
+							"RETURN", //
+							"// previous instruction starts ignore range NAME", //
+							"// previous instruction ends ignore range NAME", //
+							"// previous instruction ends ignore range NAME")));
 			fail("IllegalStateException expected");
 		} catch (final IllegalStateException e) {
 			assertEquals("Duplicate end for range NAME", e.getMessage());
@@ -104,9 +114,11 @@ public class FilterTestBaseTest extends FilterTestBase {
 	public void assertSnapshot_should_throw_when_no_branches_for_replacement()
 			throws Exception {
 		try {
-			assertSnapshot(null, context, new StringReader(TextBlock.lines( //
-					"RETURN", //
-					"// previous instruction replaced by NAME")));
+			assertSnapshot(/* filter */ null, context, /* method name */ null,
+					/* method descriptor */ null,
+					new StringReader(TextBlock.lines( //
+							"RETURN", //
+							"// previous instruction replaced by NAME")));
 			fail("IllegalStateException expected");
 		} catch (final IllegalStateException e) {
 			assertEquals("Missing branches for replacement NAME",
@@ -124,14 +136,16 @@ public class FilterTestBaseTest extends FilterTestBase {
 			}
 		};
 		try {
-			assertSnapshot(filter, context, new StringReader(TextBlock.lines( //
-					"NOP", //
-					"// previous instruction starts ignore range NAME_BB", //
-					"// previous instruction ends ignore range NAME_BB", //
-					"NOP", //
-					"// previous instruction starts ignore range NAME_Aa", //
-					"// previous instruction ends ignore range NAME_Aa", //
-					"RETURN")));
+			assertSnapshot(filter, context, /* method name */ null,
+					/* method descriptor */ null,
+					new StringReader(TextBlock.lines( //
+							"NOP", //
+							"// previous instruction starts ignore range NAME_BB", //
+							"// previous instruction ends ignore range NAME_BB", //
+							"NOP", //
+							"// previous instruction starts ignore range NAME_Aa", //
+							"// previous instruction ends ignore range NAME_Aa", //
+							"RETURN")));
 			fail("ComparisonFailure expected");
 		} catch (final ComparisonFailure e) {
 			assertTrue(e.getMessage().startsWith("ignored ranges"));
@@ -158,11 +172,13 @@ public class FilterTestBaseTest extends FilterTestBase {
 			}
 		};
 		try {
-			assertSnapshot(filter, context, new StringReader(TextBlock.lines( //
-					"IFEQ LABEL", // ,
-					"// previous instruction replaced by NAME", //
-					"// previous instruction branch 0 creates branch 1 for NAME",
-					"// previous instruction branch 1 creates branch 0 for NAME")));
+			assertSnapshot(filter, context, /* method name */ null,
+					/* method descriptor */ null,
+					new StringReader(TextBlock.lines( //
+							"IFEQ LABEL", // ,
+							"// previous instruction replaced by NAME", //
+							"// previous instruction branch 0 creates branch 1 for NAME",
+							"// previous instruction branch 1 creates branch 0 for NAME")));
 			fail("ComparisonFailure expected");
 		} catch (final ComparisonFailure e) {
 			assertTrue(e.getMessage().startsWith("replacements"));
