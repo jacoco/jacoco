@@ -3,6 +3,8 @@
     ICONST_2
     IAND
     IFEQ L1
+// previous instruction starts ignore range 0
+// previous instruction ends ignore range 0
     ILOAD 1
     IFEQ L2
     LDC "a"

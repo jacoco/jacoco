@@ -72,15 +72,23 @@ public abstract class FilterTestBase {
 				/* method descriptor */ null, snapshotPath);
 	}
 
+	@Deprecated
 	final void assertSnapshot(final IFilter filter, final String methodName,
 			final String methodDescriptor, final String snapshotPath) {
+		assertSnapshot(filter, 0, methodName, methodDescriptor, snapshotPath);
+	}
+
+	final void assertSnapshot(final IFilter filter, final int methodAccess,
+			final String methodName, final String methodDescriptor,
+			final String snapshotPath) {
 		final FileReader reader;
 		try {
 			reader = new FileReader(snapshotPath);
 		} catch (final IOException e) {
 			throw new RuntimeException(e);
 		}
-		assertSnapshot(filter, context, methodName, methodDescriptor, reader);
+		assertSnapshot(filter, context, methodAccess, methodName,
+				methodDescriptor, reader);
 		try {
 			reader.close();
 		} catch (final IOException e) {
@@ -91,6 +99,13 @@ public abstract class FilterTestBase {
 	static void assertSnapshot(final IFilter filter,
 			final IFilterContext context, final String methodName,
 			final String methodDescriptor, final Reader snapshot) {
+
+	}
+
+	static void assertSnapshot(final IFilter filter,
+			final IFilterContext context, final int methodAccess,
+			final String methodName, final String methodDescriptor,
+			final Reader snapshot) {
 		final TreeMap<String, Range> rangesByName = new TreeMap<String, Range>();
 		final HashMap<String, ArrayList<Replacement>> replacementsByName = new HashMap<String, ArrayList<Replacement>>();
 		final HashMap<String, AbstractInsnNode> replacedInstructionsByName = new HashMap<String, AbstractInsnNode>();
@@ -159,6 +174,7 @@ public abstract class FilterTestBase {
 		} catch (final IOException e) {
 			throw new RuntimeException(e);
 		}
+		methodNode.access = methodAccess;
 		methodNode.name = methodName;
 		methodNode.desc = methodDescriptor;
 		for (final Map.Entry<String, Range> e : rangesByName.entrySet()) {
