@@ -16,6 +16,7 @@ import org.jacoco.core.test.validation.JavaVersion;
 import org.jacoco.core.test.validation.Source;
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java5.targets.MethodInvocationsTarget;
+import org.junit.Test;
 
 /**
  * Test of code coverage in {@link MethodInvocationsTarget}.
@@ -42,6 +43,16 @@ public class MethodInvocationsTest extends ValidationTestBase {
 		} else {
 			assertFullyCovered(line);
 		}
+	}
+
+	@Test
+	public void bytecodeSnapshots() throws Exception {
+		final String version = !isJDKCompiler ? "ecj"
+				: JavaVersion.current().isBefore("8") ? "5" : "";
+		assertSnapshot(MethodInvocationsTarget.class, "chained",
+				version + "/chained.txt");
+		assertSnapshot(MethodInvocationsTarget.class, "nested",
+				version + "/nested.txt");
 	}
 
 }

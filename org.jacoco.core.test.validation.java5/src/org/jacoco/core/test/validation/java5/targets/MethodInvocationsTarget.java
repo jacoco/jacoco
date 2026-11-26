@@ -37,7 +37,7 @@ public class MethodInvocationsTarget {
 						new Object())); // assertEmptyWhenJavacOtherwiseFully()
 	}
 
-	private MethodInvocationsTarget m(final Object o) {
+	protected MethodInvocationsTarget m(final Object o) {
 		nop(o);
 		return this;
 	}

@@ -1,0 +1,27 @@
+   L_method_start
+    ALOAD 0
+   L1
+    NEW java/lang/Object
+    DUP
+    INVOKESPECIAL java/lang/Object.<init> ()V
+   L2
+    INVOKEVIRTUAL org/jacoco/core/test/validation/java5/targets/MethodInvocationsTarget.m (Ljava/lang/Object;)Lorg/jacoco/core/test/validation/java5/targets/MethodInvocationsTarget;
+   L3
+    NEW java/lang/Object
+    DUP
+    INVOKESPECIAL java/lang/Object.<init> ()V
+   L4
+    INVOKEVIRTUAL org/jacoco/core/test/validation/java5/targets/MethodInvocationsTarget.m (Ljava/lang/Object;)Lorg/jacoco/core/test/validation/java5/targets/MethodInvocationsTarget;
+    POP
+   L_after
+    RETURN
+   L_method_end
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/java5/targets/MethodInvocationsTarget; L_method_start L_method_end 0
+    LINENUMBER 5 L_method_start
+    LINENUMBER 6 L1
+    LINENUMBER 5 L2
+    LINENUMBER 8 L3
+    LINENUMBER 7 L4
+    LINENUMBER 9 L_after
+    MAXSTACK = 3
+    MAXLOCALS = 1
