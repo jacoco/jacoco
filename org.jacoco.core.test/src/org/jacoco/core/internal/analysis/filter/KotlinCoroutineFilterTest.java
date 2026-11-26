@@ -135,6 +135,12 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 	public void should_filter_suspendCoroutineUninterceptedOrReturn() {
 		assertSnapshot(filter,
 				"snapshots/KotlinCoroutineCallbackTarget/2.0/example.txt");
+		assertSnapshot(filter,
+				// kotlin/coroutines/jvm/internal/TailCallAsyncStackTraceEntryKt.wrapContinuation
+				// https://github.com/JetBrains/kotlin/commit/3cfcae142bda27a01e4699c173e6a32f7af88bb6
+				// https://github.com/JetBrains/kotlin/commit/b5a60a73a0883a669548f83e3b3dc89feb3f527c
+				// https://github.com/JetBrains/kotlin/commit/8a2df762d25b0069633c91f541547cc80591879f
+				"snapshots/KotlinCoroutineCallbackTarget/2.5/example.txt");
 	}
 
 	/**
@@ -146,6 +152,8 @@ public class KotlinCoroutineFilterTest extends FilterTestBase {
 				"snapshots/KotlinCoroutineCallbackTarget/2.0/without_tail_call_optimization.txt");
 		assertSnapshot(filter,
 				"snapshots/KotlinCoroutineCallbackTarget/2.2/without_tail_call_optimization.txt");
+		assertSnapshot(filter,
+				"snapshots/KotlinCoroutineCallbackTarget/2.5/without_tail_call_optimization.txt");
 	}
 
 }
