@@ -1,0 +1,23 @@
+   L0
+    ALOAD 3
+    IFNULL L1
+    NEW java/lang/UnsupportedOperationException
+    DUP
+    LDC "Super calls with default arguments not supported in this target, function: f"
+    INVOKESPECIAL java/lang/UnsupportedOperationException.<init> (Ljava/lang/String;)V
+    ATHROW
+   L1
+    ILOAD 2
+    ICONST_1
+    IAND
+    IFEQ L2
+    LDC "a"
+    ASTORE 1
+   L2
+    ALOAD 0
+    ALOAD 1
+    INVOKEVIRTUAL org/jacoco/core/test/validation/kotlin/targets/KotlinDefaultArgumentsTarget$Open.f (Ljava/lang/String;)V
+    RETURN
+    LINENUMBER 5 L0
+    MAXSTACK = 3
+    MAXLOCALS = 4
