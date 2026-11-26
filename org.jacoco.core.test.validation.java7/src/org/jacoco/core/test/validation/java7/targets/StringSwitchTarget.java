@@ -22,18 +22,21 @@ import org.jacoco.core.test.validation.targets.Stubs;
 public class StringSwitchTarget {
 
 	private static void covered(Object s) {
-		switch (String.valueOf(s)) { // assertFullyCovered(0, 4)
+		switch (String.valueOf(s)) { // assertFullyCovered(0, 5)
 		case "a":
 			nop("case a"); // assertFullyCovered()
 			break;
 		case "b":
 			nop("case b"); // assertFullyCovered()
 			break;
+		case "c":
+			nop("case c"); // assertFullyCovered()
+			break;
 		case "\0a":
 			nop("case \0a"); // assertFullyCovered()
 			break;
 		default:
-			nop("case default"); // assertFullyCovered()
+			nop("default"); // assertFullyCovered()
 			break;
 		}
 	}
@@ -83,31 +86,40 @@ public class StringSwitchTarget {
 		}
 	}
 
-	private static void handwritten(String s) {
+	private static void handwritten(Object s) {
+		String tmp = String.valueOf(s);
 		int c = -1;
-		switch (s.hashCode()) { // assertFullyCovered(2, 1)
+		switch (tmp.hashCode()) { // assertFullyCovered(3, 1)
 		case 97:
-			if ("a".equals(s)) { // assertFullyCovered(1, 1)
+			if (tmp.equals("\0a")) { // assertFullyCovered(1, 1)
+				c = 2;
+			} else if (tmp.equals("a")) {
 				c = 0;
-			} else if ("\0a".equals(s)) {
-				c = 1;
 			}
 			break;
 		case 98:
-			if ("b".equals(s)) {
-				c = 2;
+			if (tmp.equals("b")) {
+				c = 1;
+			}
+			break;
+		case 99:
+			if (tmp.equals("c")) {
+				c = 3;
 			}
 			break;
 		}
-		switch (c) { // assertFullyCovered(3, 1)
+		switch (c) { // assertFullyCovered(4, 1)
 		case 0:
 			nop("case a"); // assertFullyCovered()
 			break;
 		case 1:
-			nop("case \0a"); // assertNotCovered()
+			nop("case b");
 			break;
 		case 2:
-			nop("case b");
+			nop("case c");
+			break;
+		case 3:
+			nop("case \0a"); // assertNotCovered()
 			break;
 		default:
 			nop("default");
@@ -116,9 +128,9 @@ public class StringSwitchTarget {
 	}
 
 	/**
-	 * In this case javac generates <code>LOOKUPSWITCH</code> for second switch.
+	 * In this case javac generates <code>LOOKUPSWITCH</code>es.
 	 */
-	private static void lookupswitch(Object s) {
+	private static void fewCases(Object s) {
 		switch (String.valueOf(s)) { // assertNotCovered(3, 0)
 		case "a":
 			nop("case a");
@@ -133,12 +145,15 @@ public class StringSwitchTarget {
 	}
 
 	private static void default_is_first(Object s) {
-		switch (String.valueOf(s)) { // assertFullyCovered(0, 2)
+		switch (String.valueOf(s)) { // assertFullyCovered(0, 3)
 		default:
 			nop("default");
 			break;
 		case "a":
 			nop("case a");
+			break;
+		case "b":
+			nop("case b");
 			break;
 		}
 	}
@@ -147,6 +162,7 @@ public class StringSwitchTarget {
 		covered("");
 		covered("a");
 		covered("b");
+		covered("c");
 		covered("\0a");
 
 		executedWithSameHashCodeAsFirstCase();
@@ -159,6 +175,7 @@ public class StringSwitchTarget {
 
 		default_is_first("");
 		default_is_first("a");
+		default_is_first("b");
 	}
 
 }

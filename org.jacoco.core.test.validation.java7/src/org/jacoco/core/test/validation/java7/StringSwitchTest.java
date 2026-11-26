@@ -14,6 +14,7 @@ package org.jacoco.core.test.validation.java7;
 
 import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.java7.targets.StringSwitchTarget;
+import org.junit.Test;
 
 /**
  * Test of filtering of a bytecode that is generated for a String in switch
@@ -23,6 +24,21 @@ public class StringSwitchTest extends ValidationTestBase {
 
 	public StringSwitchTest() {
 		super(StringSwitchTarget.class);
+	}
+
+	@Test
+	public void bytecodeSnapshots() throws Exception {
+		final String version = !isJDKCompiler ? "ecj" : "";
+		assertSnapshot(StringSwitchTarget.class, "covered",
+				version + "/example.txt");
+		assertSnapshot(StringSwitchTarget.class, "default_is_first",
+				version + "/default_is_first.txt");
+		assertSnapshot(StringSwitchTarget.class, "fewCases",
+				version + "/few_cases.txt");
+		if (isJDKCompiler) {
+			assertSnapshot(StringSwitchTarget.class, "handwritten",
+					"handwritten.txt");
+		}
 	}
 
 }
