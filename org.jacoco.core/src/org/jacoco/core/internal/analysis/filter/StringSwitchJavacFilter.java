@@ -64,6 +64,7 @@ final class StringSwitchJavacFilter implements IFilter {
 					// generated for switch inside lambda
 					// by javac versions from 24 to 26
 					// for compiler-generated temporary variables
+					// https://bugs.openjdk.org/browse/JDK-8372635
 				} while (cursor != null
 						&& cursor.getType() == AbstractInsnNode.LABEL);
 			}

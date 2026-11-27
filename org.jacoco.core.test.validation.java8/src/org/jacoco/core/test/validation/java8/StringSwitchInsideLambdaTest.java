@@ -33,6 +33,7 @@ public class StringSwitchInsideLambdaTest extends ValidationTestBase {
 					"ecj/example.txt");
 		} else if (!JavaVersion.current().isBefore("24")
 				&& JavaVersion.current().isBefore("27")) {
+			// https://bugs.openjdk.org/browse/JDK-8372635
 			assertSnapshot(StringSwitchInsideLambdaTarget.class,
 					"lambda\\$example\\$0", "24-26/example.txt");
 		} else {

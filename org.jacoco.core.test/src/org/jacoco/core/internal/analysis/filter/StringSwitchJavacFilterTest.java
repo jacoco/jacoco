@@ -16,7 +16,6 @@ import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Test;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 /**
@@ -29,97 +28,22 @@ public class StringSwitchJavacFilterTest extends FilterTestBase {
 	private final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 			"name", "()V", null, null);
 
-	private AbstractInsnNode expectedFromInclusive;
-	private AbstractInsnNode expectedToInclusive;
-
-	private void createFirstSwitch() {
-		final Label h1 = new Label();
-		final Label h1_2 = new Label();
-		final Label h2 = new Label();
-		final Label secondSwitch = new Label();
-
-		m.visitInsn(Opcodes.ICONST_M1);
-		m.visitVarInsn(Opcodes.ISTORE, 2);
-
-		// Label for
-		// LOCALVARIABLE tmp1$ I Label 2
-		// with name for the above slot 2
-		// generated for switch inside lambda
-		// by javac versions starting from 24
-		m.visitLabel(new Label());
-
-		m.visitVarInsn(Opcodes.ALOAD, 1);
-		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "hashCode",
-				"()I", false);
-		m.visitLookupSwitchInsn(secondSwitch, new int[] { 97, 98 },
-				new Label[] { h1, h2 });
-		expectedFromInclusive = m.instructions.getLast();
-
-		m.visitLabel(h1);
-		m.visitVarInsn(Opcodes.ALOAD, 1);
-		m.visitLdcInsn("a");
-		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
-				"(Ljava/lang/Object;)Z", false);
-		// if not equal "a", then goto next comparison
-		m.visitJumpInsn(Opcodes.IFEQ, h1_2);
-		m.visitInsn(Opcodes.ICONST_0);
-		m.visitVarInsn(Opcodes.ISTORE, 2);
-
-		// goto secondSwitch
-		m.visitJumpInsn(Opcodes.GOTO, secondSwitch);
-
-		m.visitLabel(h1_2);
-		m.visitVarInsn(Opcodes.ALOAD, 1);
-		m.visitLdcInsn("\0a");
-		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
-				"(Ljava/lang/Object;)Z", false);
-		// if not equal "\0a", then goto second switch
-		m.visitJumpInsn(Opcodes.IFEQ, secondSwitch);
-		m.visitInsn(Opcodes.ICONST_1);
-		m.visitVarInsn(Opcodes.ISTORE, 2);
-
-		// goto secondSwitch
-		m.visitJumpInsn(Opcodes.GOTO, secondSwitch);
-
-		m.visitLabel(h2);
-		m.visitVarInsn(Opcodes.ALOAD, 1);
-		m.visitLdcInsn("b");
-		m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals",
-				"(Ljava/lang/Object;)Z", false);
-		// if not equal "b", then goto second switch
-		m.visitJumpInsn(Opcodes.IFEQ, secondSwitch);
-		m.visitInsn(Opcodes.ICONST_2);
-		m.visitVarInsn(Opcodes.ISTORE, 2);
-
-		m.visitLabel(secondSwitch);
-		expectedToInclusive = m.instructions.getLast();
-		m.visitVarInsn(Opcodes.ILOAD, 2);
-	}
-
 	@Test
 	public void should_filter_code_generated_by_javac() {
-		createFirstSwitch();
-
-		final Label cases = new Label();
-		m.visitTableSwitchInsn(0, 2, cases);
-		m.visitLabel(cases);
-
-		filter.filter(m, context, output);
-
-		assertIgnored(m, new Range(expectedFromInclusive, expectedToInclusive));
+		assertSnapshot(filter, "snapshots/StringSwitchTarget/example.txt");
+		assertSnapshot(filter,
+				"snapshots/StringSwitchTarget/default_is_first.txt");
+		assertSnapshot(filter, "snapshots/StringSwitchTarget/handwritten.txt");
+		assertSnapshot(filter,
+				"snapshots/StringSwitchInsideLambdaTarget/example.txt");
+		assertSnapshot(filter,
+				// https://bugs.openjdk.org/browse/JDK-8372635
+				"snapshots/StringSwitchInsideLambdaTarget/24-26/example.txt");
 	}
 
 	@Test
 	public void should_filter_when_javac_generates_lookupswitch() {
-		createFirstSwitch();
-
-		final Label cases = new Label();
-		m.visitLookupSwitchInsn(cases, null, new Label[] {});
-		m.visitLabel(cases);
-
-		filter.filter(m, context, output);
-
-		assertIgnored(m, new Range(expectedFromInclusive, expectedToInclusive));
+		assertSnapshot(filter, "snapshots/StringSwitchTarget/few_cases.txt");
 	}
 
 	/**
