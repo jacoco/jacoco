@@ -3,22 +3,30 @@
     INVOKESTATIC java/lang/String.valueOf (Ljava/lang/Object;)Ljava/lang/String;
     DUP
     ASTORE 1
+// previous instruction replaced by R
     INVOKEVIRTUAL java/lang/String.hashCode ()I
+// previous instruction starts ignore range 0
     LOOKUPSWITCH
       97: L_hash_a
       98: L_hash_b
-      default: L_default
+      default: L_default // note: branch 0
+// previous instruction branch 0 creates branch 0 for R
    L_hash_a
     ALOAD 1
     LDC "a"
     INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
     IFNE L_case_a
+// previous instruction branch 1 creates branch 1 for R
     GOTO L_default
+// previous instruction branch 1 creates branch 0 for R
    L_hash_b
     ALOAD 1
     LDC "b"
     INVOKEVIRTUAL java/lang/String.equals (Ljava/lang/Object;)Z
     IFNE L_case_b
+// previous instruction branch 1 creates branch 2 for R
+// previous instruction branch 0 creates branch 0 for R
+// previous instruction ends ignore range 0
    L_default
     LDC "default"
     INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.nop (Ljava/lang/Object;)V
