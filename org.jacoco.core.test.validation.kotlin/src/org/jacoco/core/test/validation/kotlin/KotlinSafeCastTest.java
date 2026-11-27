@@ -12,16 +12,23 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.kotlin;
 
-import org.jacoco.core.test.validation.ValidationTestBase;
 import org.jacoco.core.test.validation.kotlin.targets.KotlinSafeCastTarget;
+import org.junit.Test;
 
 /**
  * Test of "safe" cast operator.
  */
-public class KotlinSafeCastTest extends ValidationTestBase {
+public class KotlinSafeCastTest extends KotlinValidationTestBase {
 
 	public KotlinSafeCastTest() {
 		super(KotlinSafeCastTarget.class);
+	}
+
+	/** Starting from {@link #KOTLIN_1_3} */
+	@Test
+	public void bytecodeSnapshots() throws Exception {
+		assertSnapshot(KotlinSafeCastTarget.class, "example", "example.txt",
+				KOTLIN_1_5, KOTLIN_1_3);
 	}
 
 }
