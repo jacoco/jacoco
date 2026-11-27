@@ -1,5 +1,6 @@
   @Lkotlin/jvm/JvmOverloads;() // invisible
    L_method_start
+// previous instruction starts ignore range 0
     ALOAD 1
     LDC "p1"
     INVOKESTATIC kotlin/jvm/internal/Intrinsics.checkNotNullParameter (Ljava/lang/Object;Ljava/lang/String;)V
@@ -13,6 +14,7 @@
     LINENUMBER 5 L1
     RETURN
    L_method_end
+// previous instruction ends ignore range 0
     LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinJvmOverloadsTarget$Example; L_method_start L_method_end 0
     LOCALVARIABLE p1 Ljava/lang/String; L_method_start L_method_end 1
     MAXSTACK = 5
