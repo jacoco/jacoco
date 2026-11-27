@@ -47,6 +47,31 @@ public class MethodSnapshotParserTest {
 	private final HashMap<String, AbstractInsnNode> comments = new HashMap<String, AbstractInsnNode>();
 
 	@Test
+	public void parseParameter() {
+		m.visitParameter(null, Opcodes.ACC_MANDATED);
+		m.visitParameter(null, Opcodes.ACC_FINAL | Opcodes.ACC_MANDATED);
+		m.visitParameter(null, Opcodes.ACC_SYNTHETIC);
+		m.visitParameter("p", 0);
+		final String text = TextBlock.lines( //
+				// for example in valueOf method of enum
+				"    // parameter mandated  <no name>",
+				// for example in constructor of nested non-static member class
+				"    // parameter final mandated  <no name>",
+				// for example in constructor of enum
+				"    // parameter synthetic  <no name>",
+				// for example in constructor of record
+				"    // parameter  p");
+		assertEquals("text before parsing", text, MethodSnapshot.text(m));
+		assertEquals("snapshot", "", MethodSnapshot.snapshot(m));
+		try {
+			parse(text);
+			fail("UnsupportedOperationException expected");
+		} catch (final UnsupportedOperationException e) {
+			assertEquals("// parameter mandated  <no name>", e.getMessage());
+		}
+	}
+
+	@Test
 	public void parseAnnotation() {
 		m.visitAnnotation("Lkotlin/jvm/JvmOverloads;", false);
 		m.visitAnnotation("Ljava/lang/Deprecated;", true);

@@ -175,6 +175,9 @@ final class MethodSnapshotParser {
 		} else if (name.startsWith("// annotable parameter count")) {
 			throw new UnsupportedOperationException(name);
 
+		} else if (name.startsWith("// parameter")) {
+			throw new UnsupportedOperationException(name);
+
 		} else if (name.startsWith("//")) {
 			parseComment(name);
 

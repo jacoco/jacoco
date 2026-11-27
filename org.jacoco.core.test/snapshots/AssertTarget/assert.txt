@@ -1,6 +1,8 @@
    L_method_start
     GETSTATIC org/jacoco/core/test/validation/java5/targets/AssertTarget.$assertionsDisabled : Z
     IFNE L_after
+// previous instruction starts ignore range 0
+// previous instruction ends ignore range 0
     INVOKESTATIC org/jacoco/core/test/validation/targets/Stubs.t ()Z
     IFNE L_after
     NEW java/lang/AssertionError

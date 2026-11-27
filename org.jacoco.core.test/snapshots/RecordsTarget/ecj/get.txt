@@ -1,0 +1,9 @@
+   L_method_start
+// previous instruction starts ignore range 0
+    ALOAD 0
+    GETFIELD org/jacoco/core/test/validation/java16/targets/RecordsTarget$WithFields.x : I
+    IRETURN
+    LINENUMBER 5 L_method_start
+// previous instruction ends ignore range 0
+    MAXSTACK = 1
+    MAXLOCALS = 1

@@ -1,0 +1,16 @@
+   L_method_start
+    ALOAD 1
+    DUP
+    INSTANCEOF java/lang/String
+    IFNE L1
+    POP
+    ACONST_NULL
+   L1
+    CHECKCAST java/lang/String
+    ARETURN
+   L_method_end
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinSafeCastTarget; L_method_start L_method_end 0
+    LOCALVARIABLE x Ljava/lang/Object; L_method_start L_method_end 1
+    LINENUMBER 5 L_method_start
+    MAXSTACK = 2
+    MAXLOCALS = 2
