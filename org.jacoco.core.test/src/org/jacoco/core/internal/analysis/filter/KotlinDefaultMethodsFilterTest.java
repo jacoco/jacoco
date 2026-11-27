@@ -79,25 +79,8 @@ public class KotlinDefaultMethodsFilterTest extends FilterTestBase {
 	@Test
 	public void should_filter_compatibility_methods() {
 		context.className = "Example$DefaultImpls";
-		final MethodNode m = new MethodNode(
-				Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC
-						| Opcodes.ACC_DEPRECATED,
-				"example", "(LExample;Ljava/lang/String;)Ljava/lang/String;",
-				null, null);
-		m.visitVarInsn(Opcodes.ALOAD, 1);
-		m.visitLdcInsn("s");
-		m.visitMethodInsn(Opcodes.INVOKESTATIC,
-				"kotlin/jvm/internal/Intrinsics", "checkNotNullParameter",
-				"(Ljava/lang/Object;Ljava/lang/String;)V", false);
-		m.visitVarInsn(Opcodes.ALOAD, 0);
-		m.visitVarInsn(Opcodes.ALOAD, 1);
-		m.visitMethodInsn(Opcodes.INVOKESTATIC, "Example", "access$example$jd",
-				"(LExample;Ljava/lang/String;)Ljava/lang/String;", true);
-		m.visitInsn(Opcodes.ARETURN);
-
-		filter.filter(m, context, output);
-
-		assertMethodIgnored(m);
+		assertSnapshot(filter,
+				"snapshots/KotlinDefaultMethodsTarget/2.2/impl.txt");
 	}
 
 	/**
@@ -116,20 +99,8 @@ public class KotlinDefaultMethodsFilterTest extends FilterTestBase {
 	@Test
 	public void should_not_filter_non_compatibility_methods() {
 		context.className = "Example$DefaultImpls";
-		final MethodNode m = new MethodNode(
-				Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "example",
-				"(LExample;Ljava/lang/String;)Ljava/lang/String;", null, null);
-		m.visitVarInsn(Opcodes.ALOAD, 1);
-		m.visitLdcInsn("s");
-		m.visitMethodInsn(Opcodes.INVOKESTATIC,
-				"kotlin/jvm/internal/Intrinsics", "checkNotNullParameter",
-				"(Ljava/lang/Object;Ljava/lang/String;)V", false);
-		m.visitVarInsn(Opcodes.ALOAD, 1);
-		m.visitInsn(Opcodes.ARETURN);
-
-		filter.filter(m, context, output);
-
-		assertIgnored(m);
+		assertSnapshot(filter,
+				"snapshots/KotlinDefaultMethodsTarget/2.0/impl.txt");
 	}
 
 }
