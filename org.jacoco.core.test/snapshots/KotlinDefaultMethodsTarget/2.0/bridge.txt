@@ -1,0 +1,11 @@
+   L_method_start
+    ALOAD 0
+    ALOAD 1
+    INVOKESTATIC org/jacoco/core/test/validation/kotlin/targets/KotlinDefaultMethodsTarget$I$DefaultImpls.m2 (Lorg/jacoco/core/test/validation/kotlin/targets/KotlinDefaultMethodsTarget$I;Ljava/lang/String;)V
+    RETURN
+   L_method_end
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinDefaultMethodsTarget$C; L_method_start L_method_end 0
+    LOCALVARIABLE p Ljava/lang/String; L_method_start L_method_end 1
+    LINENUMBER 5 L_method_start
+    MAXSTACK = 2
+    MAXLOCALS = 2
