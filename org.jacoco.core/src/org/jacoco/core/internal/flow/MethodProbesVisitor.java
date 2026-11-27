@@ -79,6 +79,32 @@ public abstract class MethodProbesVisitor extends MethodVisitor {
 	}
 
 	/**
+	 * Visits the boundary probe of an ordered numeric comparison. The event is
+	 * emitted directly before the comparison itself, and the probe must be
+	 * inserted in a way that it is executed only when the two compared values
+	 * are equal. For a comparison against zero the single operand is equal to
+	 * zero, which for the result of LCMP, FCMPL, FCMPG, DCMPL or DCMPG means
+	 * that the two compared values are equal.
+	 *
+	 * Executing both branches of an ordered comparison does not imply that the
+	 * boundary value itself was ever used, which is what this probe records.
+	 *
+	 * @param opcode
+	 *            the opcode of the comparison to be visited. This opcode is
+	 *            either IFLT, IFGE, IFGT, IFLE, IF_ICMPLT, IF_ICMPGE, IF_ICMPGT
+	 *            or IF_ICMPLE.
+	 * @param probeId
+	 *            id of the probe
+	 * @param frame
+	 *            stackmap frame status before the execution of the comparison.
+	 *            The instance is only valid with the call of this method.
+	 */
+	@SuppressWarnings("unused")
+	public void visitBoundaryProbe(final int opcode, final int probeId,
+			final IFrame frame) {
+	}
+
+	/**
 	 * Visits a zero operand instruction with a probe. This event is used only
 	 * for instructions that terminate the method. Therefore the probe must be
 	 * inserted before the actual instruction.

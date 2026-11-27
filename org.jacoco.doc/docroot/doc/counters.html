@@ -66,6 +66,35 @@
   <li>Full coverage: All branches in the line have been executed (green diamond)</li>
 </ul>
 
+<h2>Boundaries</h2>
+
+<p>
+  Branch coverage reports an ordered numeric comparison as fully covered as soon
+  as both of its branches have been executed. That does not imply that the
+  <i>boundary value</i> of the comparison, the case where both compared values
+  are equal, was ever used. For <code>if (i &gt; 6)</code> a test with
+  <code>i = 5</code> and a test with <code>i = 7</code> cover both branches
+  without ever exercising <code>i = 6</code>, so an off-by-one error in the
+  comparison would not be detected.
+</p>
+
+<p>
+  The boundary counter reports how many ordered numeric comparisons were
+  exercised with equal values. Comparisons for equality are not counted, as they
+  have no boundary. A comparison is counted only once both of its branches are
+  covered: as long as a branch is missing, the branch counter already reports
+  the gap.
+</p>
+
+<p>
+  This metric is derived from the bytecode alone, like all other JaCoCo
+  counters. It therefore covers comparisons against zero and comparisons of the
+  results of <code>LCMP</code>, <code>FCMPL</code>, <code>FCMPG</code>,
+  <code>DCMPL</code> and <code>DCMPG</code>, which includes comparisons of
+  <code>long</code>, <code>float</code> and <code>double</code> values, and the
+  <code>compareTo()</code> idiom.
+</p>
+
 <h2>Cyclomatic Complexity</h2>
 
 <p>

@@ -78,7 +78,7 @@
 <!-- coverage data counter for different metrics -->
 <!ELEMENT counter EMPTY>
   <!-- metric type -->
-  <!ATTLIST counter type (INSTRUCTION|BRANCH|LINE|COMPLEXITY|METHOD|CLASS) #REQUIRED>
+  <!ATTLIST counter type (INSTRUCTION|BRANCH|LINE|COMPLEXITY|METHOD|CLASS|BOUNDARY) #REQUIRED>
   <!-- number of missed items -->
   <!ATTLIST counter missed CDATA #REQUIRED>
   <!-- number of covered items -->
