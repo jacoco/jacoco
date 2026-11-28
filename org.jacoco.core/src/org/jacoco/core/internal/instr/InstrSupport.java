@@ -23,6 +23,12 @@ import org.objectweb.asm.Opcodes;
  */
 public final class InstrSupport {
 
+	/** Name of the method that conditionally records a probe hit. */
+	public static final String HITMETHOD_NAME = "$jacocoHit";
+
+	/** Descriptor of the method that conditionally records a probe hit. */
+	public static final String HITMETHOD_DESC = "([ZI)V";
+
 	private InstrSupport() {
 	}
 
@@ -234,7 +240,8 @@ public final class InstrSupport {
 	 */
 	public static void assertNotInstrumented(final String member,
 			final String owner) throws IllegalStateException {
-		if (member.equals(DATAFIELD_NAME) || member.equals(INITMETHOD_NAME)) {
+		if (member.equals(DATAFIELD_NAME) || member.equals(INITMETHOD_NAME)
+				|| member.equals(HITMETHOD_NAME)) {
 			throw new IllegalStateException(format(
 					"Cannot process instrumented class %s. Please supply original non-instrumented classes.",
 					owner));

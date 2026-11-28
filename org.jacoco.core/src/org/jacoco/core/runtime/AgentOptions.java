@@ -189,10 +189,16 @@ public final class AgentOptions {
 	 */
 	public static final String JMX = "jmx";
 
+	/**
+	 * Specifies whether probes check for an existing hit before writing.
+	 * Default is <code>false</code>.
+	 */
+	public static final String CONDITIONALPROBES = "conditionalprobes";
+
 	private static final Collection<String> VALID_OPTIONS = Arrays.asList(
 			DESTFILE, APPEND, INCLUDES, EXCLUDES, EXCLCLASSLOADER,
 			INCLBOOTSTRAPCLASSES, INCLNOLOCATIONCLASSES, SESSIONID, DUMPONEXIT,
-			OUTPUT, ADDRESS, PORT, CLASSDUMPDIR, JMX);
+			OUTPUT, ADDRESS, PORT, CLASSDUMPDIR, JMX, CONDITIONALPROBES);
 
 	private final Map<String, String> options;
 
@@ -556,6 +562,25 @@ public final class AgentOptions {
 	 */
 	public void setJmx(final boolean jmx) {
 		setOption(JMX, jmx);
+	}
+
+	/**
+	 * Returns whether conditional probes are enabled.
+	 *
+	 * @return <code>true</code> if probes check before writing
+	 */
+	public boolean getConditionalProbes() {
+		return getOption(CONDITIONALPROBES, false);
+	}
+
+	/**
+	 * Sets whether probes should check for an existing hit before writing.
+	 *
+	 * @param conditionalProbes
+	 *            <code>true</code> to enable conditional probes
+	 */
+	public void setConditionalProbes(final boolean conditionalProbes) {
+		setOption(CONDITIONALPROBES, conditionalProbes);
 	}
 
 	private void setOption(final String key, final int value) {
