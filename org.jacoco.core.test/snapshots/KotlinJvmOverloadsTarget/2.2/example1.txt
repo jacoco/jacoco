@@ -1,0 +1,17 @@
+  @Lkotlin/jvm/JvmOverloads;() // invisible
+   L0
+    ALOAD 1
+    LDC "p1"
+    INVOKESTATIC kotlin/jvm/internal/Intrinsics.checkNotNullParameter (Ljava/lang/Object;Ljava/lang/String;)V
+    ALOAD 0
+    ALOAD 1
+    ACONST_NULL
+    ICONST_2
+    ACONST_NULL
+    INVOKESTATIC org/jacoco/core/test/validation/kotlin/targets/KotlinJvmOverloadsTarget.example$default (Lorg/jacoco/core/test/validation/kotlin/targets/KotlinJvmOverloadsTarget;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)V
+    RETURN
+   L1
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinJvmOverloadsTarget; L0 L1 0
+    LOCALVARIABLE p1 Ljava/lang/String; L0 L1 1
+    MAXSTACK = 5
+    MAXLOCALS = 2

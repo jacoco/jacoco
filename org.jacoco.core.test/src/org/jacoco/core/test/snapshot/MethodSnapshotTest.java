@@ -47,8 +47,12 @@ public final class MethodSnapshotTest {
 		}
 		assertTrue(s2.exists());
 
-		MethodSnapshot.assertSnapshot(MethodSnapshotTest.class, "<init>", s2,
-				s1);
+		MethodSnapshot.assertSnapshot(MethodSnapshotTest.class,
+				// regex without descriptor
+				"<[a-z]++>", s2, s1);
+		MethodSnapshot.assertSnapshot(MethodSnapshotTest.class,
+				// regex with descriptor
+				"<[a-z]++>\\(\\)V", s2, s1);
 		assertFalse(s1.exists());
 	}
 
