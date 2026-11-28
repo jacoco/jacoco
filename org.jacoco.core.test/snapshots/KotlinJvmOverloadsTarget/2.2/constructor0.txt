@@ -1,0 +1,13 @@
+  @Lkotlin/jvm/JvmOverloads;() // invisible
+   L_method_start
+    ALOAD 0
+    ACONST_NULL
+    ACONST_NULL
+    ICONST_3
+    ACONST_NULL
+    INVOKESPECIAL org/jacoco/core/test/validation/kotlin/targets/KotlinJvmOverloadsTarget$Example.<init> (Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+    RETURN
+   L_method_end
+    LOCALVARIABLE this Lorg/jacoco/core/test/validation/kotlin/targets/KotlinJvmOverloadsTarget$Example; L_method_start L_method_end 0
+    MAXSTACK = 5
+    MAXLOCALS = 1
