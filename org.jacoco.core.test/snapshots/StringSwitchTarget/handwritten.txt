@@ -13,6 +13,7 @@
       98: L_hash_b
       99: L_hash_c
       default: L_switch_2
+// previous instruction starts ignore range 0
    L_hash_0a
     ALOAD 1
     LDC "\u0000a"
@@ -49,6 +50,7 @@
     ICONST_3
     ISTORE 2
    L_switch_2
+// previous instruction ends ignore range 0
     ILOAD 2
     TABLESWITCH
       0: L_case_a
