@@ -24,6 +24,7 @@ object KotlinJvmOverloadsTarget {
         nop(p1 + p2) // assertFullyCovered()
     } // assertFullyCovered()
 
+    @JvmOverloads
     private fun use() { // assertEmpty()
         example() // assertFullyCovered()
     } // assertFullyCovered()
@@ -31,6 +32,7 @@ object KotlinJvmOverloadsTarget {
     private fun useOneliner() = example() // assertFullyCovered()
 
     class Example @JvmOverloads constructor(p1: String = "p1", p2: String = "p2") { // assertFullyCovered()
+        @JvmOverloads
         constructor(p: Any) : this() // assertFullyCovered()
     }
 
