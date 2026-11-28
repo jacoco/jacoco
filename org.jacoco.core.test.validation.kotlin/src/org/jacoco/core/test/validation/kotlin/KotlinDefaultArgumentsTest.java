@@ -12,16 +12,42 @@
  *******************************************************************************/
 package org.jacoco.core.test.validation.kotlin;
 
-import org.jacoco.core.test.validation.ValidationTestBase;
+import kotlin.text.StringsKt;
 import org.jacoco.core.test.validation.kotlin.targets.KotlinDefaultArgumentsTarget;
+import org.junit.Test;
 
 /**
  * Test of functions with default arguments.
  */
-public class KotlinDefaultArgumentsTest extends ValidationTestBase {
+public class KotlinDefaultArgumentsTest extends KotlinValidationTestBase {
 
 	public KotlinDefaultArgumentsTest() {
 		super(KotlinDefaultArgumentsTarget.class);
+	}
+
+	@Test
+	public void bytecodeSnapshots() throws Exception {
+		assertSnapshot(KotlinDefaultArgumentsTarget.class, "f\\$default",
+				"f.txt", //
+				KOTLIN_1_5);
+		assertSnapshot(KotlinDefaultArgumentsTarget.class,
+				"longParameter\\$default", "long_parameter.txt", //
+				KOTLIN_1_5);
+		assertSnapshot(KotlinDefaultArgumentsTarget.class, "branch\\$default",
+				"branch.txt", //
+				KOTLIN_1_5);
+		assertSnapshot(KotlinDefaultArgumentsTarget.Open.class, "f\\$default",
+				"open_function.txt", //
+				KOTLIN_1_5);
+		assertSnapshot(KotlinDefaultArgumentsTarget.Constructor.class,
+				"<init>\\(ZLjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;\\)V",
+				"constructor.txt", //
+				KOTLIN_1_5);
+		assertSnapshot(KotlinDefaultArgumentsTarget.MoreThan32Parameters.class,
+				"<init>\\(" + StringsKt.repeat("Ljava/lang/String;", 33)
+						+ "IILkotlin/jvm/internal/DefaultConstructorMarker;\\)V",
+				"more_than_32_parameters.txt", //
+				KOTLIN_1_5);
 	}
 
 }

@@ -166,9 +166,12 @@ public final class MethodSnapshot {
 	 */
 	private static MethodNode find(final ClassNode classNode,
 			final String nameRegex) {
+		final boolean withDesc = nameRegex.contains("\\(");
 		MethodNode result = null;
 		for (MethodNode methodNode : classNode.methods) {
-			if (methodNode.name.matches(nameRegex)) {
+			if ((withDesc
+					&& (methodNode.name + methodNode.desc).matches(nameRegex))
+					|| methodNode.name.matches(nameRegex)) {
 				assertNull(result);
 				result = methodNode;
 			}

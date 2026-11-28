@@ -53,13 +53,13 @@ public class KotlinDefaultArgumentsFilterTest extends FilterTestBase {
 
 	@Test
 	public void should_filter() {
-		final MethodNode m = createMethod(Opcodes.ACC_SYNTHETIC,
-				"origin$default", "(LTarget;IILjava/lang/Object;)V");
+		assertSnapshot(filter, Opcodes.ACC_SYNTHETIC, "f$default",
+				"(LTarget;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)V",
+				"snapshots/KotlinDefaultArgumentsTarget/1.5/f.txt");
 
-		filter.filter(m, context, output);
-
-		assertIgnored(m,
-				new Range(m.instructions.get(3), m.instructions.get(3)));
+		assertSnapshot(filter, Opcodes.ACC_SYNTHETIC, "branch$default",
+				"(LTarget;ZLjava/lang/String;ILjava/lang/Object;)V",
+				"snapshots/KotlinDefaultArgumentsTarget/1.5/branch.txt");
 	}
 
 	@Test
@@ -82,123 +82,25 @@ public class KotlinDefaultArgumentsFilterTest extends FilterTestBase {
 		assertIgnored(m);
 	}
 
-	/**
-	 * <pre>
-	 * open class Open {
-	 *     open fun foo(a: Int = 42) {
-	 *     }
-	 * }
-	 * </pre>
-	 */
 	@Test
 	public void should_filter_open_functions() {
-		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
-				Opcodes.ACC_SYNTHETIC, "foo$default",
-				"(LOpen;IILjava/lang/Object;)V", null, null);
-		{
-			m.visitVarInsn(Opcodes.ALOAD, 3);
-			final Label label = new Label();
-			m.visitJumpInsn(Opcodes.IFNULL, label);
-			m.visitTypeInsn(Opcodes.NEW,
-					"java/lang/UnsupportedOperationException");
-			m.visitInsn(Opcodes.DUP);
-			m.visitLdcInsn(
-					"Super calls with default arguments not supported in this target, function: foo");
-			m.visitMethodInsn(Opcodes.INVOKESPECIAL,
-					"java/lang/UnsupportedOperationException", "<init>",
-					"(Ljava/lang/String;)V", false);
-			m.visitInsn(Opcodes.ATHROW);
-			m.visitLabel(label);
-		}
-		{
-			m.visitVarInsn(Opcodes.ILOAD, 2);
-			m.visitInsn(Opcodes.ICONST_1);
-			m.visitInsn(Opcodes.IAND);
-			final Label label = new Label();
-			m.visitJumpInsn(Opcodes.IFEQ, label);
-			// default argument
-			m.visitLdcInsn(Integer.valueOf(42));
-			m.visitVarInsn(Opcodes.ISTORE, 1);
-			m.visitLabel(label);
-
-			m.visitVarInsn(Opcodes.ALOAD, 0);
-			m.visitVarInsn(Opcodes.ILOAD, 1);
-			m.visitMethodInsn(Opcodes.INVOKESPECIAL, "Open", "foo", "(I)V",
-					false);
-			m.visitInsn(Opcodes.RETURN);
-		}
-
-		filter.filter(m, context, output);
-
-		assertIgnored(m,
-				new Range(m.instructions.getFirst(), m.instructions.get(6)),
-				new Range(m.instructions.get(11), m.instructions.get(11)));
+		assertSnapshot(filter, Opcodes.ACC_SYNTHETIC, "foo$default",
+				"(LOpen;IILjava/lang/Object;)V",
+				"snapshots/KotlinDefaultArgumentsTarget/1.5/open_function.txt");
 	}
 
-	/**
-	 * <pre>
-	 * class C(a: Int = 42)
-	 * </pre>
-	 */
 	@Test
 	public void should_filter_constructors() {
-		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
-				Opcodes.ACC_SYNTHETIC, "<init>",
-				"(IILkotlin/jvm/internal/DefaultConstructorMarker;)V", null,
-				null);
-
-		m.visitVarInsn(Opcodes.ILOAD, 2);
-		m.visitInsn(Opcodes.ICONST_1);
-		m.visitInsn(Opcodes.IAND);
-		Label label = new Label();
-		m.visitJumpInsn(Opcodes.IFEQ, label);
-		// default argument
-		m.visitLdcInsn(Integer.valueOf(42));
-		m.visitVarInsn(Opcodes.ISTORE, 1);
-		m.visitLabel(label);
-		m.visitVarInsn(Opcodes.ALOAD, 0);
-		m.visitVarInsn(Opcodes.ILOAD, 1);
-		m.visitMethodInsn(Opcodes.INVOKESPECIAL, "Owner", "<init>", "(I)V",
-				false);
-		m.visitInsn(Opcodes.RETURN);
-
-		filter.filter(m, context, output);
-
-		assertIgnored(m,
-				new Range(m.instructions.get(3), m.instructions.get(3)));
+		assertSnapshot(filter, Opcodes.ACC_SYNTHETIC, "<init>",
+				"(ZLjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V",
+				"snapshots/KotlinDefaultArgumentsTarget/1.5/constructor.txt");
 	}
 
-	/**
-	 * <pre>
-	 * data class C(val x: Long = 42)
-	 * </pre>
-	 */
 	@Test
 	public void should_filter_methods_with_parameters_that_consume_two_slots() {
-		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
-				Opcodes.ACC_SYNTHETIC, "<init>",
-				"(JILkotlin/jvm/internal/DefaultConstructorMarker;)V", null,
-				null);
-
-		m.visitVarInsn(Opcodes.ILOAD, 3);
-		m.visitInsn(Opcodes.ICONST_1);
-		m.visitInsn(Opcodes.IAND);
-		final Label label = new Label();
-		m.visitJumpInsn(Opcodes.IFEQ, label);
-		// default argument
-		m.visitLdcInsn(Integer.valueOf(42));
-		m.visitVarInsn(Opcodes.ISTORE, 1);
-		m.visitLabel(label);
-		m.visitVarInsn(Opcodes.ALOAD, 0);
-		m.visitVarInsn(Opcodes.ILOAD, 1);
-		m.visitMethodInsn(Opcodes.INVOKESPECIAL, "Owner", "<init>", "(J)V",
-				false);
-		m.visitInsn(Opcodes.RETURN);
-
-		filter.filter(m, context, output);
-
-		assertIgnored(m,
-				new Range(m.instructions.get(3), m.instructions.get(3)));
+		assertSnapshot(filter, Opcodes.ACC_SYNTHETIC, "<init>",
+				"(JILkotlin/jvm/internal/DefaultConstructorMarker;)V",
+				"snapshots/KotlinDefaultArgumentsTarget/1.5/long_parameter.txt");
 	}
 
 	/**
@@ -218,49 +120,12 @@ public class KotlinDefaultArgumentsFilterTest extends FilterTestBase {
 	public void should_filter_methods_with_more_than_32_parameters() {
 		final StringBuilder paramTypes = new StringBuilder();
 		for (int i = 1; i <= 33; i++) {
-			paramTypes.append("I");
+			paramTypes.append("Ljava/lang/String;");
 		}
-		final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION,
-				Opcodes.ACC_SYNTHETIC, "<init>",
+		assertSnapshot(filter, Opcodes.ACC_SYNTHETIC, "<init>",
 				"(" + paramTypes
 						+ "IILkotlin/jvm/internal/DefaultConstructorMarker;)V",
-				null, null);
-
-		m.visitVarInsn(Opcodes.ILOAD, 34);
-		m.visitLdcInsn(Integer.valueOf(1 << 31));
-		m.visitInsn(Opcodes.IAND);
-		final Label label = new Label();
-		m.visitJumpInsn(Opcodes.IFEQ, label);
-		final Range range1 = new Range(m.instructions.getLast(),
-				m.instructions.getLast());
-		// default argument
-		m.visitLdcInsn(Integer.valueOf(42));
-		m.visitVarInsn(Opcodes.ISTORE, 32);
-		m.visitLabel(label);
-
-		m.visitVarInsn(Opcodes.ILOAD, 35);
-		m.visitInsn(Opcodes.ICONST_1);
-		m.visitInsn(Opcodes.IAND);
-		final Label label2 = new Label();
-		m.visitJumpInsn(Opcodes.IFEQ, label2);
-		final Range range2 = new Range(m.instructions.getLast(),
-				m.instructions.getLast());
-		// default argument
-		m.visitLdcInsn(Integer.valueOf(42));
-		m.visitVarInsn(Opcodes.ISTORE, 33);
-		m.visitLabel(label2);
-
-		m.visitVarInsn(Opcodes.ALOAD, 0);
-		for (int i = 1; i <= 33; i++) {
-			m.visitVarInsn(Opcodes.ILOAD, i);
-		}
-		m.visitMethodInsn(Opcodes.INVOKESPECIAL, "Owner", "<init>",
-				"(" + paramTypes + ")V", false);
-		m.visitInsn(Opcodes.RETURN);
-
-		filter.filter(m, context, output);
-
-		assertIgnored(m, range1, range2);
+				"snapshots/KotlinDefaultArgumentsTarget/1.5/more_than_32_parameters.txt");
 	}
 
 	/**
